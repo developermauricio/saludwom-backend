@@ -16,6 +16,7 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('currency')->default('eur');
             $table->mediumText('description')->nullable();
             $table->double('price');
             $table->unsignedBigInteger('user_id')->nullable();

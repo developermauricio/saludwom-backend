@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Plan extends Model
 {
     use HasFactory;
-    const WEEK = 1;
-    const MONTH = 2;
-    const YEAR = 3;
+    const WEEK = 'week';
+    const MONTH = 'month';
+    const YEAR = 'year';
 
     const ACTIVE = 1;
     const INACTIVE = 2;
