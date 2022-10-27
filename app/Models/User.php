@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
+use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-
-
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Billable;
 
     const ACTIVE = 1;
     const INACTIVE = 2;
@@ -27,8 +27,16 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+        'state',
+        'slug',
         'email',
+        'phone',
+        'city_id',
         'password',
+        'last_name',
+        'last_login',
+        'country_id',
+        'email_verified_at'
     ];
 
     /**
@@ -63,6 +71,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function patient(){
+        return $this->hasOne(Patient::class, 'user_id');
     }
 
 }

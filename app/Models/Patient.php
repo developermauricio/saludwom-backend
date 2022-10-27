@@ -9,6 +9,12 @@ class Patient extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'gender_id',
+        'patient_type'
+    ];
+
     const COURTESY = 'courtesy';
     const CLIENT = 'client';
 }
