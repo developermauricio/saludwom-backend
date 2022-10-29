@@ -64,7 +64,7 @@ class Controller extends BaseController
             return response()->json($response, 500);
         }
     }
-    public function validateEmail($email)
+    public function validateEmailApi($email)
     {
         $check = User::whereEmail($email)->first();
         if ($check !== null) {

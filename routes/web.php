@@ -20,3 +20,7 @@ Route::get('/mail', function () {
 //    return view('mails.activation-email');
     return new \App\Mail\AccountActivation('oamsoamsoamsoas', 'Maria');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

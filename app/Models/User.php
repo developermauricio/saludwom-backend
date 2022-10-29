@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
+
+
+use App\Notifications\PasswordReset;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
+use App\Notifications\VerifyEmail;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, Billable;
 
@@ -31,6 +36,7 @@ class User extends Authenticatable implements JWTSubject
         'slug',
         'email',
         'phone',
+        'picture',
         'city_id',
         'password',
         'last_name',
@@ -71,6 +77,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
+    }
+
+    public function sendPasswordResetNotification($token){
+        $this->notify(new PasswordReset($token));
     }
 
     public function patient(){

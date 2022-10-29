@@ -109,20 +109,21 @@
 {{--                                        <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72 ;">--}}
 {{--                                            {{ $user }}!</p>--}}
                                         <p class="sm-leading-32" style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            Gracias por registrarte. 👋
+                                            Restablecer Contraseña. 🔒
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-                                            Verifica tu dirección de correo electrónico haciendo clic en el botón de abajo y únete para ser un gran equipo y cumplir tus objetivos.
+                                            Estas recibiendo este correo electrónico porque hemos recibido una solicitud de restablecimiento de contraseña para tu cuenta.
+                                            <br>
+                                            Este enlace para restablecer la contraseña expirará en 60 minutos.
                                         </p>
                                         <p style="margin: 0 0 24px; color: #666666 !important;">
-                                            Si no te has registrado, ignora este correo electrónico o contáctenos a
-                                            <a href="mailto:soporte@saludwom.com" class="hover-underline" style="--text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">soporte@saludwom.com</a>
+                                            Si no has solicitado el restablecimiento de la contraseña, no es necesario realizar ninguna otra acción.
                                         </p>
                                         <a href="{{ $url }}" style="display: block; font-size: 14px; line-height: 100%; margin-bottom: 24px; --text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">{{ $url }}</a>
                                         <table style="font-family: 'Montserrat',Arial,sans-serif;" cellpadding="0" cellspacing="0" role="presentation">
                                             <tr>
                                                 <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;" bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
-                                                    <a href="{{ $url }}" style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Verificar ahora &rarr;</a>
+                                                    <a href="{{ $url }}" style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Restablecer Contraseña &rarr;</a>
                                                 </td>
                                             </tr>
                                         </table>
