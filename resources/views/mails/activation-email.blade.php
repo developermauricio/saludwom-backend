@@ -106,8 +106,8 @@
                                 <tr>
                                     <td class="sm-px-24" style="--bg-opacity: 1; background-color: #ffffff; background-color: rgba(255, 255, 255, var(--bg-opacity)); border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 24px; padding: 48px; text-align: left; --text-opacity: 1; color: #626262; color: rgba(98, 98, 98, var(--text-opacity));" bgcolor="rgba(255, 255, 255, var(--bg-opacity))" align="left">
                                         <p style="font-weight: 600; font-size: 18px; margin-bottom: 0;color: #666666 !important;">Hola.</p>
-{{--                                        <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72 ;">--}}
-{{--                                            {{ $user }}!</p>--}}
+                                        <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72 ;">
+                                            {{ $user }}!</p>
                                         <p class="sm-leading-32" style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
                                             Gracias por registrarte. 👋
                                         </p>
@@ -137,7 +137,7 @@
                                             ¿No está seguro del porqué ha recibido este correo electrónico? Por favor
                                             <a href="mailto:soporte@saludwom.com" class="hover-underline" style="--text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">háganos saber</a>.
                                         </p>
-                                        <p style="margin: 0 0 16px; color: #666666 !important;">Gracias, <br>Equipo SaludWom</p>
+                                        <p style="margin: 0 0 16px; color: #666666 !important;">Gracias, <br>Equipo SaludWoM</p>
                                     </td>
                                 </tr>
                                 <tr>
