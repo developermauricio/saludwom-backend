@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use \App\Http\Controllers\Controller;
 use \App\Http\Controllers\Auth\LoginController;
+use \App\Http\Controllers\Api\V1\PlanController;
 use \App\Http\Controllers\Auth\RegisterController;
 use \App\Http\Controllers\Api\V1\PatientController;
 use \App\Http\Controllers\Api\V1\CheckoutController;
@@ -43,6 +44,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('logout', [LoginController::class, 'logout']);
     /*Obtener el usuario autenticado*/
     Route::get('user', [LoginController::class, 'user']);
+
+
+    /*=============================================
+      RUTAS PARA LOS PLANES
+     =============================================*/
+    Route::get('/get-plans', [\App\Http\Controllers\Api\V1\PlanController::class, 'getPlans'])->name('get.plans'); /*Obtenemos todos los planes*/
 });
 
 Route::get('get-countries', [Controller::class, 'countries'])->name('get.all.countries');
@@ -58,4 +65,5 @@ Route::post('register-patient', [PatientController::class, 'register'])->name('r
 /*=============================================
       RUTAS PARA EL PROCESO DE PAGO
  =============================================*/
-Route::get('checkout/intent', [CheckoutController::class, 'intent'])->name('get.all.countries');
+Route::get('checkout/intent', [CheckoutController::class, 'intentStripe'])->name('get.all.countries');
+Route::post('checkout/payment', [CheckoutController::class, 'paymentStripe'])->name('stripe.payment');

@@ -31,7 +31,7 @@ class CreatePlansTable extends Migration
             $table->enum('state', [
                 \App\Models\Plan::ACTIVE,
                 \App\Models\Plan::INACTIVE
-            ]);
+            ])->default(\App\Models\Plan::ACTIVE);
             $table->timestamps();
         });
     }

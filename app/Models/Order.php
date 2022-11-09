@@ -12,4 +12,8 @@ class Order extends Model
     const CANCELLED = 2;
     const REJECTED = 3;
     const ACCEPTED = 4;
+
+    protected $guarded = ['id'];
+    protected $fillable = ['plan_id', 'patient_id', 'price_total', 'invoice_id', 'coupon', 'state'];
+
 }

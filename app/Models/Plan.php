@@ -14,4 +14,7 @@ class Plan extends Model
 
     const ACTIVE = 1;
     const INACTIVE = 2;
+
+    protected $guarded = ['id'];
+    protected $fillable = ['name', 'currency', 'description', 'price', 'user_id', 'number_appointments', 'period', 'image_background', 'state'];
 }

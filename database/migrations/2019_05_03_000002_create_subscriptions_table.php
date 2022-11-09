@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+
             $table->unsignedBigInteger('plan_id')->nullable();
             $table->foreign('plan_id')->references('id')->on('plans');
             $table->unsignedBigInteger('patient_id')->nullable();
             $table->foreign('patient_id')->references('id')->on('patients');
-            $table->date('expiration_date');
+            $table->timestamp('expiration_date');
             $table->enum('state', [
                 \App\Models\Subscription::PENDING,
                 \App\Models\Subscription::CANCELLED,
@@ -28,10 +28,11 @@ return new class extends Migration
                 \App\Models\Subscription::ACCEPTED,
                 \App\Models\Subscription::COMPLETED
             ])->default(\App\Models\Subscription::PENDING);
-            $table->string('name');
-            $table->string('stripe_id')->unique();
-            $table->string('stripe_status');
+            $table->string('name')->nullable();
+            $table->string('stripe_id')->unique()->nullable();
+            $table->string('stripe_status')->nullable();
             $table->string('stripe_price')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('quantity')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();

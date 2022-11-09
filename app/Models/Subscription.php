@@ -13,4 +13,7 @@ class Subscription extends Model
     const REJECTED = 3;
     const ACCEPTED = 4;
     const COMPLETED = 5;
+
+    protected $guarded = ['id'];
+    protected $fillable = ['plan_id', 'patient_id', 'expiration_date', 'state'];
 }

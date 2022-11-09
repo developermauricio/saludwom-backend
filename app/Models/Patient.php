@@ -17,4 +17,11 @@ class Patient extends Model
 
     const COURTESY = 'courtesy';
     const CLIENT = 'client';
+
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
+    public function subcrition(){
+        return $this->hasMany(Subscription::class);
+    }
 }

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Gender;
 use App\Models\IdentificationType;
 use App\Models\Patient;
+use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -77,7 +78,7 @@ class DatabaseSeeder extends Seeder
         /*=============================================
             CREAMOS UN USUARIO ADMINISTRADOR
         =============================================*/
-        User::factory()->count(1)->create([
+       $admin = User::factory()->count(1)->create([
             'name' => 'Admin',
             'last_name' => 'Salud Wom',
             'email' => 'admin@saludwom.com'
@@ -86,6 +87,39 @@ class DatabaseSeeder extends Seeder
         });
 
         /*=============================================
+            CREAMOS TRES PLANES
+        =============================================*/
+        Plan::factory()->count(1)->create([
+            'name' => 'Plan Rubí',
+            'currency' => 'EUR',
+            'description' => 'Seguimiento semanal Online 10€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
+            'price' => 30.25,
+            'user_id' => 1,
+            'number_appointments' => 0,
+            'period' => 'week',
+            'image_background' => '/assets/images/plans/plan-rubi.png'
+        ]);
+        Plan::factory()->count(1)->create([
+            'name' => 'Plan Esmeralda',
+            'currency' => 'EUR',
+            'description' => '2 citas online de 30 minutos 60€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
+            'price' => 80,
+            'user_id' => 1,
+            'number_appointments' => 2,
+            'period' => 'month',
+            'image_background' => '/assets/images/plans/plan-esmeralda.png'
+        ]);
+        Plan::factory()->count(1)->create([
+            'name' => 'Plan Diamante',
+            'currency' => 'EUR',
+            'description' => '4 citas online de 30 minutos 120€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
+            'price' => 140,
+            'user_id' => 1,
+            'number_appointments' => 4,
+            'period' => 'year',
+            'image_background' => '/assets/images/plans/plan-diamante.png'
+        ]);
+        /*=============================================
             CREAMOS PACIENTE UNO
         =============================================*/
         User::factory()->count(1)->create([
@@ -93,8 +127,8 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Gutierrez Quiñones',
             'email' => 'silviotista93@gmail.com',
             'phone' => '+57 3154940483',
-            'slug' => Str::slug('Silvio Mauricio'. '-' .'Gutierrez Quiñones'.'-'.Str::random(8), '-')
-        ])->each(function (User $user){
+            'slug' => Str::slug('Silvio Mauricio' . '-' . 'Gutierrez Quiñones' . '-' . Str::random(8), '-')
+        ])->each(function (User $user) {
             Patient::factory()->count(1)->create([
                 'user_id' => $user->id,
                 'gender_id' => 1,

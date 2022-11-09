@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('patient_id')->nullable();
             $table->foreign('patient_id')->references('id')->on('patients');
             $table->double('price_total');
+            $table->string('invoice_id')->nullable()->comment('Factura generada por stripe');
             $table->double('discount')->nullable();
             $table->string('coupon')->nullable();
             $table->enum('state', [
