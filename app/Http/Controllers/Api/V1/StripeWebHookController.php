@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Patient;
 use App\Models\Subscription;
+use App\Notifications\SendInvoiceNotification;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Http\Controllers\WebhookController;
@@ -27,7 +29,7 @@ class StripeWebHookController extends WebhookController
         Log::info(json_encode($payload));
         $user = $this->getUserByStripeId($payload['data']['object']['customer']);
         $patient = Patient::where('user_id', $user->id)->first();
-        $subcription = $patient->subcrition()->latest()->first();
+        $subscription = $patient->subcrition()->latest()->first();
         try {
             if ($patient) {
                 $order = $patient->orders()->latest()->first();
@@ -36,18 +38,27 @@ class StripeWebHookController extends WebhookController
                     'state' => Order::ACCEPTED
                 ]);
 
-                $subcription->update([
+                $subscription ->update([
                     'state' => Subscription::ACCEPTED
                 ]);
-               
-                Log::info(json_encode($user));
+
+                $invoice = Invoice::create([
+                    'patient_id' => $patient->id,
+                    'plan_id' => $order->patient_id,
+                    'order_id' => $order->id,
+                    'invoice_stripe_id' => $invoice_id
+                ]);
+
+                $patient->user->notify(new SendInvoiceNotification($patient->user, $invoice, $order, $order->plan));
+
+                Log::info(json_encode($patient->user()));
                 Log::info(json_encode($order));
-                Log::info(json_encode($subcription));
+                Log::info(json_encode($subscription));
                 Log::info("Orden actualizado correctamente");
                 return new Response('Webhook Handled: {handleChargeSucceeded}', 200);
             }
         } catch (\Exception $exception) {
-            $subcription->delete();
+            $subscription->delete();
             Log::debug("Excepción Webhook {handleChargeSucceeded}: " . $exception->getMessage() . ", Line: " . $exception->getLine() . ', File: ' . $exception->getFile());
             return new Response('Webhook Handled with error: {handleChargeSucceeded}', 400);
         }

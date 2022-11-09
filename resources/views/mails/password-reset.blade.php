@@ -20,7 +20,7 @@
         }
     </style>
     <![endif]-->
-    <title>Verify Email Address</title>
+    <title>Solicitud para restablecer contraseña</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">
@@ -87,7 +87,7 @@
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">Please verify your email address</div>
+<div style="display: none;">Verifica tu dirección de correo electrónico</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="en">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
@@ -95,7 +95,7 @@
                 <table class="sm-w-full" style="font-family: 'Montserrat',Arial,sans-serif; width: 600px;" width="600" cellpadding="0" cellspacing="0" role="presentation">
                     <tr>
                         <td class="sm-py-32 sm-px-24" style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; padding: 48px; text-align: center;" align="center">
-                            <a href="https://1.envato.market/vuexy_admin">
+                            <a href="{{ env('APP_URL_FRONT') }}">
                                 <img src="{{ env('APP_URL') }}/assets/images/logo_saludwom.png" width="300" alt="SaludWom" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">
                             </a>
                         </td>

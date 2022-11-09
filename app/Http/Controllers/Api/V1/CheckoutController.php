@@ -87,7 +87,7 @@ class CheckoutController extends Controller
             $order = Order::create([
                 'plan_id' => $request->plan,
                 'patient_id' => $patient->id,
-                'price_total' => $request->amount
+                'price_total' => $amount
             ]);
             Subscription::create([
                 'plan_id' => $request->plan,
