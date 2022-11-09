@@ -32,7 +32,7 @@
 </head>
 <body style="margin: 0; width: 100%; padding: 0; word-break: break-word; -webkit-font-smoothing: antialiased;">
 <div style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; display: none;">Esta es una factura por su compra.</div>
-<div role="article" aria-roledescription="email" aria-label="" lang="en" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly;">
+<div role="article" aria-roledescription="email" aria-label="" lang="es" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly;">
     <table style="width: 100%; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td align="center" style="mso-line-height-rule: exactly; background-color: #ffffff; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;">
@@ -40,7 +40,7 @@
                     <tr>
                         <td class="sm-py-32 sm-px-24" style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; padding: 48px; text-align: center;" align="center">
                             <a href="{{ env('APP_URL_FRONT') }}">
-                                <img src="{{ env('APP_URL') }}/assets/images/logo_saludwom.png" width="300" alt="SaludWom" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">
+                                <img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWoM" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">
                             </a>
                         </td>
                     </tr>
@@ -136,12 +136,12 @@
 {{--                                            </tr>--}}
 {{--                                        </table>--}}
                                         <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin-top: 6px; margin-bottom: 20px; font-size: 16px; line-height: 24px;">
-                                            Si tiene alguna pregunta sobre esta factura, simplemente responda a este correo electrónico o póngase en contacto con nosotros a
-                                            <a href="mailto:soporte@saludwom.com" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly;">suporte@saludwom.com</a>.
+                                            Si tiene alguna pregunta sobre esta orden de compra, simplemente responda a este correo electrónico o póngase en contacto con nosotros a
+                                            <a href="mailto:soporte@saludwom.com" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly;color: #792141; color: #792141;">suporte@saludwom.com</a>.
                                         </p>
                                         <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin-top: 6px; margin-bottom: 20px; font-size: 16px; line-height: 24px;">
                                             Gracias,
-                                            <br>Equipo SaludWoM
+                                            <br>Equipo {{ env('APP_NAME') }}
                                         </p>
                                     </td>
                                 </tr>

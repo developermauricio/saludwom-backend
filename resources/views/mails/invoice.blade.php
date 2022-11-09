@@ -25,15 +25,14 @@
 
 <table width="100%">
     <tr>
-        <td valign="top"><img src="{{ env('APP_URL') }}/assets/images/logo_saludwom.png" width="300" alt="SaludWom" width="150"/></td>
+        <td valign="top"><img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWom" width="150"/></td>
         <td align="right">
-            <h3>Shinra Electric power company</h3>
+            <h3>{{ env('APP_NAME') }}</h3>
             <pre>
-                Company representative name
-                Company address
-                Tax ID
-                phone
-                fax
+                Salud WoM
+                Barcelona - España
+                +34 640 847 411
+                info@saludwom.com
             </pre>
         </td>
     </tr>
@@ -42,8 +41,15 @@
 
 <table width="100%">
     <tr>
-        <td><strong>From:</strong> Linblum - Barrio teatral</td>
-        <td><strong>To:</strong> Linblum - Barrio Comercial</td>
+        <td>
+            <strong>Cliente:</strong> {{$user->name}} {{$user->last_name}} <br>
+            <strong>Correo electrónico:</strong> {{$user->email}} <br>
+            <strong>Teléfono:</strong> {{$user->phone}} <br>
+        </td>
+        <td>
+            <strong>Orden de compra #:</strong> {{ $invoice->id }} <br>
+            <strong>Fecha:</strong> {{ \Carbon\Carbon::parse('2023-01-09 13:23:01')->format('M d Y')  }}
+        </td>
     </tr>
 
 </table>
@@ -54,51 +60,37 @@
     <thead style="background-color: lightgray;">
     <tr>
         <th>#</th>
-        <th>Description</th>
-        <th>Quantity</th>
-        <th>Unit Price $</th>
-        <th>Total $</th>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Valor Unitario €</th>
+        <th>Total €</th>
     </tr>
     </thead>
     <tbody>
     <tr>
         <th scope="row">1</th>
-        <td>Playstation IV - Black</td>
+        <td><strong>{{ $plan->name }}</strong> - {{ $plan->description }}.</td>
         <td align="right">1</td>
-        <td align="right">1400.00</td>
-        <td align="right">1400.00</td>
-    </tr>
-    <tr>
-        <th scope="row">1</th>
-        <td>Metal Gear Solid - Phantom</td>
-        <td align="right">1</td>
-        <td align="right">105.00</td>
-        <td align="right">105.00</td>
-    </tr>
-    <tr>
-        <th scope="row">1</th>
-        <td>Final Fantasy XV - Game</td>
-        <td align="right">1</td>
-        <td align="right">130.00</td>
-        <td align="right">130.00</td>
+        <td align="right">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
+        <td align="right">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
     </tr>
     </tbody>
 
     <tfoot>
+{{--    <tr>--}}
+{{--        <td colspan="3"></td>--}}
+{{--        <td align="right">Subtotal $</td>--}}
+{{--        <td align="right">1635.00</td>--}}
+{{--    </tr>--}}
+{{--    <tr>--}}
+{{--        <td colspan="3"></td>--}}
+{{--        <td align="right">Tax $</td>--}}
+{{--        <td align="right">294.3</td>--}}
+{{--    </tr>--}}
     <tr>
         <td colspan="3"></td>
-        <td align="right">Subtotal $</td>
-        <td align="right">1635.00</td>
-    </tr>
-    <tr>
-        <td colspan="3"></td>
-        <td align="right">Tax $</td>
-        <td align="right">294.3</td>
-    </tr>
-    <tr>
-        <td colspan="3"></td>
-        <td align="right">Total $</td>
-        <td align="right" class="gray">$ 1929.3</td>
+        <td align="right">Total</td>
+        <td align="right" class="gray">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}3</td>
     </tr>
     </tfoot>
 </table>

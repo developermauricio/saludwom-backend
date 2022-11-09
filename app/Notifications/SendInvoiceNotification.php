@@ -52,13 +52,14 @@ class SendInvoiceNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $data["email"] = "test@gmail.com";
-        $data["title"] = "Welcome to NiceSnippets.com";
-        $data["body"] = "This is the email body.";
-        $pdf = Pdf::loadView('mails.invoice', $data);
+        $user = $this->user;
+        $invoice = $this->invoice;
+        $order = $this->order;
+        $plan = $this->plan;
+        $pdf = Pdf::loadView('mails.invoice', compact('user', 'invoice', 'order', 'plan'));
         return (new MailMessage)
-            ->subject(config('app.name') . '-' . 'FACTURA #' . $this->invoice->id)
-            ->attachData($pdf->output(), "test.pdf")
+            ->subject(config('app.name') . ' - ' . 'ORDEN DE COMPRA #' . $this->invoice->id)
+            ->attachData($pdf->output(), config('app.name') . '-' . 'ORDEN DE COMPRA #' . $this->invoice->id.'-'.$user->name.' '.$user->last_name.'.pdf')
             ->markdown('mails.send-invoice', [
                 'user' => $this->user,
                 'invoice' => $this->invoice,

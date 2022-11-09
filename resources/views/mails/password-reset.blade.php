@@ -88,7 +88,7 @@
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
 <div style="display: none;">Verifica tu dirección de correo electrónico</div>
-<div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="en">
+<div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td align="center" style="--bg-opacity: 1; background-color: #ffffff; background-color: #ffffff; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;" bgcolor="rgba(236, 239, 241, var(--bg-opacity))">
@@ -96,7 +96,7 @@
                     <tr>
                         <td class="sm-py-32 sm-px-24" style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; padding: 48px; text-align: center;" align="center">
                             <a href="{{ env('APP_URL_FRONT') }}">
-                                <img src="{{ env('APP_URL') }}/assets/images/logo_saludwom.png" width="300" alt="SaludWom" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">
+                                <img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWoM" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">
                             </a>
                         </td>
                     </tr>
@@ -138,7 +138,7 @@
                                             ¿No está seguro del porqué ha recibido este correo electrónico? Por favor
                                             <a href="mailto:soporte@saludwom.com" class="hover-underline" style="--text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">háganos saber</a>.
                                         </p>
-                                        <p style="margin: 0 0 16px; color: #666666 !important;">Gracias, <br>Equipo SaludWoM</p>
+                                        <p style="margin: 0 0 16px; color: #666666 !important;">Gracias, <br>Equipo {{ env('APP_NAME') }}</p>
                                     </td>
                                 </tr>
                                 <tr>
