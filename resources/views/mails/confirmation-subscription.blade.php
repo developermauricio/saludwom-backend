@@ -7,12 +7,6 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-    <!--[if mso]>
-    <xml>
-        <o:OfficeDocumentSettings>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-        </o:OfficeDocumentSettings>
-    </xml>
     <style>
         td, th, div, p, a, h1, h2, h3, h4, h5, h6 {
             font-family: "Segoe UI", sans-serif;
@@ -20,7 +14,7 @@
         }
     </style>
     <![endif]-->
-    <title>Solicitud para restablecer contraseña</title>
+    <title>Verificar Cuenta</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">
@@ -87,7 +81,7 @@
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">Verifica tu dirección de correo electrónico</div>
+<div style="display: none;">Verifique su dirección de correo electrónico</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
@@ -104,41 +98,57 @@
                         <td align="center" class="sm-px-24" style="font-family: 'Montserrat',Arial,sans-serif;">
                             <table style="font-family: 'Montserrat',Arial,sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
-                                    <td class="sm-px-24" style="--bg-opacity: 1; background-color: #ffffff; background-color: rgba(255, 255, 255, var(--bg-opacity)); border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 24px; padding: 48px; text-align: left; --text-opacity: 1; color: #626262; color: rgba(98, 98, 98, var(--text-opacity));" bgcolor="rgba(255, 255, 255, var(--bg-opacity))" align="left">
-                                        <p style="font-weight: 600; font-size: 18px; margin-bottom: 0;color: #666666 !important;">Hola.</p>
+                                    <td class="sm-px-24"
+                                        style="--bg-opacity: 1; background-color: #ffffff; background-color: rgba(255, 255, 255, var(--bg-opacity)); border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 24px; padding: 48px; text-align: left; --text-opacity: 1; color: #626262; color: rgba(98, 98, 98, var(--text-opacity));"
+                                        bgcolor="rgba(255, 255, 255, var(--bg-opacity))" align="left">
+                                        <p style="font-weight: 600; font-size: 18px; margin-bottom: 0;color: #666666 !important;">
+                                            Hola.</p>
                                         <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72;">
-                                            {{ $user }}!</p>
-                                        <p class="sm-leading-32" style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            Restablecer Contraseña. 🔒
+                                            {{ $user->name }}!</p>
+                                        <p class="sm-leading-32"
+                                           style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
+                                            Gracias por adquirir uno de nuestros planes. 👋
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-                                            Estas recibiendo este correo electrónico porque hemos recibido una solicitud de restablecimiento de contraseña para tu cuenta.
-                                            <br>
-                                            Este enlace para restablecer la contraseña expirará en 60 minutos.
+                                            En este momento tienes activa la suscripción del <strong>{{ $plan->name }}</strong>. Tu plan
+                                            vence {{ ucwords(\Jenssegers\Date\Date::parse($subscription->expiration_date)->locale('es')->format('F d Y')) }}.
+
                                         </p>
-                                        <p style="margin: 0 0 24px; color: #666666 !important;">
-                                            Si no has solicitado el restablecimiento de la contraseña, no es necesario realizar ninguna otra acción.
-                                        </p>
-                                        <a href="{{ $url }}" style="display: block; font-size: 14px; line-height: 100%; margin-bottom: 24px; --text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">{{ $url }}</a>
-                                        <table style="font-family: 'Montserrat',Arial,sans-serif;" cellpadding="0" cellspacing="0" role="presentation">
+                                        {{--                                        <p style="margin: 0 0 24px; color: #666666 !important;">--}}
+                                        {{--                                            Si no te has suscrito, ignora este correo electrónico o contáctenos a--}}
+                                        {{--                                            <a href="mailto:soporte@saludwom.com" class="hover-underline" style="--text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">soporte@saludwom.com</a>--}}
+                                        {{--                                        </p>--}}
+
+                                        <table style="font-family: 'Montserrat',Arial,sans-serif;" cellpadding="0" cellspacing="0"
+                                               role="presentation">
                                             <tr>
-                                                <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;" bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
-                                                    <a href="{{ $url }}" style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Restablecer Contraseña &rarr;</a>
+                                                <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"
+                                                    bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
+                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_VALORACION')}}"
+                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Comenzar
+                                                        ahora &rarr;</a>
                                                 </td>
                                             </tr>
                                         </table>
-                                        <table style="font-family: 'Montserrat',Arial,sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                        <table style="font-family: 'Montserrat',Arial,sans-serif; width: 100%;" width="100%"
+                                               cellpadding="0" cellspacing="0" role="presentation">
                                             <tr>
                                                 <td style="font-family: 'Montserrat',Arial,sans-serif; padding-top: 32px; padding-bottom: 32px;">
-                                                    <div style="--bg-opacity: 1; background-color: #eceff1; background-color: rgba(236, 239, 241, var(--bg-opacity)); height: 1px; line-height: 1px;">&zwnj;</div>
+                                                    <div
+                                                        style="--bg-opacity: 1; background-color: #eceff1; background-color: rgba(236, 239, 241, var(--bg-opacity)); height: 1px; line-height: 1px;">
+                                                        &zwnj;
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </table>
                                         <p style="margin: 0 0 16px; color: #666666 !important;">
                                             ¿No está seguro del porqué ha recibido este correo electrónico? Por favor
-                                            <a href="mailto:soporte@saludwom.com" class="hover-underline" style="--text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">háganos saber</a>.
+                                            <a href="mailto:soporte@saludwom.com" class="hover-underline"
+                                               style="--text-opacity: 1; color: #792141; color: #792141; text-decoration: none;">háganos
+                                                saber</a>.
                                         </p>
-                                        <p style="margin: 0 0 16px; color: #666666 !important;">Gracias, <br>Equipo {{ env('APP_NAME') }}</p>
+                                        <p style="margin: 0 0 16px; color: #666666 !important;">Gracias,
+                                            <br>Equipo {{ env('APP_NAME') }}</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -174,4 +184,6 @@
 </body>
 
 </html>
+
+
 

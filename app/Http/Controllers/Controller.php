@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\IdentificationType;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -16,19 +17,20 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function countries(){
+    public function getDocumentTypes()
+    {
 
         DB::beginTransaction();
         try {
-            $countries = Country::all();
+            $documentTypes = IdentificationType::all();
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'Get Countries',
-                'response' => 'get_countries',
-                'data' => $countries
+                'message' => 'Get document types',
+                'response' => 'get_document_types',
+                'data' => $documentTypes
             ], 200);
-        }catch (\Throwable $th){
+        } catch (\Throwable $th) {
             $response = [
                 'success' => false,
                 'message' => 'Transaction Error',
@@ -40,9 +42,38 @@ class Controller extends BaseController
             return response()->json($response, 500);
         }
     }
-    public function citiesFromCountry($country){
+    public function countries()
+    {
 
         DB::beginTransaction();
+        try {
+            $countries = Country::all();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Get Countries',
+                'response' => 'get_countries',
+                'data' => $countries
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR GET COUNTRIES.', $response); // Guardamos el error en el archivo de logs
+            DB::rollBack(); // Hacemos un rollback para eliminar cualquier registro almacenado en la BD
+            return response()->json($response, 500);
+        }
+    }
+
+    public function citiesFromCountry($country)
+    {
+
+        DB::beginTransaction();
+
+
         try {
             $countries = City::where('country_code', $country)->orderBy('name', 'asc')->get();
             DB::commit();
@@ -52,7 +83,7 @@ class Controller extends BaseController
                 'response' => 'get_cities_from_country',
                 'data' => $countries
             ], 200);
-        }catch (\Throwable $th){
+        } catch (\Throwable $th) {
             $response = [
                 'success' => false,
                 'message' => 'Transaction Error',
@@ -64,6 +95,7 @@ class Controller extends BaseController
             return response()->json($response, 500);
         }
     }
+
     public function validateEmailApi($email)
     {
         $check = User::whereEmail($email)->first();
@@ -79,6 +111,59 @@ class Controller extends BaseController
                 'message' => 'El correo electrónico no esta registrado en el sistema, puede usarlo',
                 'data' => 300
             ], 200);
+        }
+    }
+
+    public function checkTourPatient()
+    {
+        DB::beginTransaction();
+
+        try {
+            $user = User::find(auth()->id());
+            $user->tour = false;
+            $user->save();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Tour check patient',
+                'response' => 'tour_check_patient',
+                'data' => $user
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR UPADTE CHECK TOUR.', $response); // Guardamos el error en el archivo de logs
+            DB::rollBack(); // Hacemos un rollback para eliminar cualquier registro almacenado en la BD
+            return response()->json($response, 500);
+        }
+    }
+    public function checkDocument()
+    {
+        DB::beginTransaction();
+
+        try {
+            $user = User::select('document')->where('id',auth()->id())->first();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tour check document',
+                'response' => 'tour_check_document',
+                'data' => $user
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR CHECK DOCUMENT.', $response); // Guardamos el error en el archivo de logs
+            DB::rollBack(); // Hacemos un rollback para eliminar cualquier registro almacenado en la BD
+            return response()->json($response, 500);
         }
     }
 }

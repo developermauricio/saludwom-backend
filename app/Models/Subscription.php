@@ -16,4 +16,8 @@ class Subscription extends Model
 
     protected $guarded = ['id'];
     protected $fillable = ['plan_id', 'patient_id', 'expiration_date', 'state'];
+
+    public function plan(){
+        return $this->belongsTo(Plan::class);
+    }
 }

@@ -38,6 +38,7 @@ class CreateUsersTable extends Migration
             $table->foreign('city_id')->references('id')->on('cities');
             $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries');
+            $table->boolean('tour')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

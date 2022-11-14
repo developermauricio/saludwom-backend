@@ -24,6 +24,11 @@ class Patient extends Model
     public function subcrition(){
         return $this->hasMany(Subscription::class);
     }
+
+    public function currentSubscrition(){
+        return $this->hasOne(Subscription::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

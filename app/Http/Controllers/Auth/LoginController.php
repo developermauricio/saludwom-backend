@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
+use App\Models\Subscription;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -38,9 +41,13 @@ class LoginController extends Controller
         $token = (string)$this->guard()->getToken();
         $expiration = $this->guard()->getPayload()->get('exp');
 
+        $patient = Patient::where('user_id', auth()->user()->id)->first();
+        $subscription = Subscription::where('patient_id', $patient->id)->where('state', '4')->with('plan')->first();
+
         return response()->json([
             'token' => $token,
             'user' => auth()->user(),
+            'subscription' => $subscription,
             'token_type' => 'bearer',
             'expiration_in' => $expiration
         ]);
@@ -68,7 +75,13 @@ class LoginController extends Controller
     public function user(Request $request)
     {
         if (auth()->check()) {
-            return response()->json(['user' => auth()->user()], 200);
+            $user = User::where('id',auth()->user()->id)
+                ->with('patient', function ($q)  {
+                    $q->with('currentSubscrition', function ($q){
+                        $q->where('state', '4')->with('plan')->first();
+                    });
+                })->first();
+            return response()->json(['user' => $user], 200);
         }
         return response()->json(null, 200);
     }

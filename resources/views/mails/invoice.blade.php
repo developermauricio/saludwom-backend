@@ -47,8 +47,8 @@
             <strong>Teléfono:</strong> {{$user->phone}} <br>
         </td>
         <td>
-            <strong>Orden de compra #:</strong> {{ $invoice->id }} <br>
-            <strong>Fecha:</strong> {{ \Carbon\Carbon::parse('2023-01-09 13:23:01')->format('M d Y')  }}
+            <strong>Orden de compra #</strong> {{ $invoice->id }} <br>
+            <strong>Fecha:</strong> {{  ucwords(\Jenssegers\Date\Date::parse($invoice->created_at)->locale('es')->format('F d Y')) }}
         </td>
     </tr>
 
@@ -69,7 +69,7 @@
     <tbody>
     <tr>
         <th scope="row">1</th>
-        <td><strong>{{ $plan->name }}</strong> - {{ $plan->description }}.</td>
+        <td><strong>{{ $plan['name'] }}</strong> - {{ $plan['description'] }}.</td>
         <td align="right">1</td>
         <td align="right">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
         <td align="right">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
@@ -77,20 +77,20 @@
     </tbody>
 
     <tfoot>
-{{--    <tr>--}}
-{{--        <td colspan="3"></td>--}}
-{{--        <td align="right">Subtotal $</td>--}}
-{{--        <td align="right">1635.00</td>--}}
-{{--    </tr>--}}
-{{--    <tr>--}}
-{{--        <td colspan="3"></td>--}}
-{{--        <td align="right">Tax $</td>--}}
-{{--        <td align="right">294.3</td>--}}
-{{--    </tr>--}}
+{{--{{--    <tr>--}}{{--
+--}}{{--        <td colspan="3"></td>--}}{{--
+--}}{{--        <td align="right">Subtotal $</td>--}}{{--
+--}}{{--        <td align="right">1635.00</td>--}}{{--
+--}}{{--    </tr>--}}{{--
+--}}{{--    <tr>--}}{{--
+--}}{{--        <td colspan="3"></td>--}}{{--
+--}}{{--        <td align="right">Tax $</td>--}}{{--
+--}}{{--        <td align="right">294.3</td>--}}{{--
+--}}{{--    </tr>--}}--}}
     <tr>
         <td colspan="3"></td>
         <td align="right">Total</td>
-        <td align="right" class="gray">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}3</td>
+        <td align="right" class="gray">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
     </tr>
     </tfoot>
 </table>

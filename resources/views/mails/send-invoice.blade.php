@@ -50,10 +50,10 @@
                                 <tr>
                                     <td class="sm-px-24" style="mso-line-height-rule: exactly; border-radius: 4px; background-color: #ffffff; padding: 48px; text-align: left; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 24px; color: #626262;">
                                         <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin-bottom: 0; font-size: 20px; font-weight: 600;">Hola.</p>
-                                        <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin-top: 0; font-size: 24px; font-weight: 700; color: #ff5850;">
+                                        <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin-top: 0; font-size: 24px; font-weight: 700; color: #D85C72; color: #D85C72">
                                             {{ $user->name }}!</p>
                                         <p style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; margin-bottom: 24px;">
-                                            Gracias por comprar uno de nuestro planes. Esta es su orden de compra.
+                                            Gracias por comprar uno de nuestro planes. Esta es tu orden de compra.
                                         </p>
 {{--                                        <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">--}}
 {{--                                            <tr>--}}
@@ -78,7 +78,7 @@
                                                 </td>
                                                 <td style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly;">
                                                     <h3 style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin-top: 0; text-align: right; font-size: 14px; font-weight: 700;">
-                                                        {{ \Carbon\Carbon::parse($invoice->created_at)->format('M d Y')  }}
+                                                        {{ ucwords(\Jenssegers\Date\Date::parse($invoice->created_at)->locale('es')->format('F d Y')) }}
                                                     </h3>
                                                 </td>
                                             </tr>

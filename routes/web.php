@@ -21,8 +21,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/mail', function () {
-//    return view('mails.activation-email');
-    return new \App\Mail\AccountActivation('oamsoamsoamsoas', 'Maria');
+
+    dd(ucwords(\Jenssegers\Date\Date::parse('2023-01-09 13:23:01')->locale('es')->format('F d Y')));
+////    return view('mails.activation-email');
+//    return \Illuminate\Support\Facades\Notification::send(new \App\Notifications\SendInvoiceNotification('Mauro', 'so', 'sp', 's'));
 });
 
 Auth::routes();

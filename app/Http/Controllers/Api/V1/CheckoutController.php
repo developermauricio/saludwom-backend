@@ -82,10 +82,8 @@ class CheckoutController extends Controller
             $patient = Patient::where('user_id', $user->id)->first();
             $amount = $request->amount * 100;
             $user->updateDefaultPaymentMethod($paymentMethod->id);
-//            $payment = $user->charge($amount, $paymentMethod);
             $invoice = $user->invoiceFor($request->plan_name, $amount);
             $order = Order::create([
-                'plan_id' => $request->plan,
                 'patient_id' => $patient->id,
                 'price_total' => $amount
             ]);
@@ -95,49 +93,8 @@ class CheckoutController extends Controller
                 'expiration_date' => $this->validatePeriod($request->expiration_date_plan),
             ]);
             $user->save();
-//            Log::info($payment->status);
-//            if ($payment->status === 'succeeded') {
-//
-//                $order = Order::create([
-//                    'plan_id' => $request->plan,
-//                    'patient_id' => $patient->id,
-//                    'price_total' => $request->amount
-//                ]);
-//                $user->save();
-//            }
             DB::commit();
-//            return response()->json(['status' => 'success', 'data' => ['payment' => $payment, 'Order' => $order]]);
             return response()->json(['status' => 'success', 'data' => ['Invoice' => $invoice, 'Order' => $order]]);
-
-
-//            Log::info($paymentMethod->id);
-//            $user->updateDefaultPaymentMethod($paymentMethod->id);
-//
-//            Log::info($user->hasPaymentMethod());
-//
-//            if (!$user->hasDefaultPaymentMethod()) {
-//                Log::info('ENTRO EN EL IF');
-//                $user->createAsStripeCustomer();
-////                $user->createOrGetStripeCustomer([
-////                    'name' => $user->name . ' ' . $user->last_name,
-////                    'phone' => $user->phone
-////                ]);
-////                $user->createOrGetStripeCustomer();
-//            }
-//
-//
-//            $amount = $request->amount * 100;
-////            $payment = $user->charge([
-////                'amount' => $amount,
-////                'payment_method' => $paymentMethod->id,
-////            ]);
-//            $payment = $user->charge($amount, $paymentMethod);
-//
-//            if ($payment->status === 'succeeded') {
-//                $user->save();
-//            }
-//
-//            return response()->json(['status' => 'success', 'data' => ['payment' => $payment]]);
 
         } catch (\Throwable $th) {
             /* Recibimos el error */

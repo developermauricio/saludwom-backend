@@ -14,10 +14,16 @@ class Order extends Model
     const ACCEPTED = 4;
 
     protected $guarded = ['id'];
-    protected $fillable = ['plan_id', 'patient_id', 'price_total', 'invoice_id', 'coupon', 'state'];
+    protected $fillable = ['plan_id', 'patient_id', 'price_total', 'invoice_id', 'coupon', 'state', 'subscription_id'];
 
     public function plan(){
         return $this->belongsTo(Plan::class, 'plan_id');
+    }
+    public function subscription(){
+        return $this->belongsTo(Subscription::class, 'subscription_id');
+    }
+    public function invoice(){
+        return $this->hasOne(Invoice::class, 'order_id');
     }
 
 }

@@ -14,7 +14,6 @@ class PlanController extends Controller
         DB::beginTransaction();
         try {
             $plans = Plan::all();
-            DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => 'Get Plans',
@@ -29,7 +28,6 @@ class PlanController extends Controller
                 'trace' => $th->getTraceAsString()
             ];
             Log::error('LOG ERROR GET PLANS.', $response); // Guardamos el error en el archivo de logs
-            DB::rollBack(); // Hacemos un rollback para eliminar cualquier registro almacenado en la BD
             return response()->json($response, 500);
         }
     }
