@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Controller;
 use \App\Http\Controllers\Auth\LoginController;
@@ -9,6 +10,7 @@ use \App\Http\Controllers\Api\V1\OrderController;
 use \App\Http\Controllers\Auth\RegisterController;
 use \App\Http\Controllers\Api\V1\PatientController;
 use \App\Http\Controllers\Api\V1\CheckoutController;
+use \App\Http\Controllers\Api\V1\TreatmentController;
 use \App\Http\Controllers\Auth\VerificationController;
 use \App\Http\Controllers\Auth\ResetPasswordController;
 use \App\Http\Controllers\Auth\ForgotPasswordController;
@@ -65,9 +67,14 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA VERIFICAR SI TIENE DOCUMENTO
      =============================================*/
     Route::get('/check-document', [Controller::class, 'checkDocument'])->name('check.document.patient'); /*Permite verificar si el usuario tiene documento*/
+    /*=============================================
+      RUTA PARA LOS TRATAMIENTOS
+     =============================================*/
+    Route::get('get-treatments', [\App\Http\Controllers\Api\V1\TreatmentController::class, 'getTreatments'])->name('get.treatment');
 
 });
 
+Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');
 Route::get('get-document-types', [Controller::class, 'getDocumentTypes'])->name('get.document.types');
 Route::get('get-countries', [Controller::class, 'countries'])->name('get.all.countries');
 Route::get('get-cities-from-country/{country}', [Controller::class, 'citiesFromCountry'])->name('get.city.from.country');

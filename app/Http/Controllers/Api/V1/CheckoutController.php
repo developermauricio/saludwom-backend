@@ -66,19 +66,32 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
-            $check = User::whereEmail($request->email)->first(); // Verificamos si existe el usuario
+//            $check = User::whereEmail($request->email)->first(); // Verificamos si existe el usuario
             Stripe::setApiKey(env('STRIPE_SECRET'));
             $paymentMethod = $this->createCard($request);
-            if (!$check) {
-                $user = User::create([
-                    'name' => $request->name,
-                    'last_name' => $request->lastName,
-                    'email' => $request->email,
-                    'phone' => $request->phone
-                ]);
-            } else {
-                $user = $request->user();
+//            if (!$check) {
+//                $user = User::create([
+//                    'name' => $request->name,
+//                    'last_name' => $request->lastName,
+//                    'email' => $request->email,
+//                    'phone' => $request->phone
+//                ]);
+//            } else {
+//                $user = $request->user();
+//            }
+            Log::info($request->documentNumber);
+            Log::info($request->documentDocumentType);
+            if ($request->documentNumber !== 'null' && $request->documentDocumentType !== 'null'){
+
+                $typeDocument = json_decode($request->documentDocumentType);
+
+                $dataUser = User::find(auth()->user()->id);
+                $dataUser->document = $request->documentNumber;
+                $dataUser->identification_type_id = $typeDocument->id;
+                $dataUser->save();
+
             }
+            $user = $request->user();
             $patient = Patient::where('user_id', $user->id)->first();
             $amount = $request->amount * 100;
             $user->updateDefaultPaymentMethod($paymentMethod->id);

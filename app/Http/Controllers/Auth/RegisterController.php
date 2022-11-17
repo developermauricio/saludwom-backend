@@ -72,6 +72,7 @@ class RegisterController extends Controller
         ]);
         $user->patient()->firstOrCreate([
             'user_id' => $user->id,
+            'gender_id' =>  $data['gender']['id'],
             'patient_type' => 'client'
         ]);
         $user->roles()->attach($role->id); // Asignamos el rol al usuario paciente
