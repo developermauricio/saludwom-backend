@@ -7,6 +7,7 @@ use \App\Http\Controllers\Controller;
 use \App\Http\Controllers\Auth\LoginController;
 use \App\Http\Controllers\Api\V1\PlanController;
 use \App\Http\Controllers\Api\V1\OrderController;
+use \App\Http\Controllers\Api\V1\DoctorController;
 use \App\Http\Controllers\Auth\RegisterController;
 use \App\Http\Controllers\Api\V1\PatientController;
 use \App\Http\Controllers\Api\V1\CheckoutController;
@@ -70,7 +71,11 @@ Route::group(['middleware' => ['auth:api']], function () {
     /*=============================================
       RUTA PARA LOS TRATAMIENTOS
      =============================================*/
-    Route::get('get-treatments', [\App\Http\Controllers\Api\V1\TreatmentController::class, 'getTreatments'])->name('get.treatment');
+    Route::get('get-treatments', [TreatmentController::class, 'getTreatments'])->name('get.treatment');
+    /*=============================================
+      RUTA PARA LOS DOCTORES
+     =============================================*/
+    Route::get('check-schedule-available/{id}', [DoctorController::class, 'scheduleAvailable'])->name('check.schedule.available');
 
 });
 

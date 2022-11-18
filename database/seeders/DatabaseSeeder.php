@@ -4,10 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\CategoryTreatment;
 use App\Models\Doctor;
+use App\Models\DoctorSchedule;
 use App\Models\Gender;
 use App\Models\IdentificationType;
 use App\Models\Patient;
 use App\Models\Plan;
+use App\Models\SchedulesHoursMinute;
 use App\Models\TypeTreatment;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -90,7 +92,7 @@ class DatabaseSeeder extends Seeder
         /*=============================================
             CREAMOS UN USUARIO ADMINISTRADOR
         =============================================*/
-       $admin = User::factory()->count(1)->create([
+        $admin = User::factory()->count(1)->create([
             'name' => 'Admin',
             'last_name' => 'Salud Wom',
             'email' => 'admin@saludwom.com'
@@ -152,7 +154,7 @@ class DatabaseSeeder extends Seeder
             CREAMOS LAS CATEGORIAS DE LOS TRATAMIENTOS
         =============================================*/
         CategoryTreatment::factory()->count(1)->create([
-           'name' => 'Hombre',
+            'name' => 'Hombre',
         ]);
         CategoryTreatment::factory()->count(1)->create([
             'name' => 'Mujer',
@@ -175,8 +177,8 @@ class DatabaseSeeder extends Seeder
 Quiero ayudarte, junt@s trabajaremos por tu bienestar, la terapia consiste en hacer liberación muscular para aliviar el dolor, haremos ejercicios de tonificación y fortalecimiento en tu Complejo Abdominal + Lumbar + Suelo Pélvico, después los trabajaremos en sinergia con los otros músculos para conseguir su equilibrio y estabilidad, esto te ayudará a mantenerte con buena postura en tu día a día.
 El tratamiento lo puedes hacer desde cualquier lugar del mundo, desde la comodidad de tu hogar o si sales de viaje allí estaremos a tu lado, tan solo con un click en cualquier dispositivo electrónico ONLINE, o si lo prefieres PRESENCIAL, primero haremos una valoración corporal y después tendrás tus ejercicios en nuestra plataforma online, tu recuperación la conseguiremos con 7 minutos de ejercicio al día, porque considero que un buen ejercicio que cumpla tus requisitos funcionales puede generarte GRANDES CAMBIOS A CORTO PLAZO...
 ¡VAMOS HACERLO! Junt@s conseguiremos tu cambio :)'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['1','2','3','4']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['1', '2', '3', '4']);
         });
 
         TypeTreatment::factory()->count(1)->create([
@@ -188,8 +190,8 @@ Abdominal + Lumbar + Suelo Pélvico, para las demandas físicas que requiere est
 Estos tratamientos los puedes hacer desde la comodidad de tu hogar ONLINE, o si lo prefieres PRESENCIAL, primero haremos una valoración corporal, después tendrás tus ejercicios en nuestra plataforma online, nuestras pautas de tratamiento son de 7 minutos al día, queremos la efectividad ya que el proceso de adaptación en esta etapa puede ser demandante, por eso te queremos acompañar con tan solo 7 minutos de ejercicio al día para conseguir tu RECUPERACIÓN.
 Tratamientos personalizados:
 Prevención y recuperación de diástasis abdominal, masaje terapéutico, tratamiento para la incontinencia, dolor de espalda, ciática, activación abdominoperienal, ejercicios de kegel, masaje perineal, pujo fisiológico, epino, piernas cansadas y retención de líquidos, pubalgia o dolor en el pubis, reflujo, dolor abdominal, preparación al parto, sensación de pesadez vaginal, ejercicios funcionales personalizados, ligamento redondo, hipopresivos, electroterapia, Indiba, Método 5P, meditaciones y danza.'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
         TypeTreatment::factory()->count(1)->create([
@@ -199,8 +201,8 @@ Los objetivos son restaurar la funcionalidad de los tejidos, atenuar posibles se
 Lo haremos en equipo tu y yo, trabajaremos la movilidad, la elasticidad y la tonificación de las zonas irradiadas, previo al tratamiento haremos una valoración para conocer
 el estado de tu cuerpo.
 El tratamiento lo puedes hacer desde la comodidad de tu hogar ONLINE o PRESENCIAL, cada pauta terapéutica la tendrás en nuestra plataforma online, siempre estaremos conectad@s para lograr los objetivos de tu recuperación.'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
         TypeTreatment::factory()->count(1)->create([
@@ -219,8 +221,8 @@ Tus músculos abdominales se mueven en distintos ejes corporales, siendo protago
 El tratamiento consiste en hacer ejercicio analítico en los músculos débiles, este ejercicio es muy muy personalizado porque buscamos tu mejor respuesta de activación funcional, una vez recuperada la zona, haremos ejercicios evolutivos dinámicos que impliquen la vida diaria y ejercicios posturales para darle equilibrio a las fuerzas musculares.
 Haremos ejercicio con aparatología para aumentar el tono, la fuerza y el colágeno, nuestras pautas de tratamiento te llevarán 7 minutos de ejercicio al día, lograremos tu recuperación siendo efectiv@s en las pautas que te daré.
 El tratamiento lo puedes hacer desde la comodidad de tu hogar ONLINE o PRESENCIAL, cada pauta terapéutica la tendrás en nuestra plataforma online, siempre estaremos conectad@s para lograr los objetivos de tu recuperación.'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
         TypeTreatment::factory()->count(1)->create([
@@ -233,8 +235,8 @@ Con el tratamiento obtendrás como beneficios:
 - Aumento del placer, la sensibilidad y la respuesta sexual.
 El tratamiento lo puedes hacer desde cualquier lugar del mundo, desde la comodidad de tu hogar y si sales de viaje allí estaremos a tu lado, tan solo con un click en cualquier dispositivo electrónico ONLINE, o si lo prefieres PRESENCIAL., previo al fortalecimiento haremos una valoración de la musculatura Abdominal y del Suelo Pélvico, con los resultados de tu valoración haremos nuestro plan de tratamiento, considerando tus deseos y los objetivos que quieres conseguir con este tratamiento.
 El ejercicio que te daré te llevará 7 minutos al día, es personalizado y lo tendrás en nuestra plataforma online.'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
         TypeTreatment::factory()->count(1)->create([
@@ -247,8 +249,8 @@ Con el tratamiento obtendrás como beneficios:
 - Aumento del placer, la sensibilidad y la respuesta sexual.
 El tratamiento lo puedes hacer desde cualquier lugar del mundo, desde la comodidad de tu hogar y si sales de viaje allí estaremos a tu lado, tan solo con un click en cualquier dispositivo electrónico ONLINE, o si lo prefieres PRESENCIAL., previo al fortalecimiento haremos una valoración de la musculatura Abdominal y del Suelo Pélvico, con los resultados de tu valoración haremos nuestro plan de tratamiento, considerando tus deseos y los objetivos que quieres conseguir con este tratamiento.
 El ejercicio que te daré te llevará 7 minutos al día, es personalizado y lo tendrás en nuestra plataforma online.'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['4','2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['4', '2', '1', '3']);
         });
 
         TypeTreatment::factory()->count(1)->create([
@@ -256,15 +258,15 @@ El ejercicio que te daré te llevará 7 minutos al día, es personalizado y lo t
             'description' => 'Abdominales/SueloPélvico Prolapso/Hemorroides Anorgasmia/Estreñimiento Histerectomía/ Eyaculación Precoz/Disfunción Eréctil/Pre-Post Cirugía Perineal
 Vejiga Hiperactiva/ Perdidas de: Orina/Fecal/Gases
 Próstata: Adenoma/Hipertrofia Benigna'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
         TypeTreatment::factory()->count(1)->create([
             'treatment' => 'Tratamientos Multidisciplinares',
             'description' => 'Láser Ginecológico/Cirugía Íntima/Indiba/Infiltraciones/Ondas de Choque'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
         TypeTreatment::factory()->count(1)->create([
@@ -273,130 +275,130 @@ Próstata: Adenoma/Hipertrofia Benigna'
 Síndrome Miofascial/Dolor Pélvico Crónico/ Dolor Vulvar/Prostatitis/Síndrome Pudendal/Síndrome Genitourinario de la menopausia/Prostatitis
 Endometriosis/Dolor Menstrual/Sequedad Vaginal
 Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Procesos Tensiónales del Suelo Pélvico'
-        ])->each(function (TypeTreatment $typeTreatment){
-            $typeTreatment->categories()->attach(['2','1','3']);
+        ])->each(function (TypeTreatment $typeTreatment) {
+            $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
-        $schudleOne = '{"schedules":[
-        {"date": "2022-11-25","hours":[
-                {
-                    "hour": "08:00"
-                },
-                {
-                    "hour": "09:00"
-                },
-                {
-                    "hour": "10:00"
-                },
-                {
-                    "hour": "11:00"
-                },
-                {
-                    "hour": "12:00"
-                }
-            ]
-        },
-        {
-           "date": "2022-11-26",
-           "hours":[
-                {
-                    "hour": "14:00"
-                },
-                {
-                    "hour": "15:00"
-                }
-
-            ]
-        },
-        {
-           "date": "2022-11-27",
-           "hours":[
-                {
-                    "hour": "13:00"
-                },
-                {
-                    "hour": "14:00"
-                },
-                {
-                    "hour": "15:00"
-                }
-
-            ]
-        },
-        {
-           "date": "2022-11-28",
-           "hours":[
-
-                {
-                    "hour": "09:00"
-                }
-
-            ]
-
-        }
-    ]
-}';
-
-        $schudleTwo = '{
-   "schedules":[
-      {
-         "date":"2022-11-23",
-         "hours":[
-            {
-               "hh":"10",
-               "mm":"00"
-            },
-            {
-               "hh":"11",
-               "mm":"00"
-            },
-            {
-               "hh":"16",
-               "mm":"00"
-            }
-         ]
-      },
-      {
-         "date":"2022-11-27",
-         "hours":[
-            {
-               "hh":"10",
-               "mm":"00"
-            },
-            {
-               "hh":"15",
-               "mm":"00"
-            }
-         ]
-      },
-      {
-         "date":"2022-11-28",
-         "hours":[
-            {
-               "hh":"12",
-               "mm":"00"
-            },
-            {
-               "hh":"14",
-               "mm":"00"
-            },
-            {
-               "hh":"13",
-               "mm":"00"
-            }
-         ]
-      },
-      {
-         "date":"2022-11-30",
-         "hours":[
-            {
-               "hh":"09",
-               "mm":"00"
-            }
-         ]
-      }
-   ]
-}';
+//        $schudleOne = '{"schedules":[
+//        {"date": "2022-11-25","hours":[
+//                {
+//                    "hour": "08:00"
+//                },
+//                {
+//                    "hour": "09:00"
+//                },
+//                {
+//                    "hour": "10:00"
+//                },
+//                {
+//                    "hour": "11:00"
+//                },
+//                {
+//                    "hour": "12:00"
+//                }
+//            ]
+//        },
+//        {
+//           "date": "2022-11-26",
+//           "hours":[
+//                {
+//                    "hour": "14:00"
+//                },
+//                {
+//                    "hour": "15:00"
+//                }
+//
+//            ]
+//        },
+//        {
+//           "date": "2022-11-27",
+//           "hours":[
+//                {
+//                    "hour": "13:00"
+//                },
+//                {
+//                    "hour": "14:00"
+//                },
+//                {
+//                    "hour": "15:00"
+//                }
+//
+//            ]
+//        },
+//        {
+//           "date": "2022-11-28",
+//           "hours":[
+//
+//                {
+//                    "hour": "09:00"
+//                }
+//
+//            ]
+//
+//        }
+//    ]
+//}';
+//
+//        $schudleTwo = '{
+//   "schedules":[
+//      {
+//         "date":"2022-11-23",
+//         "hours":[
+//            {
+//               "hh":"10",
+//               "mm":"00"
+//            },
+//            {
+//               "hh":"11",
+//               "mm":"00"
+//            },
+//            {
+//               "hh":"16",
+//               "mm":"00"
+//            }
+//         ]
+//      },
+//      {
+//         "date":"2022-11-27",
+//         "hours":[
+//            {
+//               "hh":"10",
+//               "mm":"00"
+//            },
+//            {
+//               "hh":"15",
+//               "mm":"00"
+//            }
+//         ]
+//      },
+//      {
+//         "date":"2022-11-28",
+//         "hours":[
+//            {
+//               "hh":"12",
+//               "mm":"00"
+//            },
+//            {
+//               "hh":"14",
+//               "mm":"00"
+//            },
+//            {
+//               "hh":"13",
+//               "mm":"00"
+//            }
+//         ]
+//      },
+//      {
+//         "date":"2022-11-30",
+//         "hours":[
+//            {
+//               "hh":"09",
+//               "mm":"00"
+//            }
+//         ]
+//      }
+//   ]
+//}';
 
         /*=============================================
             CREAMOS DOCTOR UNO
@@ -407,13 +409,76 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
             'email' => 'aicode2310@gmail.com',
             'phone' => '+34 675176612',
             'slug' => Str::slug('Mailyn' . '-' . 'Solarte' . '-' . Str::random(8), '-')
-        ])->each(function (User $user) use($schudleOne) {
+        ])->each(function (User $user) {
             Doctor::factory()->count(1)->create([
                 'user_id' => $user->id,
                 'biography' => 'Fisioterapeuta Especialista en Suelo Pélvico, con más de 15 años de experiencia, mi rehabilitación abdominoperineal, es para la mujer, hombre e infante, la rehabilitación es a través del autoconocimiento, utilizando la sinergia, el movimiento funcional, la personalización del ejercicio y su evolución, son mis claves para solucionar las alteraciones posturales, dolor cervical/dorsal/lumbar y las disfunciones abdominales y el suelo pélvico.',
-                'schedule' => $schudleOne
-            ])->each(function (Doctor $doctor){
+            ])->each(function (Doctor $doctor) {
                 $doctor->treatments()->attach(['1', '2']);
+
+                $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
+                    'doctor_id' => $doctor->id,
+                    'date' => '2022-11-20'
+                ])->each(function (DoctorSchedule $doctorSchedule) {
+                    SchedulesHoursMinute::create([
+                       'doctor_schedule_id' => $doctorSchedule->id,
+                       'hour' => '10',
+                       'minute' => '30'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '11',
+                        'minute' => '00'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '14',
+                        'minute' => '30'
+                    ]);
+                });
+
+                $doctorScheduleTwo = DoctorSchedule::factory()->count(1)->create([
+                    'doctor_id' => $doctor->id,
+                    'date' => '2022-11-21'
+                ])->each(function (DoctorSchedule $doctorSchedule) {
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '13',
+                        'minute' => '00'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '15',
+                        'minute' => '30'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '16',
+                        'minute' => '30'
+                    ]);
+                });
+
+                $doctorScheduleThree = DoctorSchedule::factory()->count(1)->create([
+                    'doctor_id' => $doctor->id,
+                    'date' => '2022-11-29'
+                ])->each(function (DoctorSchedule $doctorSchedule) {
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '08',
+                        'minute' => '30'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '11',
+                        'minute' => '00'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '14',
+                        'minute' => '30'
+                    ]);
+                });
+
             });
         });
         /*=============================================
@@ -425,15 +490,77 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
             'email' => 'smgutierrez@unimayor.edu.co',
             'phone' => '+34 675176612',
             'slug' => Str::slug('Maria' . '-' . 'Yanez' . '-' . Str::random(8), '-')
-        ])->each(function (User $user) use($schudleTwo) {
+        ])->each(function (User $user) {
             Doctor::factory()->count(1)->create([
                 'user_id' => $user->id,
                 'biography' => 'Odontóloga graduada de la Universidad del Valle con 7 años de experiencia en el sector.
 Realizó sus estudios de especialización en Rehabilitación Oral en la Universidad Nacional de Colombia, Bogotá, donde estuvo vinculada como docente de clínica en el pregrado de la Facultad.
 Apasionada por el trabajo y la atención a pacientes.',
-                'schedule' => $schudleTwo
-            ])->each(function (Doctor $doctor){
+            ])->each(function (Doctor $doctor) {
                 $doctor->treatments()->attach(['1', '2', '3', '4']);
+
+                $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
+                    'doctor_id' => $doctor->id,
+                    'date' => '2022-11-25'
+                ])->each(function (DoctorSchedule $doctorSchedule) {
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '10',
+                        'minute' => '30'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '11',
+                        'minute' => '00'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '14',
+                        'minute' => '30'
+                    ]);
+                });
+
+                $doctorScheduleTwo = DoctorSchedule::factory()->count(1)->create([
+                    'doctor_id' => $doctor->id,
+                    'date' => '2022-11-27'
+                ])->each(function (DoctorSchedule $doctorSchedule) {
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '13',
+                        'minute' => '00'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '15',
+                        'minute' => '30'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '16',
+                        'minute' => '30'
+                    ]);
+                });
+
+                $doctorScheduleThree = DoctorSchedule::factory()->count(1)->create([
+                    'doctor_id' => $doctor->id,
+                    'date' => '2022-11-30'
+                ])->each(function (DoctorSchedule $doctorSchedule) {
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '08',
+                        'minute' => '30'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '11',
+                        'minute' => '00'
+                    ]);
+                    SchedulesHoursMinute::create([
+                        'doctor_schedule_id' => $doctorSchedule->id,
+                        'hour' => '14',
+                        'minute' => '30'
+                    ]);
+                });
             });
         });
     }

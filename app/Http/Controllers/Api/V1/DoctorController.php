@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-
-use App\Models\TypeTreatment;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
-class TreatmentController extends Controller
+use App\Models\Doctor;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+class DoctorController extends Controller
 {
-    public function getTreatments(){
+    public function scheduleAvailable($id){
         DB::beginTransaction();
         try {
-            $treatments = TypeTreatment::with('categories', 'doctors.user')->get();
+            $scheduleAvailable = Doctor::where('id', $id)->with('user', 'doctorSchedule.schedulesHoursMinutes')->first();
             return response()->json([
                 'success' => true,
-                'message' => 'Get treatments',
-                'response' => 'get_treatments',
-                'data' => $treatments
+                'message' => 'Check schedule available',
+                'response' => 'check_schedule_available',
+                'data' => $scheduleAvailable
             ], 200);
 
         }catch (\Throwable $th){
@@ -28,7 +28,7 @@ class TreatmentController extends Controller
                 'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ];
-            Log::error('LOG ERROR GET TREATMENT.', $response); // Guardamos el error en el archivo de logs
+            Log::error('LOG ERROR CHECK SCHEDULE AVAILABLE.', $response); // Guardamos el error en el archivo de logs
             return response()->json($response, 500);
         }
     }

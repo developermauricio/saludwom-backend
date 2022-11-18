@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,5 +17,12 @@ class Doctor extends Model
 
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function doctorSchedule(){
+        $dateNow = Carbon::now();
+        return $this->hasMany(DoctorSchedule::class, 'doctor_id')
+            ->where('date', '>=', $dateNow->format('Y-m-d'))
+            ->where('state', 'AVAILABLE');
     }
 }

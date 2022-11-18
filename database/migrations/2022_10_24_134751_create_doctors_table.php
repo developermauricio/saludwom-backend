@@ -18,7 +18,7 @@ class CreateDoctorsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->text('biography')->nullable();
-            $table->json('schedule')->nullable();
+//            $table->json('schedule')->nullable();
             $table->timestamps();
         });
     }
