@@ -19,12 +19,17 @@ class CreateAppointmentValuationsTable extends Migration
             $table->foreign('valuation_id')->references('id')->on('valuations');
             $table->unsignedBigInteger('patient_id')->nullable();
             $table->foreign('patient_id')->references('id')->on('patients');
+            $table->unsignedBigInteger('doctor_id')->nullable();
+            $table->foreign('doctor_id')->references('id')->on('doctors');
+            $table->unsignedBigInteger('subscription_id')->nullable();
+            $table->foreign('subscription_id')->references('id')->on('subscriptions');
+            $table->timestamp('date');
             $table->text('description')->nullable();
             $table->enum('state', [
                 \App\Models\AppointmentValuation::PENDING,
                 \App\Models\AppointmentValuation::CANCELLED,
                 \App\Models\AppointmentValuation::FINISHED
-            ]);
+            ])->default(\App\Models\AppointmentValuation::PENDING);
             $table->timestamps();
         });
     }
