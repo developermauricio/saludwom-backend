@@ -17,5 +17,12 @@ use Spatie\Permission\Models\Role;
 
 class PatientController extends Controller
 {
-
+    public function checkSignature(){
+        $patient = Patient::where('user_id',auth()->user()->id)->first();
+        if ($patient->signature !== null && $patient->signature !== 'null' && $patient->signature !== ''){
+            return response()->json($patient->signature);
+        }else{
+            return response()->json('no check signature');
+        }
+    }
 }

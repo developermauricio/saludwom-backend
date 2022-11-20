@@ -12,6 +12,7 @@ use \App\Http\Controllers\Auth\RegisterController;
 use \App\Http\Controllers\Api\V1\PatientController;
 use \App\Http\Controllers\Api\V1\CheckoutController;
 use \App\Http\Controllers\Api\V1\TreatmentController;
+use \App\Http\Controllers\Api\V1\ValorationController;
 use \App\Http\Controllers\Auth\VerificationController;
 use \App\Http\Controllers\Auth\ResetPasswordController;
 use \App\Http\Controllers\Auth\ForgotPasswordController;
@@ -76,6 +77,14 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA LOS DOCTORES
      =============================================*/
     Route::get('check-schedule-available/{id}', [DoctorController::class, 'scheduleAvailable'])->name('check.schedule.available');
+    /*=============================================
+      RUTA PARA LA VALORACIÓN
+     =============================================*/
+    Route::post('create-valoration', [ValorationController::class, 'createValoration'])->name('create.valoration');
+    /*=============================================
+      RUTA PARA PACIENTES
+     =============================================*/
+    Route::get('check-signature', [PatientController::class, 'checkSignature'])->name('check.signature');
 
 });
 
@@ -84,6 +93,7 @@ Route::get('get-document-types', [Controller::class, 'getDocumentTypes'])->name(
 Route::get('get-countries', [Controller::class, 'countries'])->name('get.all.countries');
 Route::get('get-cities-from-country/{country}', [Controller::class, 'citiesFromCountry'])->name('get.city.from.country');
 Route::get('/verify-email-user/{email}', [Controller::class, 'validateEmailApi'])->name('get.validate.email');
+Route::post('/upload-files-valuation', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 
 /*=============================================
       RUTA PARA LAS FACTURAS

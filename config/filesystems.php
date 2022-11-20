@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
+    'default' => env('FILESYSTEM_DRIVER', 'public'),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,6 +51,14 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+        ],
+        'digitalocean' => [
+            'driver' => 's3',
+            'key' => env('DIGITALOCEAN_SPACES_KEY'),
+            'secret' => env('DIGITALOCEAN_SPACES_SECRET'),
+            'endpoint' => env('DIGITALOCEAN_SPACES_ENDPOINT'),
+            'region' => env('DIGITALOCEAN_SPACES_REGION'),
+            'bucket' => env('DIGITALOCEAN_SPACES_BUCKET'),
         ],
 
     ],

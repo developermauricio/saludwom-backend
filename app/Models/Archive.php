@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AppointmentValuation extends Model
+class Archive extends Model
 {
     use HasFactory;
-    const PENDING = 1;
-    const CANCELLED = 2;
-    const FINISHED = 3;
-    const IN_PROGRESS = 5;
 }

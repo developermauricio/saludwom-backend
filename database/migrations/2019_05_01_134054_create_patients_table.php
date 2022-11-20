@@ -19,6 +19,8 @@ class CreatePatientsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('gender_id')->nullable();
             $table->foreign('gender_id')->references('id')->on('genders');
+            $table->string('signature')->nullable();
+            $table->enum('consent_forms', ['ACCEPT', 'NOT_ACCEPT'])->nullable();
             $table->enum('patient_type', [\App\Models\Patient::COURTESY, \App\Models\Patient::CLIENT]);
             $table->timestamps();
         });
