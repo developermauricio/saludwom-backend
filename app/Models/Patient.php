@@ -12,6 +12,8 @@ class Patient extends Model
     protected $fillable = [
         'user_id',
         'gender_id',
+        'signature',
+        'consent_forms',
         'patient_type'
     ];
 
@@ -23,6 +25,10 @@ class Patient extends Model
     }
     public function subcrition(){
         return $this->hasMany(Subscription::class);
+    }
+
+    public function valuations(){
+        return $this->hasMany(Valuation::class);
     }
 
     public function currentSubscrition(){

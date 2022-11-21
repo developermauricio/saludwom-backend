@@ -81,19 +81,20 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA LA VALORACIÓN
      =============================================*/
     Route::post('create-valoration', [ValorationController::class, 'createValoration'])->name('create.valoration');
+
     /*=============================================
       RUTA PARA PACIENTES
      =============================================*/
     Route::get('check-signature', [PatientController::class, 'checkSignature'])->name('check.signature');
 
 });
-
+Route::post('/upload-files-valuation/{id}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');
 Route::get('get-document-types', [Controller::class, 'getDocumentTypes'])->name('get.document.types');
 Route::get('get-countries', [Controller::class, 'countries'])->name('get.all.countries');
 Route::get('get-cities-from-country/{country}', [Controller::class, 'citiesFromCountry'])->name('get.city.from.country');
 Route::get('/verify-email-user/{email}', [Controller::class, 'validateEmailApi'])->name('get.validate.email');
-Route::post('/upload-files-valuation', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
+
 
 /*=============================================
       RUTA PARA LAS FACTURAS

@@ -17,9 +17,16 @@ class Valuation extends Model
     protected $guarded = ['id'];
     protected $fillable = ['name', 'patient_id', 'doctor_id', 'type_treatment_id', 'subscription_id', 'objectives', 'state'];
 
-    public function files()
+    public function archives()
     {
         return $this->morphMany(Archive::class, 'archiveable');
+    }
+
+    public function archive()
+    {
+        $this->archives()->firstOrCreate([
+            'user_id' => auth()->id()
+        ]);
     }
 
 }
