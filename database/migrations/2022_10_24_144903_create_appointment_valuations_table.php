@@ -18,6 +18,9 @@ class CreateAppointmentValuationsTable extends Migration
             $table->unsignedBigInteger('valuation_id')->nullable();
             $table->foreign('valuation_id')->references('id')->on('valuations');
             $table->timestamp('date');
+            $table->string('only_hour');
+            $table->string('only_minute');
+            $table->string('link_meeting');
             $table->enum('state', [
                 \App\Models\AppointmentValuation::PENDING,
                 \App\Models\AppointmentValuation::CANCELLED,

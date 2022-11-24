@@ -14,7 +14,7 @@
         }
     </style>
     <![endif]-->
-    <title>Verificar Cuenta</title>
+    <title>Has sido asignado a un nuevo objetivo</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">
@@ -81,7 +81,7 @@
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">Verifique su dirección de correo electrónico</div>
+<div style="display: none;">Tienes un nuevo objetivo asignado</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
@@ -102,16 +102,16 @@
                                         style="--bg-opacity: 1; background-color: #ffffff; background-color: rgba(255, 255, 255, var(--bg-opacity)); border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 24px; padding: 48px; text-align: left; --text-opacity: 1; color: #626262; color: rgba(98, 98, 98, var(--text-opacity));"
                                         bgcolor="rgba(255, 255, 255, var(--bg-opacity))" align="left">
                                         <p style="font-weight: 600; font-size: 18px; margin-bottom: 0;color: #666666 !important;">
-                                            Hola.</p>
+                                            Estimad@.</p>
                                         <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72;">
-                                            {{ $user->name }}!</p>
+                                           Esp. {{ $doctor['name'] }} {{ $doctor['last_name'] }}</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            Gracias por adquirir uno de nuestros planes. 🤗
+                                            Has sido asignado a un nuevo objetivo llamado {{ $valuation }}. 🔥
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-                                            En este momento tienes activa la suscripción del <strong>{{ $plan->name }}</strong>. Tu plan
-                                            vence {{ ucwords(\Jenssegers\Date\Date::parse($subscription->expiration_date)->locale('es')->format('F d Y')) }}.
+                                            El objetivo es para el tratamiento de <strong>{{$treatment}}</strong>, con el paciente <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong>. <br>
+{{--                                            El objetivo lo has creado con el <strong>{{$plan['name']}}</strong>.--}}
 
                                         </p>
                                         {{--                                        <p style="margin: 0 0 24px; color: #666666 !important;">--}}
@@ -124,9 +124,8 @@
                                             <tr>
                                                 <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"
                                                     bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
-                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_VALORACION')}}"
-                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Comenzar
-                                                        ahora &rarr;</a>
+                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_SHOW_VALORACION')}}"
+                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Ver objetivo &rarr;</a>
                                                 </td>
                                             </tr>
                                         </table>
@@ -184,6 +183,3 @@
 </body>
 
 </html>
-
-
-

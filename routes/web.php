@@ -1,7 +1,9 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Api\V1\StripeWebHookController;
+use MacsiDigital\Zoom\Facades\Zoom;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,15 @@ Route::post('stripe/webhook', [StripeWebHookController::class, 'handleWebHook'])
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/zoom', function () {
+    $zoomMeeting = Zoom::meeting()->make([
+            'topic' => 'Test Create Meeting',
+            'duration' => 15, // In minutes, optional
+            'start_time' => new Carbon('2022-11-22 20:00:00'),
+            'timezone' => 'Asia/Jakarta',
+        ]);
+    return response()->json($zoomMeeting);
 });
 Route::get('/mail', function () {
 

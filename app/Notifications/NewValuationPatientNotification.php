@@ -6,21 +6,28 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class NewValuationPatientNotification extends Notification
 {
     use Queueable;
     protected $user;
+    protected $doctor;
     protected $valuation;
-    protected $schedule;
+    protected $plan;
+    protected $treatment;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user, $doctor, $valuation, $plan, $treatment)
     {
-        //
+        $this->user = $user;
+        $this->doctor = $doctor;
+        $this->valuation = $valuation;
+        $this->treatment = $treatment;
+        $this->plan = $plan;
     }
 
     /**
@@ -31,7 +38,7 @@ class NewValuationPatientNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -43,9 +50,14 @@ class NewValuationPatientNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject(config('app.name') . ' - ' . 'CONFIRMACIÓN DE UN NUEVO OBJETIVO CREADO')
+            ->markdown('mails.new-valuation-notification-patient', [
+                'user' => $this->user,
+                'plan' => $this->plan,
+                'doctor' => $this->doctor,
+                'valuation' => $this->valuation,
+                'treatment' => $this->treatment,
+            ]);
     }
 
     /**
@@ -57,7 +69,9 @@ class NewValuationPatientNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'link' => env('LINK_SHOW_VALORACION'),
+            'title' => 'Tienes un nuevo objetivo creado',
+            'description' => 'Pronto el doctor enviará los recursos para iniciar el plan de tratamiento.'
         ];
     }
 }

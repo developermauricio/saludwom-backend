@@ -12,4 +12,7 @@ class AppointmentValuation extends Model
     const CANCELLED = 2;
     const FINISHED = 3;
     const IN_PROGRESS = 5;
+
+    protected $guarded = ['id'];
+    protected $fillable = ['valuation_id', 'date', 'only_hour', 'only_minute', 'state', 'link_meeting'];
 }

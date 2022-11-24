@@ -15,10 +15,10 @@ class Doctor extends Model
         return $this->belongsToMany(TypeTreatment::class, 'doctor_type_treatment', 'doctor_id', 'type_treatment_id');
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
-
     public function doctorSchedule(){
         $dateNow = Carbon::now();
         return $this->hasMany(DoctorSchedule::class, 'doctor_id')

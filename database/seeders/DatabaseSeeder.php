@@ -406,11 +406,13 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
         User::factory()->count(1)->create([
             'name' => 'Mailyn',
             'last_name' => 'Solarte',
-            'email' => 'aicode2310@gmail.com',
+            'email' => 'developer.mauricio2310@gmail.com',
             'phone' => '+34 675176612',
             'slug' => Str::slug('Mailyn' . '-' . 'Solarte' . '-' . Str::random(8), '-')
         ])->each(function (User $user) {
             Doctor::factory()->count(1)->create([
+                'zoom_api_key' => 'kcrItEiYRyaAeeli7ongAA',
+                'zoom_api_secret' => 'NpxY33l8R40SpI7RxdgjZvdcth7vIwHo0EfG',
                 'user_id' => $user->id,
                 'biography' => 'Fisioterapeuta Especialista en Suelo Pélvico, con más de 15 años de experiencia, mi rehabilitación abdominoperineal, es para la mujer, hombre e infante, la rehabilitación es a través del autoconocimiento, utilizando la sinergia, el movimiento funcional, la personalización del ejercicio y su evolución, son mis claves para solucionar las alteraciones posturales, dolor cervical/dorsal/lumbar y las disfunciones abdominales y el suelo pélvico.',
             ])->each(function (Doctor $doctor) {
@@ -418,7 +420,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-20'
+                    'date' => '2022-11-27',
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                        'doctor_schedule_id' => $doctorSchedule->id,
@@ -439,7 +441,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleTwo = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-21'
+                    'date' => '2022-11-30'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -460,7 +462,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleThree = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-29'
+                    'date' => '2022-12-16'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -492,6 +494,8 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
             'slug' => Str::slug('Maria' . '-' . 'Yanez' . '-' . Str::random(8), '-')
         ])->each(function (User $user) {
             Doctor::factory()->count(1)->create([
+                'zoom_api_key' => '',
+                'zoom_api_secret' => '',
                 'user_id' => $user->id,
                 'biography' => 'Odontóloga graduada de la Universidad del Valle con 7 años de experiencia en el sector.
 Realizó sus estudios de especialización en Rehabilitación Oral en la Universidad Nacional de Colombia, Bogotá, donde estuvo vinculada como docente de clínica en el pregrado de la Facultad.
