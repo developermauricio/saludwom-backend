@@ -14,7 +14,7 @@
         }
     </style>
     <![endif]-->
-    <title>{{ count($appointments) > 0 ? 'Tus citas ' : 'Tu cita ' }} }} en Salud WoM</title>
+    <title>{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el tratamiento de {{$treatment}}</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">
@@ -82,7 +82,7 @@
 
 <body
     style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">{{count($appointments) > 0 ? 'Tus citas ' : 'Tu cita ' }}para el tratamiento de {{$treatment}} se encuentra confirmada.</div>
+<div style="display: none;">{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el tratamiento de {{$treatment}}</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%"
            cellpadding="0" cellspacing="0" role="presentation">
@@ -112,12 +112,12 @@
                                         style="--bg-opacity: 1; background-color: #ffffff; background-color: rgba(255, 255, 255, var(--bg-opacity)); border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 24px; padding: 48px; text-align: left; --text-opacity: 1; color: #626262; color: rgba(98, 98, 98, var(--text-opacity));"
                                         bgcolor="rgba(255, 255, 255, var(--bg-opacity))" align="left">
                                         <p style="font-weight: 600; font-size: 18px; margin-bottom: 0;color: #666666 !important;">
-                                            Hola.</p>
+                                            Estimad@.</p>
                                         <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72;">
-                                            {{ $user['name'] }}!</p>
+                                            Esp. {{ $doctor['name'] }} {{ $doctor['last_name'] }}!</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            {{ count($appointments) > 0 ? 'Tus citas ' : 'Tu cita ' }}para el tratamiento de {{$treatment}}   {{ count($appointments) > 0 ? 'han sido' : 'ha sido' }} {{ count($appointments) > 0 ? 'confirmadas' : 'confirmada' }}. 🗓
+                                            {{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el tratamiento de {{$treatment}}. 🗓
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
 {{--                                            Especialista:--}}
@@ -128,7 +128,7 @@
                                         @foreach($appointments as $key => $appointment)
                                             <p style="margin: 0 0 24px;color: #666666 !important;">
                                                 Tu cita #{{ ($key + 1) }}<br>
-                                                Especialista: <strong>{{ $appointment->doctor['user']['name'] }} {{ $appointment->doctor['user']['last_name'] }}</strong><br>
+                                                Paciente: <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong><br>
                                                 Fecha: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date)->locale('es')->format('l F d Y')) }}</strong><br>
                                                 Hora: <strong>{{ $appointment->only_hour.":".$appointment->only_minute }}</strong><br>
                                                 Link Zoom: <a href="{{ $appointment->link_meeting }}">{{ $appointment->link_meeting }}</a>

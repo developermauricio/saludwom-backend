@@ -14,7 +14,7 @@ class Order extends Model
     const ACCEPTED = 4;
 
     protected $guarded = ['id'];
-    protected $fillable = ['plan_id', 'patient_id', 'price_total', 'invoice_id', 'coupon', 'state', 'subscription_id'];
+    protected $fillable = ['plan_id', 'patient_id', 'price_total', 'invoice_id', 'coupon_id', 'state', 'subscription_id', 'discount'];
 
     public function plan(){
         return $this->belongsTo(Plan::class, 'plan_id');

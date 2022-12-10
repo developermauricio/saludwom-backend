@@ -12,6 +12,7 @@ use App\Models\SchedulesHoursMinute;
 use App\Models\Subscription;
 use App\Models\TypeTreatment;
 use App\Models\Valuation;
+use App\Notifications\NewScheduleDoctorNotification;
 use App\Notifications\NewSchedulePatientNotification;
 use App\Notifications\NewValuationDoctorNotification;
 use App\Notifications\NewValuationPatientNotification;
@@ -31,14 +32,16 @@ class ValorationController extends Controller
         DB::beginTransaction();
         $signature = null;
         $patient = Patient::where('user_id', auth()->user()->id)->with('user')->first();
+        $doctorValoration =  Doctor::where('id', $request['doctorId'])->with('user')->first();
         $subscription = Subscription::where('id', $request['subscriptionId'])->with('plan')->first();
         $treatment = TypeTreatment::where('id', $request['selectedTreatment']['id'])->first();
 
         try {
+            /*Creamos la firma en un formato válido y lo guardamos en el storage */
             if ($request['signature']) {
                 $signature = env('FILES_UPLOAD_PRODUCTION') === false ? $this->uploadSignaturePatientLocal($request['signature']['data']) : $this->uploadSignaturePatientStorage($request['signature']['data']);
             }
-
+            /*Si el request viene con firma, le asignamos la firma y aceptamos los consentimientos*/
             if ($signature) {
                 $patient->signature = $signature;
                 $patient->consent_forms = 'accept';
@@ -59,7 +62,7 @@ class ValorationController extends Controller
                     $doctorSchedule = DoctorSchedule::where('doctor_id', $appointment['doctor']['id'])->where('date',  $appointment['date'].' 00:00:00')->first();
 
                     if ($doctorSchedule){
-
+                        /*Actualizamos los horario a no diponible o seleccionado*/
                         $scheduleHoursMinute = SchedulesHoursMinute::where('doctor_schedule_id',  $doctorSchedule->id)->where('hour', $appointment['onlyHour'])->where('minute', $appointment['onlyMinute'])->first();
                         $scheduleHoursMinute->state = 'SELECTED';
                         $scheduleHoursMinute->save();
@@ -67,6 +70,7 @@ class ValorationController extends Controller
                         $doctor =  Doctor::where('id', $appointment['doctor']['id'])->with('user')->first();
                         /* Válidamos las credenciales de acceso de zoom del doctor para poder crear reuniones*/
                         config(['zoom.api_key' => $doctor->zoom_api_key, 'zoom.api_secret' => $doctor->zoom_api_secret]);
+                        /*Creamos la reunión en zoom*/
                         $zoomMeeting = Zoom::user()->find($doctor->user->email)
                             ->meetings()->create([
                                 'topic' => 'Cita con el paciente ' .$patient->user->name.' '.$patient->user->last_name.' '.Str::random(5),
@@ -74,7 +78,7 @@ class ValorationController extends Controller
                                 'start_time' => new Carbon($appointment['date']. " " .$appointment['onlyHour'].":".$appointment['onlyMinute'].":00"),
                                 'timezone' => 'Europe/Madrid',
                             ]);
-
+                        /*Creamos la cita*/
                         $appointmentValuation = AppointmentValuation::create([
                             'valuation_id' =>  $valuation->id,
                             'date' => $appointment['date'].' 00:00:00',
@@ -83,8 +87,7 @@ class ValorationController extends Controller
                             'link_meeting' => $zoomMeeting->join_url
                         ]);
 
-
-
+                        /*Creamos el objeto que enviaremos al correo electrónico*/
                         $appointmentDoctor[] = (object)[
                             'doctor' => $doctor,
                             'link_meeting' => $appointmentValuation->link_meeting,
@@ -97,9 +100,18 @@ class ValorationController extends Controller
                 }
 
 
-
+                /*Notificamos al paciente de las citas creadas*/
                 $patient->user->notify(new NewSchedulePatientNotification(
                     $patient->user,
+                    $appointmentDoctor,
+                    $subscription->plan,
+                    $treatment->treatment
+                ));
+
+                /*Notificamos al doctor de las citas creadas*/
+                $doctorValoration->user->notify(new NewScheduleDoctorNotification(
+                    $patient->user,
+                    $doctorValoration->user,
                     $appointmentDoctor,
                     $subscription->plan,
                     $treatment->treatment
@@ -107,21 +119,22 @@ class ValorationController extends Controller
             }
 
 
-
-//            $patient->user->notify(new NewValuationPatientNotification(
-//                $patient->user,
-//                $doctor->user,
-//                $valuation->name,
-//                $subscription->plan,
-//                $treatment->treatment
-//            ));
-//            $doctor->user->notify(new NewValuationDoctorNotification(
-//                $patient->user,
-//                $doctor->user,
-//                $valuation->name,
-//                $subscription->plan,
-//                $treatment->treatment
-//            ));
+            /*Notificamos al paciente de que ha creado una nueva valoració u objetivo*/
+            $patient->user->notify(new NewValuationPatientNotification(
+                $patient->user,
+                $doctorValoration->user,
+                $valuation->name,
+                $subscription->plan,
+                $treatment->treatment
+            ));
+            /*Notificamos al doctor que ha sido asignado a una nueva valoración u objetivo */
+            $doctorValoration->user->notify(new NewValuationDoctorNotification(
+                $patient->user,
+                $doctorValoration->user,
+                $valuation->name,
+                $subscription->plan,
+                $treatment->treatment
+            ));
 
             DB::commit();
             return response()->json([

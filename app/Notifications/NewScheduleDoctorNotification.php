@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
@@ -11,23 +12,23 @@ use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
 use Spatie\IcalendarGenerator\Properties\TextProperty;
 
-class NewSchedulePatientNotification extends Notification
+class NewScheduleDoctorNotification extends Notification
 {
     use Queueable;
-
     protected $user;
+    protected $doctor;
     protected $appointments;
     protected $plan;
     protected $treatment;
-
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user, $appointments, $plan, $treatment)
+    public function __construct($user, $doctor, $appointments, $plan, $treatment)
     {
         $this->user = $user;
+        $this->doctor = $doctor;
         $this->appointments = $appointments;
         $this->plan = $plan;
         $this->treatment = $treatment;
@@ -36,7 +37,7 @@ class NewSchedulePatientNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -47,21 +48,21 @@ class NewSchedulePatientNotification extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
-        $subject = count($this->appointments) > 0 ? 'CONFIRMACIÓN DE TUS CITA' : 'CONFIRMACIÓN DE TU CITA';
+        $subject = count($this->appointments) > 0 ? 'NUEVAS CITAS PROGRAMADAS' : 'NUEVA CITA PROGRAMADA';
         $email = (new MailMessage)
-            ->subject(config('app.name') . ' - ' . $subject);
+            ->subject(config('app.name') . ' - ' .$subject);
 
         foreach ($this->appointments as $key => $appointment) {
             $calendar = Calendar::create()
                 ->productIdentifier(Str::random(5).'-descargar-agenda.cz')
                 ->event(function (Event $event) use ($appointment, $key) {
-                    $event->name('Tu cita #' . ($key + 1) . ' para tu tratamiento agendada para el ')
-                        ->attendee($appointment->doctor['user']['email'])
+                    $event->name('Cita #' . ($key + 1) . ' para el tratamiento agendada para el ')
+                        ->attendee($this->user['email'])
                         ->startsAt(Carbon::parse($appointment->date . " " . $appointment->only_hour . ":" . $appointment->only_minute . ":00"));
                 });
             $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
@@ -73,29 +74,29 @@ class NewSchedulePatientNotification extends Notification
 
 
 
-        $email->markdown('mails.new-schedule-notification-patient', [
+        $email->markdown('mails.new-schedule-notification-doctor', [
             'user' => $this->user,
+            'doctor' => $this->doctor,
             'plan' => $this->plan,
             'appointments' => $this->appointments,
             'treatment' => $this->treatment,
 
         ]);
         return $email;
-
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
             'link' => '',
-            'title' => count($this->appointments) > 0 ? 'Tus citas han sido agendadas' : 'Tu cita ha sido agendada',
-            'description' => count($this->appointments) > 0 ? 'Tus citas han sido programadas' : 'Tu cita ha sido programada'.', clic para ver mis citas'
+            'title' => count($this->appointments) > 0 ? 'Nuevas citas programadas' : 'Nueva cita programada ',
+            'description' => count($this->appointments) > 0 ? 'Han sido programadas varias citas con el paciente' : 'Ha sido programada la cita con el paciente '. $this->user['name'].' '.$this->user['last_name']
         ];
     }
 }

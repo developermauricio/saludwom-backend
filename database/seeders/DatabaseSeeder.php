@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CategoryTreatment;
+use App\Models\Coupon;
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
 use App\Models\Gender;
@@ -54,7 +55,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Femenino'
         ]);
         Gender::factory()->count(1)->create([
-            'name' => 'Prefiero no decirlo'
+            'name' => 'Otro'
         ]);
 //        Gender::factory()->count(1)->create([
 //            'name' => 'No reporta género'
@@ -120,16 +121,18 @@ class DatabaseSeeder extends Seeder
             'price' => 80,
             'user_id' => 1,
             'number_appointments' => 2,
+            'time_interval_appointments' => 15,
             'period' => 'month',
             'image_background' => '/assets/images/plans/plan-esmeralda.png'
         ]);
         Plan::factory()->count(1)->create([
-            'name' => 'Plan Diamante',
+            'name' => 'Plan Rubí',
             'currency' => 'EUR',
             'description' => '4 citas online de 30 minutos 120€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
             'price' => 140,
             'user_id' => 1,
             'number_appointments' => 4,
+            'time_interval_appointments' => 7,
             'period' => 'month',
             'image_background' => '/assets/images/plans/plan-rubi.png'
         ]);
@@ -279,127 +282,6 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
             $typeTreatment->categories()->attach(['2', '1', '3']);
         });
 
-//        $schudleOne = '{"schedules":[
-//        {"date": "2022-11-25","hours":[
-//                {
-//                    "hour": "08:00"
-//                },
-//                {
-//                    "hour": "09:00"
-//                },
-//                {
-//                    "hour": "10:00"
-//                },
-//                {
-//                    "hour": "11:00"
-//                },
-//                {
-//                    "hour": "12:00"
-//                }
-//            ]
-//        },
-//        {
-//           "date": "2022-11-26",
-//           "hours":[
-//                {
-//                    "hour": "14:00"
-//                },
-//                {
-//                    "hour": "15:00"
-//                }
-//
-//            ]
-//        },
-//        {
-//           "date": "2022-11-27",
-//           "hours":[
-//                {
-//                    "hour": "13:00"
-//                },
-//                {
-//                    "hour": "14:00"
-//                },
-//                {
-//                    "hour": "15:00"
-//                }
-//
-//            ]
-//        },
-//        {
-//           "date": "2022-11-28",
-//           "hours":[
-//
-//                {
-//                    "hour": "09:00"
-//                }
-//
-//            ]
-//
-//        }
-//    ]
-//}';
-//
-//        $schudleTwo = '{
-//   "schedules":[
-//      {
-//         "date":"2022-11-23",
-//         "hours":[
-//            {
-//               "hh":"10",
-//               "mm":"00"
-//            },
-//            {
-//               "hh":"11",
-//               "mm":"00"
-//            },
-//            {
-//               "hh":"16",
-//               "mm":"00"
-//            }
-//         ]
-//      },
-//      {
-//         "date":"2022-11-27",
-//         "hours":[
-//            {
-//               "hh":"10",
-//               "mm":"00"
-//            },
-//            {
-//               "hh":"15",
-//               "mm":"00"
-//            }
-//         ]
-//      },
-//      {
-//         "date":"2022-11-28",
-//         "hours":[
-//            {
-//               "hh":"12",
-//               "mm":"00"
-//            },
-//            {
-//               "hh":"14",
-//               "mm":"00"
-//            },
-//            {
-//               "hh":"13",
-//               "mm":"00"
-//            }
-//         ]
-//      },
-//      {
-//         "date":"2022-11-30",
-//         "hours":[
-//            {
-//               "hh":"09",
-//               "mm":"00"
-//            }
-//         ]
-//      }
-//   ]
-//}';
-
         /*=============================================
             CREAMOS DOCTOR UNO
         =============================================*/
@@ -505,7 +387,7 @@ Apasionada por el trabajo y la atención a pacientes.',
 
                 $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-25'
+                    'date' => '2022-11-29'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -526,7 +408,7 @@ Apasionada por el trabajo y la atención a pacientes.',
 
                 $doctorScheduleTwo = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-27'
+                    'date' => '2022-11-30'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -547,7 +429,7 @@ Apasionada por el trabajo y la atención a pacientes.',
 
                 $doctorScheduleThree = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-30'
+                    'date' => '2022-12-02'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -565,6 +447,18 @@ Apasionada por el trabajo y la atención a pacientes.',
                         'minute' => '30'
                     ]);
                 });
+
+                /*=============================================
+                    CREAMOS LOS CUPONES DE DESCUENTO
+                 =============================================*/
+                Coupon::factory()->count(1)->create([
+                    "name" => 'AmorSaludWom',
+                    "discount" => 10,
+                    "description" => 'Este cupon es para uso solo en tiempos de febrero en amor y amistad',
+                    "create_user_id" => 1,
+                    "date_expiration" => "2022-12-15",
+                    "limit_use" => 2
+                ]);
             });
         });
     }

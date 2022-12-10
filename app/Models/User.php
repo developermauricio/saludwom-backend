@@ -92,4 +92,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasOne(Patient::class, 'user_id');
     }
 
+    public function identificationType(){
+        return $this->belongsTo(IdentificationType::class, 'identification_type_id');
+    }
+
 }

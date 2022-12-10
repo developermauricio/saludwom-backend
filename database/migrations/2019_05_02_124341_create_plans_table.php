@@ -22,6 +22,7 @@ class CreatePlansTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('number_appointments')->nullable();
+            $table->integer('time_interval_appointments')->default(0)->nullable();
             $table->enum('period', [
                 \App\Models\Plan::WEEK,
                 \App\Models\Plan::MONTH,

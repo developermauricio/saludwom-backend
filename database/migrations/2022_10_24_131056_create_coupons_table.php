@@ -15,11 +15,14 @@ class CreateCouponsTable extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->mediumText('description')->nullable();
             $table->double('discount');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('create_user_id')->nullable();
+            $table->foreign('create_user_id')->references('id')->on('users');
+            $table->timestamp('date_expiration')->nullable();
+            $table->integer('limit_use')->default(1);
+            $table->json('except_plans')->nullable();
             $table->enum('state', [
                 \App\Models\Coupon::ACTIVE,
                 \App\Models\Coupon::INACTIVE

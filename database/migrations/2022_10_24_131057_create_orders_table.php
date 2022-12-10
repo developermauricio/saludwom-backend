@@ -22,7 +22,8 @@ class CreateOrdersTable extends Migration
             $table->double('price_total');
             $table->string('invoice_id')->nullable()->comment('Factura generada por stripe');
             $table->double('discount')->nullable();
-            $table->string('coupon')->nullable();
+            $table->foreign('coupon_id')->references('id')->on('coupons');
+            $table->unsignedBigInteger('coupon_id')->nullable();
             $table->enum('state', [
                 \App\Models\Order::PENDING,
                 \App\Models\Order::CANCELLED,

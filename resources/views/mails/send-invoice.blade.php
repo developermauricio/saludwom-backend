@@ -109,12 +109,38 @@
                                                         <tr>
                                                             <td style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; width: 80%;">
                                                                 <p align="right" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; padding-right: 16px; text-align: right; font-size: 16px; font-weight: 700; line-height: 24px;">
-                                                                    Total
+                                                                    Costo Plan
                                                                 </p>
                                                             </td>
                                                             <td style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; width: 20%;">
                                                                 <p align="right" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; text-align: right; font-size: 16px; font-weight: 700; line-height: 24px;">
                                                                     {{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; width: 80%;">
+                                                                <p align="right" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; padding-right: 16px; text-align: right; font-size: 16px; font-weight: 700; line-height: 24px;">
+                                                                    Descuento
+                                                                </p>
+                                                            </td>
+                                                            <td style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; width: 20%;">
+                                                                <p align="right" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; text-align: right; font-size: 16px; line-height: 24px;">
+                                                                    @php($totalDiscount = $order->price_total - $order->discount)
+                                                                    {{ $order->discount ? new \Akaunting\Money\Money($totalDiscount, new \Akaunting\Money\Currency('EUR')) : new \Akaunting\Money\Money(0, new \Akaunting\Money\Currency('EUR')) }}
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; width: 80%;">
+                                                                <p align="right" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; padding-right: 16px; text-align: right; font-size: 16px; font-weight: 700; line-height: 24px;">
+                                                                    Costo Total
+                                                                </p>
+                                                            </td>
+                                                            <td style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; width: 20%;">
+                                                                <p align="right" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; margin: 0; text-align: right; font-size: 16px; line-height: 24px;">
+
+                                                                    {{ $order->discount ? new \Akaunting\Money\Money($order->discount, new \Akaunting\Money\Currency('EUR')) :  new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}
                                                                 </p>
                                                             </td>
                                                         </tr>

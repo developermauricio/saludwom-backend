@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\IdentificationType;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Patient;
@@ -30,9 +31,9 @@ class StripeWebHookController extends WebhookController
         $invoice_id = $payload['data']['object']["invoice"];
         Log::info(json_encode($payload));
         $user = $this->getUserByStripeId($payload['data']['object']['customer']);
-        $patient = Patient::where('user_id', $user->id)->first();
+        $patient = Patient::where('user_id', $user->id)->with('user.identificationType')->first();
         $subscription = $patient->subcrition()->latest()->first();
-        Log::info(json_encode($subscription->plan));
+        Log::info(json_encode($subscription));
         DB::beginTransaction();
         try {
             if ($patient) {

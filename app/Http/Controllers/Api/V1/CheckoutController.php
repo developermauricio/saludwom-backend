@@ -63,6 +63,7 @@ class CheckoutController extends Controller
     }
     public function paymentStripe(Request $request)
     {
+        Log::info($request);
 
         DB::beginTransaction();
         try {
@@ -79,7 +80,7 @@ class CheckoutController extends Controller
 //            } else {
 //                $user = $request->user();
 //            }
-            Log::info($request->documentNumber);
+
             Log::info($request->documentDocumentType);
             if ($request->documentNumber !== 'null' && $request->documentDocumentType !== 'null'){
 
@@ -98,7 +99,9 @@ class CheckoutController extends Controller
             $invoice = $user->invoiceFor($request->plan_name, $amount);
             $order = Order::create([
                 'patient_id' => $patient->id,
-                'price_total' => $amount
+                'price_total' => $request->total * 100,
+                'discount' => $request->discount === 'null' ? null : $request->discount * 100,
+                'coupon_id' => $request->coupon === 'null'  ? null : $request->coupon
             ]);
             Subscription::create([
                 'plan_id' => $request->plan,

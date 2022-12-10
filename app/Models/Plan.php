@@ -16,7 +16,7 @@ class Plan extends Model
     const INACTIVE = 2;
 
     protected $guarded = ['id'];
-    protected $fillable = ['name', 'currency', 'description', 'price', 'user_id', 'number_appointments', 'period', 'image_background', 'state'];
+    protected $fillable = ['name', 'currency', 'description', 'price', 'user_id', 'number_appointments', 'period', 'image_background', 'state', 'time_interval_appointments'];
 
     public function subscription(){
         $this->hasOne(Subscription::class, 'plan_id');

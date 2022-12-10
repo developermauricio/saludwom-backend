@@ -15,7 +15,9 @@ class OrderController extends Controller
     public function getOrdersPatient(){
         $patient = Patient::where('user_id', auth()->id())->first();
         try {
-            $orders = Order::where('patient_id', $patient->id)->with('subscription.plan')->get();
+            $orders = Order::where('patient_id', $patient->id)
+                ->orderBy('created_at', 'DESC')
+                ->with('subscription.plan')->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Get Orders Patient',

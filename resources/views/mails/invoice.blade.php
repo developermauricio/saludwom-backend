@@ -8,14 +8,18 @@
         * {
             font-family: Verdana, Arial, sans-serif;
         }
-        table{
+
+        table {
             font-size: x-small;
         }
-        tfoot tr td{
+
+        tfoot tr td {
             font-weight: bold;
             font-size: x-small;
         }
+
         .gray {
+            width: 3.2rem;
             background-color: lightgray
         }
     </style>
@@ -25,7 +29,8 @@
 
 <table width="100%">
     <tr>
-        <td valign="top"><img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWom" width="150"/></td>
+        <td valign="top"><img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWom"
+                              width="150"/></td>
         <td align="right">
             <h3>{{ env('APP_NAME') }}</h3>
             <pre>
@@ -43,6 +48,8 @@
     <tr>
         <td>
             <strong>Cliente:</strong> {{$user->name}} {{$user->last_name}} <br>
+            <strong>Tipo de identificacnón:</strong> {{$user->identificationType->name}} <br>
+            <strong>Nº Identificación:</strong> {{$user->document }} <br>
             <strong>Correo electrónico:</strong> {{$user->email}} <br>
             <strong>Teléfono:</strong> {{$user->phone}} <br>
         </td>
@@ -77,20 +84,34 @@
     </tbody>
 
     <tfoot>
-{{--{{--    <tr>--}}{{--
---}}{{--        <td colspan="3"></td>--}}{{--
---}}{{--        <td align="right">Subtotal $</td>--}}{{--
---}}{{--        <td align="right">1635.00</td>--}}{{--
---}}{{--    </tr>--}}{{--
---}}{{--    <tr>--}}{{--
---}}{{--        <td colspan="3"></td>--}}{{--
---}}{{--        <td align="right">Tax $</td>--}}{{--
---}}{{--        <td align="right">294.3</td>--}}{{--
---}}{{--    </tr>--}}--}}
+    {{--{{--    <tr>--}}{{--
+    --}}{{--        <td colspan="3"></td>--}}{{--
+    --}}{{--        <td align="right">Subtotal $</td>--}}{{--
+    --}}{{--        <td align="right">1635.00</td>--}}{{--
+    --}}{{--    </tr>--}}{{--
+    --}}{{--    <tr>--}}{{--
+    --}}{{--        <td colspan="3"></td>--}}{{--
+    --}}{{--        <td align="right">Tax $</td>--}}{{--
+    --}}{{--        <td align="right">294.3</td>--}}{{--
+    --}}{{--    </tr>--}}--}}
     <tr>
         <td colspan="3"></td>
-        <td align="right">Total</td>
-        <td align="right" class="gray">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
+        <td align="right">Costo Plan</td>
+        <td align="right"
+            class="gray">{{ new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td align="right">Descuento</td>
+        <td align="right" class="gray">
+            @php($totalDiscount = $order->price_total - $order->discount)
+            {{ $order->discount ? new \Akaunting\Money\Money($totalDiscount, new \Akaunting\Money\Currency('EUR')) : new \Akaunting\Money\Money(0, new \Akaunting\Money\Currency('EUR')) }}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td align="right">Costo Total</td>
+        <td align="right" class="gray">{{ $order->discount ? new \Akaunting\Money\Money($order->discount, new \Akaunting\Money\Currency('EUR')) :  new \Akaunting\Money\Money($order->price_total, new \Akaunting\Money\Currency('EUR')) }}</td>
     </tr>
     </tfoot>
 </table>

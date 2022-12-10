@@ -7,6 +7,7 @@ use \App\Http\Controllers\Controller;
 use \App\Http\Controllers\Auth\LoginController;
 use \App\Http\Controllers\Api\V1\PlanController;
 use \App\Http\Controllers\Api\V1\OrderController;
+use \App\Http\Controllers\Api\V1\CouponController;
 use \App\Http\Controllers\Api\V1\DoctorController;
 use \App\Http\Controllers\Auth\RegisterController;
 use \App\Http\Controllers\Api\V1\PatientController;
@@ -86,6 +87,11 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA PACIENTES
      =============================================*/
     Route::get('check-signature', [PatientController::class, 'checkSignature'])->name('check.signature');
+
+    /*=============================================
+      RUTA PARA CUPONES
+     =============================================*/
+    Route::post('apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon');
 
 });
 Route::post('/upload-files-valuation/{id}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
