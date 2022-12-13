@@ -120,33 +120,25 @@
                                             {{ count($appointments) > 0 ? 'Tus citas ' : 'Tu cita ' }}para el tratamiento de {{$treatment}}   {{ count($appointments) > 0 ? 'han sido' : 'ha sido' }} {{ count($appointments) > 0 ? 'confirmadas' : 'confirmada' }}. 🗓
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-{{--                                            Especialista:--}}
-{{--                                            <strong>{{ $appointments->doctor['user']['name'] }} {{ $appointments->doctor['user']['last_name'] }}</strong><br>--}}
+                                            {{--                                            Especialista:--}}
+                                            {{--                                            <strong>{{ $appointments->doctor['user']['name'] }} {{ $appointments->doctor['user']['last_name'] }}</strong><br>--}}
                                             Tratamiento: <strong>{{ $treatment }}</strong><br>
                                         </p>
                                         <p><strong>Información {{ count($appointments) > 0 ? 'tus citas.' : 'tu cita.' }}</strong></p><br>
+                                        @php(\Carbon\Carbon::setLocale(config('app.locale')))
                                         @foreach($appointments as $key => $appointment)
+                                            @php($dateTimezoneUser = \Carbon\Carbon::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->timezone($appointment->timezone))
                                             <p style="margin: 0 0 24px;color: #666666 !important;">
                                                 Tu cita #{{ ($key + 1) }}<br>
                                                 Especialista: <strong>{{ $appointment->doctor['user']['name'] }} {{ $appointment->doctor['user']['last_name'] }}</strong><br>
-                                                Fecha: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date)->locale('es')->format('l F d Y')) }}</strong><br>
-                                                Hora: <strong>{{ $appointment->only_hour.":".$appointment->only_minute }}</strong><br>
+                                                Fecha para {{config('app.timezone')}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                                Fecha para {{$appointment->timezone}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($dateTimezoneUser)->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+{{--                                                Hora: <strong>{{ $appointment->only_hour.":".$appointment->only_minute }}</strong><br>--}}
                                                 Link Zoom: <a href="{{ $appointment->link_meeting }}">{{ $appointment->link_meeting }}</a>
                                             </p>
                                             <hr>
                                         @endforeach
-{{--                                        <table style="font-family: 'Montserrat',Arial,sans-serif;" cellpadding="0"--}}
-{{--                                               cellspacing="0"--}}
-{{--                                               role="presentation">--}}
-{{--                                            <tr>--}}
-{{--                                                <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"--}}
-{{--                                                    bgcolor="rgba(115, 103, 240, var(--bg-opacity))">--}}
-{{--                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_SHOW_VALORACION')}}"--}}
-{{--                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Cancelar--}}
-{{--                                                        cita &rarr;</a>--}}
-{{--                                                </td>--}}
-{{--                                            </tr>--}}
-{{--                                        </table>--}}
+
                                         <table style="font-family: 'Montserrat',Arial,sans-serif; width: 100%;"
                                                width="100%"
                                                cellpadding="0" cellspacing="0" role="presentation">

@@ -302,7 +302,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-27',
+                    'date' => '2022-12-27',
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                        'doctor_schedule_id' => $doctorSchedule->id,
@@ -323,7 +323,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleTwo = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-30'
+                    'date' => '2022-12-30'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -344,7 +344,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleThree = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-12-16'
+                    'date' => '2023-01-20'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -387,7 +387,7 @@ Apasionada por el trabajo y la atención a pacientes.',
 
                 $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-29'
+                    'date' => '2022-1-29'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,

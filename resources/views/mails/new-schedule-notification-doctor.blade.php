@@ -14,7 +14,8 @@
         }
     </style>
     <![endif]-->
-    <title>{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el tratamiento de {{$treatment}}</title>
+    <title>{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el
+        tratamiento de {{$treatment}}</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">
@@ -82,7 +83,9 @@
 
 <body
     style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el tratamiento de {{$treatment}}</div>
+<div
+    style="display: none;">{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}
+    para el tratamiento de {{$treatment}}</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%"
            cellpadding="0" cellspacing="0" role="presentation">
@@ -117,36 +120,45 @@
                                             Esp. {{ $doctor['name'] }} {{ $doctor['last_name'] }}!</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            {{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el tratamiento de {{$treatment}}. 🗓
+                                            {{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}
+                                            para el tratamiento de {{$treatment}}. 🗓
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-{{--                                            Especialista:--}}
-{{--                                            <strong>{{ $appointments->doctor['user']['name'] }} {{ $appointments->doctor['user']['last_name'] }}</strong><br>--}}
+                                            {{--                                            Especialista:--}}
+                                            {{--                                            <strong>{{ $appointments->doctor['user']['name'] }} {{ $appointments->doctor['user']['last_name'] }}</strong><br>--}}
                                             Tratamiento: <strong>{{ $treatment }}</strong><br>
                                         </p>
-                                        <p><strong>Información {{ count($appointments) > 0 ? 'tus citas.' : 'tu cita.' }}</strong></p><br>
+                                        <p>
+                                            <strong>Información {{ count($appointments) > 0 ? 'tus citas.' : 'tu cita.' }}</strong>
+                                        </p><br>
                                         @foreach($appointments as $key => $appointment)
+                                            @php($dateTimezoneUser = \Carbon\Carbon::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->timezone($appointment->timezone))
                                             <p style="margin: 0 0 24px;color: #666666 !important;">
                                                 Tu cita #{{ ($key + 1) }}<br>
-                                                Paciente: <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong><br>
-                                                Fecha: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date)->locale('es')->format('l F d Y')) }}</strong><br>
-                                                Hora: <strong>{{ $appointment->only_hour.":".$appointment->only_minute }}</strong><br>
-                                                Link Zoom: <a href="{{ $appointment->link_meeting }}">{{ $appointment->link_meeting }}</a>
+                                                Paciente:
+                                                <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong><br>
+                                                Fecha para {{config('app.timezone')}}:
+                                                <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                                Fecha para {{$appointment->timezone}}:
+                                                <strong>{{ ucwords(\Jenssegers\Date\Date::parse($dateTimezoneUser)->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                                {{--                                                Hora: <strong>{{ $appointment->only_hour.":".$appointment->only_minute }}</strong><br>--}}
+                                                Link Zoom: <a
+                                                    href="{{ $appointment->link_meeting }}">{{ $appointment->link_meeting }}</a>
                                             </p>
                                             <hr>
                                         @endforeach
-{{--                                        <table style="font-family: 'Montserrat',Arial,sans-serif;" cellpadding="0"--}}
-{{--                                               cellspacing="0"--}}
-{{--                                               role="presentation">--}}
-{{--                                            <tr>--}}
-{{--                                                <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"--}}
-{{--                                                    bgcolor="rgba(115, 103, 240, var(--bg-opacity))">--}}
-{{--                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_SHOW_VALORACION')}}"--}}
-{{--                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Cancelar--}}
-{{--                                                        cita &rarr;</a>--}}
-{{--                                                </td>--}}
-{{--                                            </tr>--}}
-{{--                                        </table>--}}
+                                        {{--                                        <table style="font-family: 'Montserrat',Arial,sans-serif;" cellpadding="0"--}}
+                                        {{--                                               cellspacing="0"--}}
+                                        {{--                                               role="presentation">--}}
+                                        {{--                                            <tr>--}}
+                                        {{--                                                <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"--}}
+                                        {{--                                                    bgcolor="rgba(115, 103, 240, var(--bg-opacity))">--}}
+                                        {{--                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_SHOW_VALORACION')}}"--}}
+                                        {{--                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Cancelar--}}
+                                        {{--                                                        cita &rarr;</a>--}}
+                                        {{--                                                </td>--}}
+                                        {{--                                            </tr>--}}
+                                        {{--                                        </table>--}}
                                         <table style="font-family: 'Montserrat',Arial,sans-serif; width: 100%;"
                                                width="100%"
                                                cellpadding="0" cellspacing="0" role="presentation">

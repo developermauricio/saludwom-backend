@@ -191,4 +191,27 @@ class Controller extends BaseController
             return response()->json($response, 500);
         }
     }
+
+    public function allTimezone(){
+        DB::beginTransaction();
+        try {
+            $allTimezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Get timezones',
+                'response' => 'get_timezones',
+                'data' => $allTimezones
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR GET TIMEZONES.', $response); // Guardamos el error en el archivo de logs
+            return response()->json($response, 500);
+        }
+    }
 }

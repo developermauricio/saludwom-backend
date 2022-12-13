@@ -18,6 +18,7 @@ class CreateAppointmentValuationsTable extends Migration
             $table->unsignedBigInteger('valuation_id')->nullable();
             $table->foreign('valuation_id')->references('id')->on('valuations');
             $table->timestamp('date');
+            $table->string('timezone');
             $table->string('only_hour');
             $table->string('only_minute');
             $table->string('link_meeting');

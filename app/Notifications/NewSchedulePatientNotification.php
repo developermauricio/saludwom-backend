@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
@@ -20,6 +21,7 @@ class NewSchedulePatientNotification extends Notification
     protected $plan;
     protected $treatment;
 
+
     /**
      * Create a new notification instance.
      *
@@ -31,6 +33,7 @@ class NewSchedulePatientNotification extends Notification
         $this->appointments = $appointments;
         $this->plan = $plan;
         $this->treatment = $treatment;
+
     }
 
     /**
@@ -52,7 +55,9 @@ class NewSchedulePatientNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $subject = count($this->appointments) > 0 ? 'CONFIRMACIÓN DE TUS CITA' : 'CONFIRMACIÓN DE TU CITA';
+
+
+        $subject = count($this->appointments) > 0 ? 'CONFIRMACIÓN DE TUS CITAS' : 'CONFIRMACIÓN DE TU CITA';
         $email = (new MailMessage)
             ->subject(config('app.name') . ' - ' . $subject);
 

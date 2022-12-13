@@ -16,6 +16,7 @@ class CreateValuationsTable extends Migration
         Schema::create('valuations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug');
             $table->unsignedBigInteger('patient_id')->nullable();
             $table->foreign('patient_id')->references('id')->on('patients');
             $table->unsignedBigInteger('doctor_id')->nullable();

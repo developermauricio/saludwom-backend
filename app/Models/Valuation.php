@@ -15,7 +15,12 @@ class Valuation extends Model
 
     use HasFactory;
     protected $guarded = ['id'];
-    protected $fillable = ['name', 'patient_id', 'doctor_id', 'type_treatment_id', 'subscription_id', 'objectives', 'state'];
+    protected $fillable = ['name', 'patient_id', 'doctor_id', 'type_treatment_id', 'subscription_id', 'objectives', 'state', 'slug'];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function archives()
     {
@@ -29,4 +34,15 @@ class Valuation extends Model
         ]);
     }
 
+    public function doctor(){
+        return $this->belongsTo(Doctor::class, 'doctor_id');
+    }
+
+    public function patient(){
+        return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    public function treatment(){
+        return $this->belongsTo(TypeTreatment::class, 'type_treatment_id');
+    }
 }

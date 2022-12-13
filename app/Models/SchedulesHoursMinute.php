@@ -12,5 +12,7 @@ class SchedulesHoursMinute extends Model
     protected $fillable = ['doctor_schedule_id', 'hour', 'minute', 'state'];
     protected $table = 'schedule_hours_minutes';
 
-
+    public function doctorSchedule(){
+        return $this->belongsTo(DoctorSchedule::class, 'doctor_schedule_id');
+    }
 }

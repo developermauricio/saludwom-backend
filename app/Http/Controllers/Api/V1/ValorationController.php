@@ -27,6 +27,41 @@ use MacsiDigital\Zoom\Facades\Zoom;
 
 class ValorationController extends Controller
 {
+    public function getValorations(){
+        $patient = Patient::where('user_id', auth()->id())->first();
+
+        try {
+            $valuations = Valuation::where('patient_id', $patient->id)->with('doctor', 'patient.user', 'treatment')->latest('created_at')->paginate(12);
+            return response()->json([
+                'success' => true,
+                'message' => 'Get Valuations',
+                'response' => 'get_valuations',
+                'data' => $valuations,
+                'lastPage' => $valuations->lastPage(),
+                'total' => $valuations->total()
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR GET VALUATIONS.', $response); // Guardamos el error en el archivo de logs
+            return response()->json($response, 500);
+        }
+    }
+
+    public function getValoration(Valuation $valuation){
+        $getValuation = $valuation->wi->first();th('')
+        return response()->json([
+            'success' => true,
+            'message' => 'Get Valuation',
+            'response' => 'get_valuation',
+            'data' => $valuation,
+        ], 200);
+    }
+
     public function createValoration(ValorationRequest $request)
     {
         DB::beginTransaction();
@@ -51,6 +86,7 @@ class ValorationController extends Controller
             $valuation = Valuation::create([
                 'name' => $request['name'],
                 'patient_id' => $patient->id,
+                'slug' => Str::slug($request['name'].'-'.Str::random(10), '-'),
                 'doctor_id' => $request['doctorId'],
                 'type_treatment_id' => $request['selectedTreatment']['id'],
                 'subscription_id' => $request['subscriptionId'],
@@ -71,17 +107,19 @@ class ValorationController extends Controller
                         /* Válidamos las credenciales de acceso de zoom del doctor para poder crear reuniones*/
                         config(['zoom.api_key' => $doctor->zoom_api_key, 'zoom.api_secret' => $doctor->zoom_api_secret]);
                         /*Creamos la reunión en zoom*/
+                        $startTime = Carbon::parse($appointment['date']. " " .$appointment['onlyHour'].":".$appointment['onlyMinute'].":00")->timezone('Europe/Madrid');
                         $zoomMeeting = Zoom::user()->find($doctor->user->email)
                             ->meetings()->create([
                                 'topic' => 'Cita con el paciente ' .$patient->user->name.' '.$patient->user->last_name.' '.Str::random(5),
                                 'duration' => 30, // In minutes, optional
-                                'start_time' => new Carbon($appointment['date']. " " .$appointment['onlyHour'].":".$appointment['onlyMinute'].":00"),
-                                'timezone' => 'Europe/Madrid',
+                                'start_time' => $startTime,
+                                'timezone' => config('app.timezone'),
                             ]);
                         /*Creamos la cita*/
                         $appointmentValuation = AppointmentValuation::create([
                             'valuation_id' =>  $valuation->id,
                             'date' => $appointment['date'].' 00:00:00',
+                            'timezone' => $appointment['timezone'],
                             'only_hour' => $appointment['onlyHour'],
                             'only_minute' => $appointment['onlyMinute'],
                             'link_meeting' => $zoomMeeting->join_url
@@ -90,10 +128,11 @@ class ValorationController extends Controller
                         /*Creamos el objeto que enviaremos al correo electrónico*/
                         $appointmentDoctor[] = (object)[
                             'doctor' => $doctor,
-                            'link_meeting' => $appointmentValuation->link_meeting,
                             'date' => $appointment['date'],
+                            'timezone' => $appointment['timezone'],
                             'only_hour' => $appointmentValuation->only_hour,
-                            'only_minute' => $appointmentValuation->only_minute
+                            'only_minute' => $appointmentValuation->only_minute,
+                            'link_meeting' => $zoomMeeting->join_url
                         ];
 
                     }
@@ -105,7 +144,7 @@ class ValorationController extends Controller
                     $patient->user,
                     $appointmentDoctor,
                     $subscription->plan,
-                    $treatment->treatment
+                    $treatment->treatment,
                 ));
 
                 /*Notificamos al doctor de las citas creadas*/

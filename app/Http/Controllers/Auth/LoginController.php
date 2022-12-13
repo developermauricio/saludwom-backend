@@ -42,7 +42,11 @@ class LoginController extends Controller
         $expiration = $this->guard()->getPayload()->get('exp');
 
         $patient = Patient::where('user_id', auth()->user()->id)->first();
-        $subscription = Subscription::where('patient_id', $patient->id)->where('state', '4')->with('plan')->first();
+        $subscription = null;
+        if($patient){
+            $subscription = Subscription::where('patient_id', $patient->id)->where('state', '4')->with('plan')->first();
+        }
+
 
         return response()->json([
             'token' => $token,
