@@ -18,6 +18,7 @@ class CreateArchivesTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('path_file');
             $table->string('name_file');
+            $table->string('type_file');
             $table->morphs('archiveable');
             $table->timestamps();
         });

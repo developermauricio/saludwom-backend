@@ -33,7 +33,9 @@ class Valuation extends Model
             'user_id' => auth()->id()
         ]);
     }
-
+    public function appointments(){
+        return $this->hasMany(AppointmentValuation::class, 'valuation_id');
+    }
     public function doctor(){
         return $this->belongsTo(Doctor::class, 'doctor_id');
     }
@@ -44,5 +46,9 @@ class Valuation extends Model
 
     public function treatment(){
         return $this->belongsTo(TypeTreatment::class, 'type_treatment_id');
+    }
+
+    public function subscription(){
+        return $this->belongsTo(Subscription::class, 'subscription_id');
     }
 }

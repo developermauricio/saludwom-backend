@@ -31,7 +31,7 @@ class ValorationController extends Controller
         $patient = Patient::where('user_id', auth()->id())->first();
 
         try {
-            $valuations = Valuation::where('patient_id', $patient->id)->with('doctor', 'patient.user', 'treatment')->latest('created_at')->paginate(12);
+            $valuations = Valuation::where('patient_id', $patient->id)->with('doctor', 'patient.user', 'treatment', 'appointments.doctor.user')->latest('created_at')->paginate(12);
             return response()->json([
                 'success' => true,
                 'message' => 'Get Valuations',
@@ -53,12 +53,12 @@ class ValorationController extends Controller
     }
 
     public function getValoration(Valuation $valuation){
-        $getValuation = $valuation->wi->first();th('')
+        $getValuation = $valuation->with('doctor', 'patient.user', 'treatment', 'subscription.plan', 'archives', 'appointments.doctor.user')->first();
         return response()->json([
             'success' => true,
             'message' => 'Get Valuation',
             'response' => 'get_valuation',
-            'data' => $valuation,
+            'data' => $getValuation,
         ], 200);
     }
 
@@ -118,7 +118,9 @@ class ValorationController extends Controller
                         /*Creamos la cita*/
                         $appointmentValuation = AppointmentValuation::create([
                             'valuation_id' =>  $valuation->id,
-                            'date' => $appointment['date'].' 00:00:00',
+                            'doctor_id' =>  $doctor ->id,
+                            'date' => $appointment['date'].' '.$appointment['onlyHour'].':'.$appointment['onlyMinute'].':00',
+                            'only_date' => $appointment['date'],
                             'timezone' => $appointment['timezone'],
                             'only_hour' => $appointment['onlyHour'],
                             'only_minute' => $appointment['onlyMinute'],
@@ -217,6 +219,7 @@ class ValorationController extends Controller
     {
         $random = Str::random(10);
         $file = $request->file('file');
+        $fileExtension = $file->getClientOriginalExtension();
         $fileName = $random . '-' . $request->filename;
         $urlFinal = env('FILES_UPLOAD_PRODUCTION') === false ? $this->uploadFilesLocal($file, $fileName) : $this->uploadFilesStorage($file, $fileName);
         Log::info($id);
@@ -226,6 +229,7 @@ class ValorationController extends Controller
         try {
             $valuation->archives()->firstOrCreate([
                 'user_id' => $id,
+                'type_file' => strtolower($fileExtension),
                 'path_file' => $urlFinal,
                 'name_file' =>  $request->filename
             ]);
@@ -260,8 +264,9 @@ class ValorationController extends Controller
 
     public function uploadFilesLocal($file, $fileName)
     {
-        $path = Storage::disk('public')->put('/patient/archives/' . str_replace(' ', '-', $fileName), file_get_contents($file));
-        $urlFinal = '/storage/patient/archives/' . $fileName;
+        $fileNameStr = str_replace(' ', '-', $fileName);
+        $path = Storage::disk('public')->put('/patient/archives/' . $fileNameStr, file_get_contents($file));
+        $urlFinal = '/storage/patient/archives/' . $fileNameStr;
         return $urlFinal;
     }
 }
