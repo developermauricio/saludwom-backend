@@ -50,6 +50,7 @@ class LoginController extends Controller
 
         return response()->json([
             'token' => $token,
+            'roles' => auth()->user()->getRoleNames(),
             'user' => auth()->user(),
             'subscription' => $subscription,
             'token_type' => 'bearer',

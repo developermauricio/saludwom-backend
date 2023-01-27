@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -28,14 +29,15 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
-    protected function registered(Request $request, User $user){
+    protected function registered(Request $request, User $user)
+    {
         return response()->json($user, 200);
     }
 
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -51,32 +53,41 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\Models\User
      */
     protected function create(array $data)
     {
+        try {
+            $user = User::create([
+                'name' => ucwords($data['name']),
+                'last_name' => ucwords($data['lastName']),
+                'email' => $data['email'],
+                'phone' => $data['phoneI'],
+                'city_id' => $data['city'] ? $data['city']['id'] : null,
+                'country_id' => $data['country']['id'],
+                'picture' => '/assets/images/user-profile.png',
+                'password' => Hash::make($data['password']),
+                'slug' => Str::slug(ucwords($data['name']) . '-' . ucwords($data['lastName']) . '-' . Str::random(8), '-')
+            ]);
+            $user->patient()->firstOrCreate([
+                'user_id' => $user->id,
+                'gender_id' => $data['gender']['id'],
+                'patient_type' => 'client'
+            ]);
+            $user->roles()->attach(2); // Asignamos el rol al usuario paciente
 
-        $role = Role::where('name', 'Patient')->first();
-
-        $user = User::create([
-            'name' => ucwords($data['name']),
-            'last_name' => ucwords($data['lastName']),
-            'email' => $data['email'],
-            'phone' => $data['phoneI'],
-            'city_id' => $data['city'] ? $data['city']['id'] : null,
-            'country_id' => $data['country']['id'],
-            'picture' => '/assets/images/user-profile.png',
-            'password' => Hash::make($data['password']),
-            'slug' => Str::slug( ucwords($data['name']). '-' .ucwords($data['lastName']).'-'.Str::random(8), '-')
-        ]);
-        $user->patient()->firstOrCreate([
-            'user_id' => $user->id,
-            'gender_id' =>  $data['gender']['id'],
-            'patient_type' => 'client'
-        ]);
-        $user->roles()->attach($role->id); // Asignamos el rol al usuario paciente
-
-        return $user;
+            return $user;
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR CREATE VALUATION.', $response); // Guardamos el error en el archivo de logs
+            DB::rollBack();
+            return response()->json($response, 500);
+        }
     }
 }

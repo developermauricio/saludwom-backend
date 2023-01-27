@@ -50,7 +50,7 @@ class StripeWebHookController extends WebhookController
 
                 $invoice = Invoice::create([
                     'patient_id' => $patient->id,
-                    'plan_id' => $order->patient_id,
+                    'plan_id' => $subscription['plan_id'],
                     'order_id' => $order->id,
                     'invoice_stripe_id' => $invoice_id
                 ]);

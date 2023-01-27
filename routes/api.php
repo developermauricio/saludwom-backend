@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Controller;
 use \App\Http\Controllers\Auth\LoginController;
 use \App\Http\Controllers\Api\V1\PlanController;
+use \App\Http\Controllers\Api\V1\AdminController;
 use \App\Http\Controllers\Api\V1\OrderController;
 use \App\Http\Controllers\Api\V1\CouponController;
 use \App\Http\Controllers\Api\V1\DoctorController;
@@ -78,12 +79,22 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA LOS DOCTORES
      =============================================*/
     Route::get('check-schedule-available/{id}', [DoctorController::class, 'scheduleAvailable'])->name('check.schedule.available');
+    Route::get('get-patients-doctor', [DoctorController::class, 'getPatients'])->name('get.patients.doctor');
+    Route::get('get-count-patients-doctor/{idDoctor}', [DoctorController::class, 'getCountPatients'])->name('get.patients.doctor');
+    Route::get('get-valuations-doctor', [DoctorController::class, 'getValorations'])->name('get.valorations.objectives.doctor');
+    /*=============================================
+      RUTA PARA EL ADMIN
+     =============================================*/
+    Route::get('get-patients-admin', [AdminController::class, 'getPatients'])->name('get.patients.admin');
     /*=============================================
       RUTA PARA LA VALORACIÓN
      =============================================*/
     Route::get('get-valuation/{valuation}', [ValorationController::class, 'getValoration'])->name('get.valoration'); /*Obtenemos todas las suscripciones*/
     Route::get('get-valuations', [ValorationController::class, 'getValorations'])->name('get.valorations'); /*Obtenemos todas las suscripciones*/
     Route::post('create-valoration', [ValorationController::class, 'createValoration'])->name('create.valoration');
+
+    Route::post('update-valoration-objetive/{idValuation}', [ValorationController::class, 'updateValorationObjective'])->name('update.valoration.objective');
+    Route::post('remove-archive', [ValorationController::class, 'removeArchive'])->name('remove.archive');
 
     /*=============================================
       RUTA PARA PACIENTES
@@ -96,7 +107,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon');
 
 });
-Route::post('/upload-files-valuation/{id}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
+Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');
 Route::get('get-timezones', [Controller::class, 'allTimezone'])->name('get.timezones');
 Route::get('get-document-types', [Controller::class, 'getDocumentTypes'])->name('get.document.types');

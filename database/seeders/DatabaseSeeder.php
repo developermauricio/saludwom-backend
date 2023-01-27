@@ -11,8 +11,10 @@ use App\Models\IdentificationType;
 use App\Models\Patient;
 use App\Models\Plan;
 use App\Models\SchedulesHoursMinute;
+use App\Models\Subscription;
 use App\Models\TypeTreatment;
 use App\Models\User;
+use App\Models\Valuation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -86,8 +88,8 @@ class DatabaseSeeder extends Seeder
         /*=============================================
              CREAMOS LOS ROLES
          =============================================*/
-        $administrator = Role::create(['name' => 'Administrator']);
-        $patient = Role::create(['name' => 'Patient']);
+        $administrator = Role::create(['name' => 'Admin']);
+        $patient = Role::create(['name' => 'Paciente']);
         $doctor = Role::create(['name' => 'Doctor']);
 
         /*=============================================
@@ -292,6 +294,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
             'phone' => '+34 675176612',
             'slug' => Str::slug('Mailyn' . '-' . 'Solarte' . '-' . Str::random(8), '-')
         ])->each(function (User $user) {
+            $user->roles()->attach('3'); // Asignamos el rol doctor al usuario
             Doctor::factory()->count(1)->create([
                 'zoom_api_key' => 'kcrItEiYRyaAeeli7ongAA',
                 'zoom_api_secret' => 'NpxY33l8R40SpI7RxdgjZvdcth7vIwHo0EfG',
@@ -375,6 +378,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
             'phone' => '+34 675176612',
             'slug' => Str::slug('Maria' . '-' . 'Yanez' . '-' . Str::random(8), '-')
         ])->each(function (User $user) {
+            $user->roles()->attach('3'); // Asignamos el rol doctor al usuario
             Doctor::factory()->count(1)->create([
                 'zoom_api_key' => '',
                 'zoom_api_secret' => '',
@@ -448,17 +452,49 @@ Apasionada por el trabajo y la atención a pacientes.',
                     ]);
                 });
 
-                /*=============================================
+            });
+        });
+
+        /*=============================================
                     CREAMOS LOS CUPONES DE DESCUENTO
                  =============================================*/
-                Coupon::factory()->count(1)->create([
-                    "name" => 'AmorSaludWom',
-                    "discount" => 10,
-                    "description" => 'Este cupon es para uso solo en tiempos de febrero en amor y amistad',
-                    "create_user_id" => 1,
-                    "date_expiration" => "2022-12-15",
-                    "limit_use" => 2
+        Coupon::factory()->count(1)->create([
+            "name" => 'AmorSaludWom',
+            "discount" => 10,
+            "description" => 'Este cupon es para uso solo en tiempos de febrero en amor y amistad',
+            "create_user_id" => 1,
+            "date_expiration" => "2022-12-15",
+            "limit_use" => 2
+        ]);
+        /*=============================================
+          CREAMOS PACIENTES SIN SUSCRIPTION
+        =============================================*/
+        User::factory()->count(40)->create()
+            ->each(function (User $user){
+                $user->roles()->attach('2');
+                Patient::factory()->count(1)->create([
+                    'user_id' => $user->id,
+                    'patient_type' => 'client'
                 ]);
+            });
+        /*=============================================
+          CREAMOS PACIENTES CON DOCTOR
+        =============================================*/
+        User::factory()->count(20)->create()
+        ->each(function (User $user){
+            $user->roles()->attach('2');
+            Patient::factory()->count(1)->create([
+                'user_id' => $user->id
+            ])->each(function (Patient $patient){
+               Subscription::factory()->count(1)->create([
+                    'patient_id' => $patient->id
+                ])->each(function (Subscription $subscription) use ($patient){
+                   $valuation = Valuation::factory()->count(1)->create([
+                       'subscription_id' => $subscription->id,
+                       'patient_id' => $patient->id
+                   ]);
+               });
+
             });
         });
     }

@@ -74,6 +74,16 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      *
      * @return array
      */
+
+    // This will hide `roles` from your `User`, when converted to JSON/Array/etc
+
+    // This will add `role_names` to your `User`, when converted to JSON/Array/etc
+    protected $appends = ['role_names'];
+
+    // Accessible via `$user->role_names`, or `user.role_names` in JSON
+    public function getRoleNamesAttribute() {
+        return $this->roles->pluck('name');
+    }
     public function getJWTCustomClaims()
     {
         return [];
@@ -94,6 +104,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function identificationType(){
         return $this->belongsTo(IdentificationType::class, 'identification_type_id');
+    }
+
+    public function city(){
+        return $this->belongsTo(City::class, 'city_id');
     }
 
 }

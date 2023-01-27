@@ -27,7 +27,8 @@ use MacsiDigital\Zoom\Facades\Zoom;
 
 class ValorationController extends Controller
 {
-    public function getValorations(){
+    public function getValorations()
+    {
         $patient = Patient::where('user_id', auth()->id())->first();
 
         try {
@@ -52,8 +53,10 @@ class ValorationController extends Controller
         }
     }
 
-    public function getValoration(Valuation $valuation){
-        $getValuation = $valuation->with('doctor', 'patient.user', 'treatment', 'subscription.plan', 'archives', 'appointments.doctor.user')->first();
+    public function getValoration($valuation)
+    {
+
+        $getValuation = Valuation::where('slug', $valuation)->with('doctor', 'patient.user', 'treatment', 'subscription.plan', 'archives', 'appointments.doctor.user')->first();
         return response()->json([
             'success' => true,
             'message' => 'Get Valuation',
@@ -67,7 +70,7 @@ class ValorationController extends Controller
         DB::beginTransaction();
         $signature = null;
         $patient = Patient::where('user_id', auth()->user()->id)->with('user')->first();
-        $doctorValoration =  Doctor::where('id', $request['doctorId'])->with('user')->first();
+        $doctorValoration = Doctor::where('id', $request['doctorId'])->with('user')->first();
         $subscription = Subscription::where('id', $request['subscriptionId'])->with('plan')->first();
         $treatment = TypeTreatment::where('id', $request['selectedTreatment']['id'])->first();
 
@@ -86,40 +89,40 @@ class ValorationController extends Controller
             $valuation = Valuation::create([
                 'name' => $request['name'],
                 'patient_id' => $patient->id,
-                'slug' => Str::slug($request['name'].'-'.Str::random(10), '-'),
+                'slug' => Str::slug($request['name'] . '-' . Str::random(10), '-'),
                 'doctor_id' => $request['doctorId'],
                 'type_treatment_id' => $request['selectedTreatment']['id'],
                 'subscription_id' => $request['subscriptionId'],
                 'objectives' => $request['objectives']
             ]);
             $appointmentDoctor = [];
-            if ($request->appointments){
-                foreach ($request->appointments as $appointment){
-                    $doctorSchedule = DoctorSchedule::where('doctor_id', $appointment['doctor']['id'])->where('date',  $appointment['date'].' 00:00:00')->first();
+            if ($request->appointments) {
+                foreach ($request->appointments as $appointment) {
+                    $doctorSchedule = DoctorSchedule::where('doctor_id', $appointment['doctor']['id'])->where('date', $appointment['date'] . ' 00:00:00')->first();
 
-                    if ($doctorSchedule){
+                    if ($doctorSchedule) {
                         /*Actualizamos los horario a no diponible o seleccionado*/
-                        $scheduleHoursMinute = SchedulesHoursMinute::where('doctor_schedule_id',  $doctorSchedule->id)->where('hour', $appointment['onlyHour'])->where('minute', $appointment['onlyMinute'])->first();
+                        $scheduleHoursMinute = SchedulesHoursMinute::where('doctor_schedule_id', $doctorSchedule->id)->where('hour', $appointment['onlyHour'])->where('minute', $appointment['onlyMinute'])->first();
                         $scheduleHoursMinute->state = 'SELECTED';
                         $scheduleHoursMinute->save();
 
-                        $doctor =  Doctor::where('id', $appointment['doctor']['id'])->with('user')->first();
+                        $doctor = Doctor::where('id', $appointment['doctor']['id'])->with('user')->first();
                         /* Válidamos las credenciales de acceso de zoom del doctor para poder crear reuniones*/
                         config(['zoom.api_key' => $doctor->zoom_api_key, 'zoom.api_secret' => $doctor->zoom_api_secret]);
                         /*Creamos la reunión en zoom*/
-                        $startTime = Carbon::parse($appointment['date']. " " .$appointment['onlyHour'].":".$appointment['onlyMinute'].":00")->timezone('Europe/Madrid');
+                        $startTime = Carbon::parse($appointment['date'] . " " . $appointment['onlyHour'] . ":" . $appointment['onlyMinute'] . ":00")->timezone('Europe/Madrid');
                         $zoomMeeting = Zoom::user()->find($doctor->user->email)
                             ->meetings()->create([
-                                'topic' => 'Cita con el paciente ' .$patient->user->name.' '.$patient->user->last_name.' '.Str::random(5),
+                                'topic' => 'Cita con el paciente ' . $patient->user->name . ' ' . $patient->user->last_name . ' ' . Str::random(5),
                                 'duration' => 30, // In minutes, optional
                                 'start_time' => $startTime,
                                 'timezone' => config('app.timezone'),
                             ]);
                         /*Creamos la cita*/
                         $appointmentValuation = AppointmentValuation::create([
-                            'valuation_id' =>  $valuation->id,
-                            'doctor_id' =>  $doctor ->id,
-                            'date' => $appointment['date'].' '.$appointment['onlyHour'].':'.$appointment['onlyMinute'].':00',
+                            'valuation_id' => $valuation->id,
+                            'doctor_id' => $doctor->id,
+                            'date' => $appointment['date'] . ' ' . $appointment['onlyHour'] . ':' . $appointment['onlyMinute'] . ':00',
                             'only_date' => $appointment['date'],
                             'timezone' => $appointment['timezone'],
                             'only_hour' => $appointment['onlyHour'],
@@ -215,7 +218,7 @@ class ValorationController extends Controller
         return $urlFinal;
     }
 
-    public function uploadFiles(Request $request, $id)
+    public function uploadFiles(Request $request, $id, $valuationId)
     {
         $random = Str::random(10);
         $file = $request->file('file');
@@ -223,15 +226,21 @@ class ValorationController extends Controller
         $fileName = $random . '-' . $request->filename;
         $urlFinal = env('FILES_UPLOAD_PRODUCTION') === false ? $this->uploadFilesLocal($file, $fileName) : $this->uploadFilesStorage($file, $fileName);
         Log::info($id);
-        $patient = Patient::where('user_id', $id)->first();
-        $valuation = $patient->valuations()->latest()->first();
+        Log::info($valuationId);
+        if ($valuationId) {
+            $valuation = Valuation::find($valuationId);
+        } else {
+            $patient = Patient::where('user_id', $id)->first();
+            $valuation = $patient->valuations()->latest()->first();
+        }
+
 
         try {
             $valuation->archives()->firstOrCreate([
                 'user_id' => $id,
                 'type_file' => strtolower($fileExtension),
                 'path_file' => $urlFinal,
-                'name_file' =>  $request->filename
+                'name_file' => $request->filename
             ]);
             DB::commit();
             return response()->json([
@@ -242,7 +251,7 @@ class ValorationController extends Controller
                 'name_file' => $request->filename
 
             ], 200);
-        }catch (\Throwable $th){
+        } catch (\Throwable $th) {
             $response = [
                 'success' => false,
                 'message' => 'Transaction Error',
@@ -268,5 +277,61 @@ class ValorationController extends Controller
         $path = Storage::disk('public')->put('/patient/archives/' . $fileNameStr, file_get_contents($file));
         $urlFinal = '/storage/patient/archives/' . $fileNameStr;
         return $urlFinal;
+    }
+
+    public function removeArchive(Request $request)
+    {
+        Log::info($request);
+        env('FILES_UPLOAD_PRODUCTION') === false ? $this->removeArchiveLocal($request) : $this->removeArchiveStorage($request);
+    }
+
+    public function removeArchiveLocal($request)
+    {
+        Log::info($request);
+        if ($request) {
+            DB::table('archives')
+                ->where('id', $request['id'])
+                ->delete();
+            $pathInfo = pathinfo($request['path']);
+            Storage::delete('public/patient/archives/'.$pathInfo['basename']);
+        }
+    }
+
+    public function removeArchiveStorage($request)
+    {
+
+    }
+
+    public function updateValorationObjective(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+
+            $valuation = Valuation::find($id);
+            if ($request['valuationName'] !== $valuation->name) {
+                $valuation->slug = Str::slug($request['valuationName'] . '-' . Str::random(10), '-');
+            }
+            $valuation->name = $request['valuationName'];
+            $valuation->objectives = $request['valuationObjective'];
+            $valuation->type_treatment_id = $request['valuationTreatment']['id'];
+            $valuation->save();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Update Objective',
+                'response' => 'put_update_objective',
+                'data' => $valuation,
+
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = ['success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()];
+            Log::error('LOG ERROR UPDATE OBJECTIVE.', $response); // Guardamos el error en el archivo de logs
+            DB::rollBack();
+            return response()->json($response, 500);
+        }
     }
 }
