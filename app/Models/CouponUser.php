@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class CouponUser extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['patient_id', 'coupon_id', 'order_id'];
 }

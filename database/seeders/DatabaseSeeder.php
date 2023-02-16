@@ -305,7 +305,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-12-27',
+                    'date' => '2023-02-05',
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                        'doctor_schedule_id' => $doctorSchedule->id,
@@ -326,7 +326,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleTwo = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-12-30'
+                    'date' => '2023-03-20'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -347,7 +347,7 @@ Dispareunia/Vaginismo/ Atrofia Vulvovaginal/Liquen Escleroso/Inflamación y Proc
 
                 $doctorScheduleThree = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2023-01-20'
+                    'date' => '2023-02-10'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -463,7 +463,7 @@ Apasionada por el trabajo y la atención a pacientes.',
             "discount" => 10,
             "description" => 'Este cupon es para uso solo en tiempos de febrero en amor y amistad',
             "create_user_id" => 1,
-            "date_expiration" => "2022-12-15",
+            "date_expiration" => "2023-12-15",
             "limit_use" => 2
         ]);
         /*=============================================

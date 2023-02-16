@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 
+use App\Models\Coupon;
+use App\Models\CouponUser;
 use App\Models\Order;
 use App\Models\Patient;
 use App\Models\Subscription;
@@ -43,46 +45,20 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function validatePeriod($period){
-        $date = null;
-        if ($period){
-            switch ($period) {
-                case 'week':
-                    $date = Carbon::now()->addWeeks(1 );
-                    break;
-                case 'month':
-                    $date = Carbon::now()->addMonth();
-                    break;
-                case 'year':
-                    $date =  Carbon::now()->addYear();
-                    break;
-            }
-            Log::info($date->format('Y-m-d H:i:s'));
-            return $date->format('Y-m-d H:i:s');
-        }
-    }
+
+
     public function paymentStripe(Request $request)
     {
         Log::info($request);
-
+        $couponExists = Coupon::where('id', $request->coupon)->first();
         DB::beginTransaction();
         try {
-//            $check = User::whereEmail($request->email)->first(); // Verificamos si existe el usuario
+
             Stripe::setApiKey(env('STRIPE_SECRET'));
             $paymentMethod = $this->createCard($request);
-//            if (!$check) {
-//                $user = User::create([
-//                    'name' => $request->name,
-//                    'last_name' => $request->lastName,
-//                    'email' => $request->email,
-//                    'phone' => $request->phone
-//                ]);
-//            } else {
-//                $user = $request->user();
-//            }
 
             Log::info($request->documentDocumentType);
-            if ($request->documentNumber !== 'null' && $request->documentDocumentType !== 'null'){
+            if ($request->documentNumber !== 'null' && $request->documentDocumentType !== 'null') {
 
                 $typeDocument = json_decode($request->documentDocumentType);
 
@@ -101,13 +77,21 @@ class CheckoutController extends Controller
                 'patient_id' => $patient->id,
                 'price_total' => $request->total * 100,
                 'discount' => $request->discount === 'null' ? null : $request->discount * 100,
-                'coupon_id' => $request->coupon === 'null'  ? null : $request->coupon
+                'coupon_id' => $request->coupon === 'null' ? null : $request->coupon
             ]);
             Subscription::create([
                 'plan_id' => $request->plan,
                 'patient_id' => $patient->id,
-                'expiration_date' => $this->validatePeriod($request->expiration_date_plan),
             ]);
+            /* Si existe el cupón*/
+            if ($couponExists) {
+                CouponUser::create([
+                    'patient_id' => $patient->id,
+                    'coupon_id' => $couponExists->id,
+                    'order_id' => $order->id
+                ]);
+            }
+
             $user->save();
             DB::commit();
             return response()->json(['status' => 'success', 'data' => ['Invoice' => $invoice, 'Order' => $order]]);

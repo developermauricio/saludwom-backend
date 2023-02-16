@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,12 +59,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        Log::info(Carbon::parse($data['birthday'])->format('Y-m-d'));
         try {
             $user = User::create([
                 'name' => ucwords($data['name']),
                 'last_name' => ucwords($data['lastName']),
                 'email' => $data['email'],
                 'phone' => $data['phoneI'],
+                'birthday' => Carbon::parse($data['birthday'])->format('Y-m-d H:m:s'),
                 'city_id' => $data['city'] ? $data['city']['id'] : null,
                 'country_id' => $data['country']['id'],
                 'picture' => '/assets/images/user-profile.png',
@@ -85,7 +88,7 @@ class RegisterController extends Controller
                 'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ];
-            Log::error('LOG ERROR CREATE VALUATION.', $response); // Guardamos el error en el archivo de logs
+            Log::error('LOG ERROR REGISTER PATIENT.', $response); // Guardamos el error en el archivo de logs
             DB::rollBack();
             return response()->json($response, 500);
         }

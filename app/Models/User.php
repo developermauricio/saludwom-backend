@@ -38,6 +38,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'phone',
         'picture',
         'city_id',
+        'birthday',
         'password',
         'last_name',
         'last_login',
@@ -98,15 +99,21 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         $this->notify(new PasswordReset($token));
     }
 
-    public function patient(){
+    public function patient(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
         return $this->hasOne(Patient::class, 'user_id');
     }
 
-    public function identificationType(){
+    public function identificationType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
         return $this->belongsTo(IdentificationType::class, 'identification_type_id');
     }
-
-    public function city(){
+    public function country(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+    public function city(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
         return $this->belongsTo(City::class, 'city_id');
     }
 

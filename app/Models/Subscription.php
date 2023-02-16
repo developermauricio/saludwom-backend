@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Subscription extends Model
 {
@@ -19,5 +21,25 @@ class Subscription extends Model
 
     public function plan(){
         return $this->belongsTo(Plan::class);
+    }
+
+    static public function validatePeriod($period)
+    {
+        $date = null;
+        if ($period) {
+            switch ($period) {
+                case 'week':
+                    $date = Carbon::now()->addWeeks(1);
+                    break;
+                case 'month':
+                    $date = Carbon::now()->addMonth();
+                    break;
+                case 'year':
+                    $date = Carbon::now()->addYear();
+                    break;
+            }
+            Log::info($date->format('Y-m-d H:i:s'));
+            return $date->format('Y-m-d H:i:s');
+        }
     }
 }

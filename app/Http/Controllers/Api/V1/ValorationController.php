@@ -225,22 +225,23 @@ class ValorationController extends Controller
         $fileExtension = $file->getClientOriginalExtension();
         $fileName = $random . '-' . $request->filename;
         $urlFinal = env('FILES_UPLOAD_PRODUCTION') === false ? $this->uploadFilesLocal($file, $fileName) : $this->uploadFilesStorage($file, $fileName);
-        Log::info($id);
-        Log::info($valuationId);
-        if ($valuationId) {
+        $storage = env('FILES_UPLOAD_PRODUCTION') === false ? 'local' : 'cloud';
+
+        if ($valuationId !== '0') {
             $valuation = Valuation::find($valuationId);
         } else {
+            Log::info("Entro aca");
             $patient = Patient::where('user_id', $id)->first();
             $valuation = $patient->valuations()->latest()->first();
         }
-
-
+        DB::beginTransaction();
         try {
             $valuation->archives()->firstOrCreate([
                 'user_id' => $id,
                 'type_file' => strtolower($fileExtension),
-                'path_file' => $urlFinal,
-                'name_file' => $request->filename
+                'path_file' => '/'.$urlFinal,
+                'name_file' => $request->filename,
+                'storage' => $storage
             ]);
             DB::commit();
             return response()->json([
@@ -275,31 +276,51 @@ class ValorationController extends Controller
     {
         $fileNameStr = str_replace(' ', '-', $fileName);
         $path = Storage::disk('public')->put('/patient/archives/' . $fileNameStr, file_get_contents($file));
-        $urlFinal = '/storage/patient/archives/' . $fileNameStr;
+        $urlFinal = 'storage/patient/archives/' . $fileNameStr;
         return $urlFinal;
     }
 
     public function removeArchive(Request $request)
     {
-        Log::info($request);
-        env('FILES_UPLOAD_PRODUCTION') === false ? $this->removeArchiveLocal($request) : $this->removeArchiveStorage($request);
+        DB::beginTransaction();
+        try {
+            DB::table('archives')
+                ->where('id', $request['id'])
+                ->delete();
+            env('FILES_UPLOAD_PRODUCTION') === false ? $this->removeArchiveLocal($request) : $this->removeArchiveStorage($request);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Remove File(s)',
+                'response' => 'remove_files',
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR REMOVE FILE.', $response); // Guardamos el error en el archivo de logs
+            DB::rollBack();
+            return response()->json($response, 500);
+        }
     }
 
     public function removeArchiveLocal($request)
     {
-        Log::info($request);
         if ($request) {
-            DB::table('archives')
-                ->where('id', $request['id'])
-                ->delete();
             $pathInfo = pathinfo($request['path']);
-            Storage::delete('public/patient/archives/'.$pathInfo['basename']);
+            Storage::delete('public/patient/archives/' . $pathInfo['basename']);
         }
     }
 
     public function removeArchiveStorage($request)
     {
-
+        if ($request){
+            $pathInfo = pathinfo($request['path']);
+            Storage::disk('digitalocean')->delete(env('DIGITALOCEAN_FOLDER_ARCHIVES_PATIENT').'/'.$pathInfo['basename']);
+        }
     }
 
     public function updateValorationObjective(Request $request, $id)

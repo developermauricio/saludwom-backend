@@ -15,6 +15,7 @@ class PatientsResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->patient->id,
             'user_id' => $this->patient->user->id,
@@ -29,9 +30,9 @@ class PatientsResource extends JsonResource
             'slug' => $this->patient->user->slug,
             'picture' => $this->patient->user->picture,
             'patient_type' => $this->patient->patient_type,
-            'country' => $this->patient->user->city->country->name,
-            'country_flag' => $this->patient->user->city->country->flag,
-            'city' => $this->patient->user->city->name,
+            'country' => $this->patient->user->country ? $this->patient->user->country->name : 'No registrado.',
+            'country_flag' => $this->patient->user->country ? $this->patient->user->country->flag : '',
+            'city' => $this->patient->user->city ? $this->patient->user->city->name : 'No regitrado.',
             'created_at' => $this->patient->created_at,
             'updated_at' => $this->patient->updated_at,
         ];

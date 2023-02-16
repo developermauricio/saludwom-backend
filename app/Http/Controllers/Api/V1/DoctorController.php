@@ -72,7 +72,7 @@ class DoctorController extends Controller
             if ($request->genderId == null && $request->type == null) {
                 $patients = PatientsResource::collection(
                     Valuation::where('doctor_id', $doctor->id)
-                        ->with(['patient.user.identificationType', 'patient.gender', 'patient.user.city.country'])->get());
+                        ->with(['patient.user.identificationType', 'patient.gender', 'patient.user.city', 'patient.user.country'])->get());
             }
             $countGenderM = $patients->filter(function ($item, $key){
                return $item->patient->gender_id === 1;

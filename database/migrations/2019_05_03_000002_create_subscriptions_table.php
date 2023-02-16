@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('plan_id')->references('id')->on('plans');
             $table->unsignedBigInteger('patient_id')->nullable();
             $table->foreign('patient_id')->references('id')->on('patients');
-            $table->timestamp('expiration_date');
+            $table->timestamp('expiration_date')->nullable();
             $table->enum('state', [
                 \App\Models\Subscription::PENDING,
                 \App\Models\Subscription::CANCELLED,

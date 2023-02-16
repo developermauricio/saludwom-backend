@@ -39,7 +39,7 @@ class CouponController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Coupon ha vencido',
-                'response' => 'coupon_toexpired_inactive',
+                'response' => 'coupon_to_expired_inactive',
 
             ], 202);
         }
@@ -55,7 +55,6 @@ class CouponController extends Controller
 
             ], 202);
         }
-
 
         return response()->json([
             'success' => false,

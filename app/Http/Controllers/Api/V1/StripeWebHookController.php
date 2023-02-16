@@ -33,7 +33,8 @@ class StripeWebHookController extends WebhookController
         $user = $this->getUserByStripeId($payload['data']['object']['customer']);
         $patient = Patient::where('user_id', $user->id)->with('user.identificationType')->first();
         $subscription = $patient->subcrition()->latest()->first();
-        Log::info(json_encode($subscription));
+        $plan = $subscription->plan()->latest()->first();
+        Log::info(json_encode($plan));
         DB::beginTransaction();
         try {
             if ($patient) {
@@ -45,7 +46,8 @@ class StripeWebHookController extends WebhookController
                 ]);
 
                 $subscription ->update([
-                    'state' => Subscription::ACCEPTED
+                    'state' => Subscription::ACCEPTED,
+                    'expiration_date' => Subscription::validatePeriod($plan->period)
                 ]);
 
                 $invoice = Invoice::create([
@@ -57,7 +59,7 @@ class StripeWebHookController extends WebhookController
 
                 $patient->user->notify(new SendInvoiceNotification($patient->user, $invoice, $order, $subscription->plan));
                 $patient->user->notify(new ConfirmationSubscriptionNotification($patient->user, $subscription->plan,  $subscription));
-                Log::info(json_encode($patient->user()));
+
                 Log::info(json_encode($order));
                 Log::info(json_encode($subscription));
                 Log::info("Orden actualizado correctamente");
