@@ -391,7 +391,7 @@ Apasionada por el trabajo y la atención a pacientes.',
 
                 $doctorScheduleOne = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-1-29'
+                    'date' => '2023-03-5'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -412,7 +412,7 @@ Apasionada por el trabajo y la atención a pacientes.',
 
                 $doctorScheduleTwo = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-11-30'
+                    'date' => '2023-03-20'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -433,7 +433,7 @@ Apasionada por el trabajo y la atención a pacientes.',
 
                 $doctorScheduleThree = DoctorSchedule::factory()->count(1)->create([
                     'doctor_id' => $doctor->id,
-                    'date' => '2022-12-02'
+                    'date' => '2022-04-02'
                 ])->each(function (DoctorSchedule $doctorSchedule) {
                     SchedulesHoursMinute::create([
                         'doctor_schedule_id' => $doctorSchedule->id,
@@ -467,7 +467,7 @@ Apasionada por el trabajo y la atención a pacientes.',
             "limit_use" => 2
         ]);
         /*=============================================
-          CREAMOS PACIENTES SIN SUSCRIPTION
+          CREAMOS PACIENTES SIN SUBCRIPTION
         =============================================*/
         User::factory()->count(40)->create()
             ->each(function (User $user){

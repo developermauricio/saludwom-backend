@@ -53,7 +53,7 @@ class NewScheduleDoctorNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $subject = count($this->appointments) > 0 ? 'NUEVAS CITAS PROGRAMADAS' : 'NUEVA CITA PROGRAMADA';
+        $subject = count($this->appointments) > 1 ? 'NUEVAS CITAS PROGRAMADAS' : 'NUEVA CITA PROGRAMADA';
         $email = (new MailMessage)
             ->subject(config('app.name') . ' - ' .$subject);
 

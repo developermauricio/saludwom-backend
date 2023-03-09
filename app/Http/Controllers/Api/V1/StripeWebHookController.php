@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\IdentificationType;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Patient;
 use App\Models\Subscription;
-use App\Notifications\ConfirmationSubscriptionNotification;
+use App\Notifications\Patient\ConfirmationSubscriptionNotification;
 use App\Notifications\SendInvoiceNotification;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Http\Controllers\WebhookController;
-use Stripe\Stripe;
-use Stripe\StripeClient;
 
 class StripeWebHookController extends WebhookController
 {
@@ -47,7 +44,7 @@ class StripeWebHookController extends WebhookController
 
                 $subscription ->update([
                     'state' => Subscription::ACCEPTED,
-                    'expiration_date' => Subscription::validatePeriod($plan->period)
+//                    'expiration_date' => Subscription::validatePeriod($plan->period)
                 ]);
 
                 $invoice = Invoice::create([
@@ -58,7 +55,7 @@ class StripeWebHookController extends WebhookController
                 ]);
 
                 $patient->user->notify(new SendInvoiceNotification($patient->user, $invoice, $order, $subscription->plan));
-                $patient->user->notify(new ConfirmationSubscriptionNotification($patient->user, $subscription->plan,  $subscription));
+                $patient->user->notify(new ConfirmationSubscriptionNotification($patient->user, $subscription->plan,  $subscription)); //Confirmación al paciente
 
                 Log::info(json_encode($order));
                 Log::info(json_encode($subscription));

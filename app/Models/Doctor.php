@@ -19,6 +19,7 @@ class Doctor extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
     public function doctorSchedule(){
         $dateNow = Carbon::now();
         return $this->hasMany(DoctorSchedule::class, 'doctor_id')

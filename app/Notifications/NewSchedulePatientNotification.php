@@ -55,12 +55,11 @@ class NewSchedulePatientNotification extends Notification
      */
     public function toMail($notifiable)
     {
-
-
-        $subject = count($this->appointments) > 0 ? 'CONFIRMACIÓN DE TUS CITAS' : 'CONFIRMACIÓN DE TU CITA';
+        //Agregamos el asunto
+        $subject = count($this->appointments) > 1 ? 'CONFIRMACIÓN DE TUS CITAS' : 'CONFIRMACIÓN DE TU CITA';
         $email = (new MailMessage)
             ->subject(config('app.name') . ' - ' . $subject);
-
+        //Creamos el calendario para agendarlo con Google
         foreach ($this->appointments as $key => $appointment) {
             $calendar = Calendar::create()
                 ->productIdentifier(Str::random(5).'-descargar-agenda.cz')
@@ -75,8 +74,6 @@ class NewSchedulePatientNotification extends Notification
                 'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
             ]);
         }
-
-
 
         $email->markdown('mails.new-schedule-notification-patient', [
             'user' => $this->user,
@@ -99,8 +96,8 @@ class NewSchedulePatientNotification extends Notification
     {
         return [
             'link' => '',
-            'title' => count($this->appointments) > 0 ? 'Tus citas han sido agendadas' : 'Tu cita ha sido agendada',
-            'description' => count($this->appointments) > 0 ? 'Tus citas han sido programadas' : 'Tu cita ha sido programada'.', clic para ver mis citas'
+            'title' => count($this->appointments) > 0 ? 'Tus citas han sido agendadas.' : 'Tu cita ha sido agendada.',
+            'description' => count($this->appointments) > 0 ? 'Tus citas han sido programadas.' : 'Tu cita ha sido programada'.', clic para ver mis citas.'
         ];
     }
 }

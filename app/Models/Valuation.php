@@ -34,7 +34,7 @@ class Valuation extends Model
         ]);
     }
     public function appointments(){
-        return $this->hasMany(AppointmentValuation::class, 'valuation_id');
+        return $this->hasMany(AppointmentValuation::class, 'valuation_id')->orderByRaw("FIELD(state , '5', '1', '3', '2') ASC")->orderBy('date', 'ASC');
     }
     public function doctor(){
         return $this->belongsTo(Doctor::class, 'doctor_id');

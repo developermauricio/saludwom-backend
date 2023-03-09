@@ -15,7 +15,7 @@ class AppointmentValuation extends Model
     const IN_PROGRESS = 5;
 
     protected $guarded = ['id'];
-    protected $fillable = ['valuation_id','doctor_id', 'date', 'only_date', 'only_hour', 'only_minute', 'state', 'link_meeting', 'timezone'];
+    protected $fillable = ['valuation_id','doctor_id', 'schedule_hours_minutes_id', 'date', 'only_date', 'only_hour', 'only_minute', 'state', 'link_meeting_zoom', 'id_meeting_zoom', 'timezone'];
 
     public function doctor(){
         return $this->belongsTo(Doctor::class, 'doctor_id');

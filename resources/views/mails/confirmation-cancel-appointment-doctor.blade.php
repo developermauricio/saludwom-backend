@@ -14,7 +14,7 @@
         }
     </style>
     <![endif]-->
-    <title>{{ count($appointments) > 1 ? 'Tus citas ' : 'Tu cita ' }} }} en SaludWoM</title>
+    <title>Confirmación de cancelación de cita en SaludWoM</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">
@@ -82,7 +82,6 @@
 
 <body
     style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">{{count($appointments) > 1 ? 'Tus citas ' : 'Tu cita ' }}para el tratamiento de {{$treatment}} se encuentra confirmada.</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%"
            cellpadding="0" cellspacing="0" role="presentation">
@@ -112,32 +111,28 @@
                                         style="--bg-opacity: 1; background-color: #ffffff; background-color: rgba(255, 255, 255, var(--bg-opacity)); border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 24px; padding: 48px; text-align: left; --text-opacity: 1; color: #626262; color: rgba(98, 98, 98, var(--text-opacity));"
                                         bgcolor="rgba(255, 255, 255, var(--bg-opacity))" align="left">
                                         <p style="font-weight: 600; font-size: 18px; margin-bottom: 0;color: #666666 !important;">
-                                            Hola.</p>
+                                            Estimad@.</p>
                                         <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72;">
-                                            {{ $user['name'] }}!</p>
+                                            Esp. {{ $doctor['user']['name'] }} {{ $doctor['user']['last_name'] }}!</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            {{ count($appointments) > 1 ? 'Tus citas ' : 'Tu cita ' }}para el tratamiento de {{$treatment}}   {{ count($appointments) > 1 ? 'han sido' : 'ha sido' }} {{ count($appointments) > 1 ? 'confirmadas' : 'confirmada' }}. 🗓
+                                            Este mensaje es para confirmar que tu cita con el paciente {{ $user['name'] }} {{ $user['last_name'] }} ha sido cancelada.
+                                            🗓
                                         </p>
                                         <p style="margin: 0 0 10px;color: #666666 !important;">
-                                            {{--                                            Especialista:--}}
-                                            {{--                                            <strong>{{ $appointments->doctor['user']['name'] }} {{ $appointments->doctor['user']['last_name'] }}</strong><br>--}}
-                                            Tratamiento: <strong>{{ $treatment }}</strong><br>
+                                            Tratamiento: <strong>{{ $valuation['treatment']['treatment'] }}</strong><br>
                                         </p>
-                                        <p><strong>Información de {{ count($appointments) > 1 ? 'tus citas.' : 'tu cita.' }}</strong></p><br>
+                                        <p><strong>Información la cita:</strong></p><br>
                                         @php(\Carbon\Carbon::setLocale(config('app.locale')))
-                                        @foreach($appointments as $key => $appointment)
-                                            @php($dateTimezoneUser = \Carbon\Carbon::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->timezone($appointment->timezone))
-                                            <p style="margin: 0 0 10px;color: #666666 !important;">
-                                                {{ count($appointments) > 1 ? ' Tu cita #'.($key+1) : '' }}<br>
-                                                Especialista: <strong>{{ $appointment->doctor['user']['name'] }} {{ $appointment->doctor['user']['last_name'] }}</strong><br>
-                                                Fecha para {{config('app.timezone')}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
-                                                Fecha para {{$appointment->timezone}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($dateTimezoneUser)->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
-                                                Link Zoom: <a href="{{ $appointment->link_meeting }}">{{ $appointment->link_meeting }}</a>
-                                            </p>
-                                            <hr>
-                                        @endforeach
-
+                                        <p style="margin: 0 0 10px;color: #666666 !important;">
+                                            Paciente:
+                                            <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong><br>
+                                            Fecha para {{config('app.timezone')}}: <!--Timezone del doctor-->
+                                            <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment['date'])->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                            Fecha para {{$appointment['timezone']}}: <!--Timezone del paciente-->
+                                            <strong>{{ ucwords(\Jenssegers\Date\Date::parse(\Carbon\Carbon::parse($appointment['date'])->timezone($appointment['timezone']))->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                        </p>
+                                        <hr>
                                         <table style="font-family: 'Montserrat',Arial,sans-serif; width: 100%;"
                                                width="100%"
                                                cellpadding="0" cellspacing="0" role="presentation">
@@ -212,3 +207,4 @@
 </body>
 
 </html>
+

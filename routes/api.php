@@ -13,9 +13,10 @@ use \App\Http\Controllers\Api\V1\DoctorController;
 use \App\Http\Controllers\Auth\RegisterController;
 use \App\Http\Controllers\Api\V1\PatientController;
 use \App\Http\Controllers\Api\V1\CheckoutController;
+use \App\Http\Controllers\Auth\VerificationController;
 use \App\Http\Controllers\Api\V1\TreatmentController;
 use \App\Http\Controllers\Api\V1\ValorationController;
-use \App\Http\Controllers\Auth\VerificationController;
+use \App\Http\Controllers\Api\V1\AppointmentController;
 use \App\Http\Controllers\Auth\ResetPasswordController;
 use \App\Http\Controllers\Auth\ForgotPasswordController;
 use \App\Http\Controllers\Api\V1\SubscriptionsController;
@@ -105,6 +106,12 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA CUPONES
      =============================================*/
     Route::post('apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon');
+
+    /*=============================================
+      RUTAS PARA LAS CITAS
+     =============================================*/
+    Route::post('cancel-appointment/{idAppointmentValuation}', [AppointmentController::class, 'cancelAppointment'])->name('cancel.appointment');
+    Route::post('reschedule-appointment', [AppointmentController::class, 'rescheduleAppointment'])->name('reschedule.appointment');
 
 });
 Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');

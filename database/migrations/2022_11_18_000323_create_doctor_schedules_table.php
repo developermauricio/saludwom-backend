@@ -17,7 +17,7 @@ class CreateDoctorSchedulesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('doctor_id')->nullable();
             $table->foreign('doctor_id')->references('id')->on('doctors');
-            $table->timestamp('date');
+            $table->date('date');
             $table->text('comment')->nullable();
             $table->enum('state', ['UNAGENDIZED', 'AVAILABLE', 'COMPLETED'])->default('AVAILABLE');
             $table->timestamps();

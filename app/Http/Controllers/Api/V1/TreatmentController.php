@@ -13,7 +13,7 @@ class TreatmentController extends Controller
     public function getTreatments(){
         DB::beginTransaction();
         try {
-            $treatments = TypeTreatment::with('categories', 'doctors.user')->get();
+            $treatments = TypeTreatment::with('categories', 'doctors.user', 'doctors.doctorSchedule')->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Get treatments',

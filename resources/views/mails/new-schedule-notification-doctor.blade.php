@@ -14,7 +14,7 @@
         }
     </style>
     <![endif]-->
-    <title>{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el
+    <title>{{ count($appointments) > 1 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}para el
         tratamiento de {{$treatment}}</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
@@ -84,7 +84,7 @@
 <body
     style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
 <div
-    style="display: none;">{{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}
+    style="display: none;">{{ count($appointments) > 1 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}
     para el tratamiento de {{$treatment}}</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%"
@@ -120,7 +120,7 @@
                                             Esp. {{ $doctor['name'] }} {{ $doctor['last_name'] }}!</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            {{ count($appointments) > 0 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}
+                                            {{ count($appointments) > 1 ? 'Han sido progamadas varias citas ' : 'Ha sido programada la cita ' }}
                                             para el tratamiento de {{$treatment}}. 🗓
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
@@ -129,12 +129,12 @@
                                             Tratamiento: <strong>{{ $treatment }}</strong><br>
                                         </p>
                                         <p>
-                                            <strong>Información {{ count($appointments) > 0 ? 'tus citas.' : 'tu cita.' }}</strong>
+                                            <strong>Información de {{ count($appointments) > 1 ? 'tus citas.' : 'tu cita.' }}</strong>
                                         </p><br>
                                         @foreach($appointments as $key => $appointment)
                                             @php($dateTimezoneUser = \Carbon\Carbon::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->timezone($appointment->timezone))
                                             <p style="margin: 0 0 24px;color: #666666 !important;">
-                                                Tu cita #{{ ($key + 1) }}<br>
+                                                {{ count($appointments) > 1 ? 'Tu cita  #'.($key+1) : '' }}<br>
                                                 Paciente:
                                                 <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong><br>
                                                 Fecha para {{config('app.timezone')}}:

@@ -56,7 +56,7 @@ class ValorationController extends Controller
     public function getValoration($valuation)
     {
 
-        $getValuation = Valuation::where('slug', $valuation)->with('doctor', 'patient.user', 'treatment', 'subscription.plan', 'archives', 'appointments.doctor.user')->first();
+        $getValuation = Valuation::where('slug', $valuation)->with('doctor.user', 'patient.user', 'treatment', 'subscription.plan', 'archives', 'appointments.doctor.user')->first();
         return response()->json([
             'success' => true,
             'message' => 'Get Valuation',
@@ -96,15 +96,31 @@ class ValorationController extends Controller
                 'objectives' => $request['objectives']
             ]);
             $appointmentDoctor = [];
+
             if ($request->appointments) {
+                $dateNotAvailable = false;
                 foreach ($request->appointments as $appointment) {
                     $doctorSchedule = DoctorSchedule::where('doctor_id', $appointment['doctor']['id'])->where('date', $appointment['date'] . ' 00:00:00')->first();
 
                     if ($doctorSchedule) {
-                        /*Actualizamos los horario a no diponible o seleccionado*/
+                        /*Actualizamos los horarios a no diponible o seleccionado*/
                         $scheduleHoursMinute = SchedulesHoursMinute::where('doctor_schedule_id', $doctorSchedule->id)->where('hour', $appointment['onlyHour'])->where('minute', $appointment['onlyMinute'])->first();
                         $scheduleHoursMinute->state = 'SELECTED';
                         $scheduleHoursMinute->save();
+
+                        /*Validamos si la fecha tiene horas disponibles*/
+                       $timesSchedule = SchedulesHoursMinute::where('doctor_schedule_id', $doctorSchedule->id)->get();
+                       foreach ($timesSchedule as $timeSchedule){
+                           if($timeSchedule->state === 'AVAILABLE'){
+                               $dateNotAvailable = true;
+                           }
+                       }
+                       Log::info($dateNotAvailable);
+                       /* Si la fecha global no tiene horas disponibles,entonces pasa a no disponible la fecha global*/
+                       if (!$dateNotAvailable){
+                           $doctorSchedule->state = 'COMPLETED';
+                           $doctorSchedule->save();
+                       }
 
                         $doctor = Doctor::where('id', $appointment['doctor']['id'])->with('user')->first();
                         /* Válidamos las credenciales de acceso de zoom del doctor para poder crear reuniones*/
@@ -122,12 +138,14 @@ class ValorationController extends Controller
                         $appointmentValuation = AppointmentValuation::create([
                             'valuation_id' => $valuation->id,
                             'doctor_id' => $doctor->id,
+                            'schedule_hours_minutes_id' => $scheduleHoursMinute->id,
                             'date' => $appointment['date'] . ' ' . $appointment['onlyHour'] . ':' . $appointment['onlyMinute'] . ':00',
                             'only_date' => $appointment['date'],
                             'timezone' => $appointment['timezone'],
                             'only_hour' => $appointment['onlyHour'],
                             'only_minute' => $appointment['onlyMinute'],
-                            'link_meeting' => $zoomMeeting->join_url
+                            'link_meeting_zoom' => $zoomMeeting->join_url,
+                            'id_meeting_zoom' => $zoomMeeting->id,
                         ]);
 
                         /*Creamos el objeto que enviaremos al correo electrónico*/
@@ -184,7 +202,7 @@ class ValorationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Create valoration',
-                'response' => 'get_valoration',
+                'response' => 'create_valoration',
                 'data' => $valuation,
 
             ], 200);

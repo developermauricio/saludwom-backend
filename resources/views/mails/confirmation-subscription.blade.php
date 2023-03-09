@@ -14,7 +14,7 @@
         }
     </style>
     <![endif]-->
-    <title>Verificar Cuenta</title>
+    <title>Confirmación Suscripción</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">
@@ -81,7 +81,7 @@
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">Verifique su dirección de correo electrónico</div>
+<div style="display: none;">Confirmación Suscripción</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
@@ -89,8 +89,8 @@
                 <table class="sm-w-full" style="font-family: 'Montserrat',Arial,sans-serif; width: 600px;" width="600" cellpadding="0" cellspacing="0" role="presentation">
                     <tr>
                         <td class="sm-py-32 sm-px-24" style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; padding: 48px; text-align: center;" align="center">
-                            <a href="{{ env('APP_URL_FRONT') }}">
-                                <img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWoM" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">
+{{--                            <a href="{{ env('APP_URL_FRONT') }}">--}}
+{{--                                <img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWoM" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">--}}
                             </a>
                         </td>
                     </tr>
@@ -107,11 +107,11 @@
                                             {{ $user->name }}!</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            Gracias por adquirir uno de nuestros planes. 🤗
+                                            Gracias por adquirir uno de nuestros planes. <strong>Crear ahora tu nuevo objetivo para ser un equipo y alcanzar tus exitos.</strong> 🤗
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-                                            En este momento tienes activa la suscripción del <strong>{{ $plan->name }}</strong>. Tu plan
-                                            vence {{ ucwords(\Jenssegers\Date\Date::parse($subscription->expiration_date)->locale('es')->format('F d Y')) }}.
+                                            En este momento tienes activa la suscripción del <strong>{{ $plan->name }}</strong>.
+{{--                                            Tu plan vence {{ ucwords(\Jenssegers\Date\Date::parse($subscription->expiration_date)->locale('es')->format('F d Y')) }}.--}}
 
                                         </p>
                                         {{--                                        <p style="margin: 0 0 24px; color: #666666 !important;">--}}
@@ -124,9 +124,8 @@
                                             <tr>
                                                 <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"
                                                     bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
-                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_VALORACION')}}"
-                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Comenzar
-                                                        ahora &rarr;</a>
+                                                    <a href="{{ env('APP_URL_FRONT') }}{{$link}}"
+                                                       style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Crear Nuevo Objetivo &rarr;</a>
                                                 </td>
                                             </tr>
                                         </table>

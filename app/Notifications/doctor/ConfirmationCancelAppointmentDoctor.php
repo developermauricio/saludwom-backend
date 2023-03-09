@@ -1,28 +1,30 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Doctor;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ConfirmationSubscriptionNotification extends Notification
+class ConfirmationCancelAppointmentDoctor extends Notification
 {
     use Queueable;
+    protected $valuation;
     protected $user;
-    protected $plan;
-    protected $subscription;
+    protected $doctor;
+    protected $appointment;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user, $plan, $subscription)
+    public function __construct($valuation, $user, $doctor, $appointment)
     {
+        $this->valuation = $valuation;
         $this->user = $user;
-        $this->subscription = $subscription;
-        $this->plan = $plan;
+        $this->doctor = $doctor;
+        $this->appointment = $appointment;
     }
 
     /**
@@ -44,13 +46,18 @@ class ConfirmationSubscriptionNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            ->subject(config('app.name') . ' - ' . 'CONFIRMACIÓN DE SUSCRIPCIÓN')
-            ->markdown('mails.confirmation-subscription', [
-                'user' => $this->user,
-                'plan' => $this->plan,
-                'subscription' => $this->subscription,
-            ]);
+        $subject = 'CONFIRMACIÓN DE CITA CANCELADA';
+        $email = (new MailMessage)
+            ->subject(config('app.name') . ' - ' . $subject);
+
+
+        $email->markdown('mails.confirmation-cancel-appointment-doctor', [
+            'valuation' => $this->valuation,
+            'user' => $this->user,
+            'doctor' => $this->doctor,
+            'appointment' => $this->appointment,
+        ]);
+        return $email;
     }
 
     /**
@@ -62,9 +69,9 @@ class ConfirmationSubscriptionNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'link' => env('LINK_VALORACION'),
-            'title' => 'Tienes una suscripción activa',
-            'description' => 'Es momento de que nos digas cual es el tratamiento que necesitas.'
+            'link' => '',
+            'title' => 'Tu cita con el paciente '.$this->user['name'].' '.$this->user['last_name'].' ha sido cancelada.',
+            'description' => ''
         ];
     }
 }
