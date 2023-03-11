@@ -138,9 +138,9 @@
                                                 Paciente:
                                                 <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong><br>
                                                 Fecha para {{config('app.timezone')}}:
-                                                <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                                <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->locale('es')->format('l F d Y H:i')) }}</strong><br>
                                                 Fecha para {{$appointment->timezone}}:
-                                                <strong>{{ ucwords(\Jenssegers\Date\Date::parse($dateTimezoneUser)->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                                <strong>{{ ucwords(\Jenssegers\Date\Date::parse($dateTimezoneUser)->locale('es')->format('l F d Y H:i')) }}</strong><br>
                                                 {{--                                                Hora: <strong>{{ $appointment->only_hour.":".$appointment->only_minute }}</strong><br>--}}
                                                 Link Zoom: <a
                                                     href="{{ $appointment->link_meeting }}">{{ $appointment->link_meeting }}</a>

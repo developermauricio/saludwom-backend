@@ -131,8 +131,8 @@
                                             <p style="margin: 0 0 10px;color: #666666 !important;">
                                                 {{ count($appointments) > 1 ? ' Tu cita #'.($key+1) : '' }}<br>
                                                 Especialista: <strong>{{ $appointment->doctor['user']['name'] }} {{ $appointment->doctor['user']['last_name'] }}</strong><br>
-                                                Fecha para {{config('app.timezone')}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
-                                                Fecha para {{$appointment->timezone}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($dateTimezoneUser)->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                                Fecha para {{config('app.timezone')}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment->date.' '. $appointment->only_hour.":".$appointment->only_minute.':00')->locale('es')->format('l F d Y H:i')) }}</strong><br>
+                                                Fecha para {{$appointment->timezone}}: <strong>{{ ucwords(\Jenssegers\Date\Date::parse($dateTimezoneUser)->locale('es')->format('l F d Y H:i')) }}</strong><br>
                                                 Link Zoom: <a href="{{ $appointment->link_meeting }}">{{ $appointment->link_meeting }}</a>
                                             </p>
                                             <hr>

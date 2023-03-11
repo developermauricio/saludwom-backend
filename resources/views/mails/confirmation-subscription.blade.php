@@ -89,8 +89,8 @@
                 <table class="sm-w-full" style="font-family: 'Montserrat',Arial,sans-serif; width: 600px;" width="600" cellpadding="0" cellspacing="0" role="presentation">
                     <tr>
                         <td class="sm-py-32 sm-px-24" style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; padding: 48px; text-align: center;" align="center">
-{{--                            <a href="{{ env('APP_URL_FRONT') }}">--}}
-{{--                                <img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWoM" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">--}}
+                            <a href="{{ env('APP_URL_FRONT') }}">
+                                <img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWoM" style="border: 0; max-width: 100%; line-height: 100%; vertical-align: middle;">
                             </a>
                         </td>
                     </tr>
@@ -107,7 +107,7 @@
                                             {{ $user->name }}!</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            Gracias por adquirir uno de nuestros planes. <strong>Crear ahora tu nuevo objetivo para ser un equipo y alcanzar tus exitos.</strong> 🤗
+                                            Gracias por adquirir uno de nuestros planes. <strong>Crea ahora tu nuevo objetivo para ser un equipo y alcanzar tus exitos.</strong> 🤗
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
                                             En este momento tienes activa la suscripción del <strong>{{ $plan->name }}</strong>.

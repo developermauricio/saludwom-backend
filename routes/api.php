@@ -16,6 +16,7 @@ use \App\Http\Controllers\Api\V1\CheckoutController;
 use \App\Http\Controllers\Auth\VerificationController;
 use \App\Http\Controllers\Api\V1\TreatmentController;
 use \App\Http\Controllers\Api\V1\ValorationController;
+use \App\Http\Controllers\Api\V1\NotificationController;
 use \App\Http\Controllers\Api\V1\AppointmentController;
 use \App\Http\Controllers\Auth\ResetPasswordController;
 use \App\Http\Controllers\Auth\ForgotPasswordController;
@@ -112,6 +113,12 @@ Route::group(['middleware' => ['auth:api']], function () {
      =============================================*/
     Route::post('cancel-appointment/{idAppointmentValuation}', [AppointmentController::class, 'cancelAppointment'])->name('cancel.appointment');
     Route::post('reschedule-appointment', [AppointmentController::class, 'rescheduleAppointment'])->name('reschedule.appointment');
+
+    /*=============================================
+      RUTAS PARA LAS NOTIFICACIONES
+     =============================================*/
+    Route::get('get-notification-users/{idUser}', [ NotificationController::class, 'getNotifications'])->name('get.notifications');
+    Route::post('read-at-notification/{notification}', [ NotificationController::class, 'readAtNotifications'])->name('readAt.notifications');
 
 });
 Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');

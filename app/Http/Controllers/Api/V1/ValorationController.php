@@ -12,9 +12,9 @@ use App\Models\SchedulesHoursMinute;
 use App\Models\Subscription;
 use App\Models\TypeTreatment;
 use App\Models\Valuation;
+use App\Notifications\doctor\NewValuationDoctorNotification;
 use App\Notifications\NewScheduleDoctorNotification;
 use App\Notifications\NewSchedulePatientNotification;
-use App\Notifications\NewValuationDoctorNotification;
 use App\Notifications\NewValuationPatientNotification;
 use Carbon\Carbon;
 use Illuminate\Http\File;
@@ -109,18 +109,18 @@ class ValorationController extends Controller
                         $scheduleHoursMinute->save();
 
                         /*Validamos si la fecha tiene horas disponibles*/
-                       $timesSchedule = SchedulesHoursMinute::where('doctor_schedule_id', $doctorSchedule->id)->get();
-                       foreach ($timesSchedule as $timeSchedule){
-                           if($timeSchedule->state === 'AVAILABLE'){
-                               $dateNotAvailable = true;
-                           }
-                       }
-                       Log::info($dateNotAvailable);
-                       /* Si la fecha global no tiene horas disponibles,entonces pasa a no disponible la fecha global*/
-                       if (!$dateNotAvailable){
-                           $doctorSchedule->state = 'COMPLETED';
-                           $doctorSchedule->save();
-                       }
+                        $timesSchedule = SchedulesHoursMinute::where('doctor_schedule_id', $doctorSchedule->id)->get();
+                        foreach ($timesSchedule as $timeSchedule) {
+                            if ($timeSchedule->state === 'AVAILABLE') {
+                                $dateNotAvailable = true;
+                            }
+                        }
+                        Log::info($dateNotAvailable);
+                        /* Si la fecha global no tiene horas disponibles,entonces pasa a no disponible la fecha global*/
+                        if (!$dateNotAvailable) {
+                            $doctorSchedule->state = 'COMPLETED';
+                            $doctorSchedule->save();
+                        }
 
                         $doctor = Doctor::where('id', $appointment['doctor']['id'])->with('user')->first();
                         /* Válidamos las credenciales de acceso de zoom del doctor para poder crear reuniones*/
@@ -186,6 +186,7 @@ class ValorationController extends Controller
                 $patient->user,
                 $doctorValoration->user,
                 $valuation->name,
+                $valuation->slug,
                 $subscription->plan,
                 $treatment->treatment
             ));
@@ -194,6 +195,7 @@ class ValorationController extends Controller
                 $patient->user,
                 $doctorValoration->user,
                 $valuation->name,
+                $valuation->slug,
                 $subscription->plan,
                 $treatment->treatment
             ));
@@ -257,7 +259,7 @@ class ValorationController extends Controller
             $valuation->archives()->firstOrCreate([
                 'user_id' => $id,
                 'type_file' => strtolower($fileExtension),
-                'path_file' => '/'.$urlFinal,
+                'path_file' => '/' . $urlFinal,
                 'name_file' => $request->filename,
                 'storage' => $storage
             ]);
@@ -335,9 +337,9 @@ class ValorationController extends Controller
 
     public function removeArchiveStorage($request)
     {
-        if ($request){
+        if ($request) {
             $pathInfo = pathinfo($request['path']);
-            Storage::disk('digitalocean')->delete(env('DIGITALOCEAN_FOLDER_ARCHIVES_PATIENT').'/'.$pathInfo['basename']);
+            Storage::disk('digitalocean')->delete(env('DIGITALOCEAN_FOLDER_ARCHIVES_PATIENT') . '/' . $pathInfo['basename']);
         }
     }
 

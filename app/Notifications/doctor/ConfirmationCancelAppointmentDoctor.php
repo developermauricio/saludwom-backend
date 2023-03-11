@@ -2,10 +2,13 @@
 
 namespace App\Notifications\Doctor;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Jenssegers\Date\Date;
+use PhpMqtt\Client\Facades\MQTT;
 
 class ConfirmationCancelAppointmentDoctor extends Notification
 {
@@ -68,10 +71,11 @@ class ConfirmationCancelAppointmentDoctor extends Notification
      */
     public function toArray($notifiable)
     {
+        MQTT::publish('notification', 'confirmation-cancel-appointment-doctor');
         return [
             'link' => '',
-            'title' => 'Tu cita con el paciente '.$this->user['name'].' '.$this->user['last_name'].' ha sido cancelada.',
-            'description' => ''
+            'title' => 'Tu cita para el <strong>'.Date::parse(Carbon::parse($this->appointment['date'])->timezone($this->appointment['timezone']))->locale('es')->format('l F d Y H:i:s').'</strong> con el paciente <strong>'.$this->user['name'].' '.$this->user['last_name'].'</strong> ha sido cancelada.',
+            'description' => 'Puede ser que el paciente reprograme su cita pronto. 😊'
         ];
     }
 }

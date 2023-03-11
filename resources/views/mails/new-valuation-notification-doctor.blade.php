@@ -81,7 +81,7 @@
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">Tienes un nuevo objetivo asignado</div>
+<div style="display: none;">Tienes un nuevo objetivo asignado.</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
@@ -107,7 +107,8 @@
                                            Esp. {{ $doctor['name'] }} {{ $doctor['last_name'] }}</p>
                                         <p class="sm-leading-32"
                                            style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            Has sido asignado a un nuevo objetivo llamado {{ $valuation }}. 🔥
+                                            Has sido asignado a un nuevo objetivo llamado {{ $valuation }} 🔥.
+                                            <span style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72;">{{ $user['name'] }} {{ $user['last_name'] }}</span> esta esperando conozcas su objetivo y que envíes los recursos
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
                                             El objetivo es para el tratamiento de <strong>{{$treatment}}</strong>, con el paciente <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong>. <br>
@@ -124,7 +125,7 @@
                                             <tr>
                                                 <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"
                                                     bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
-                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_SHOW_VALORACION')}}"
+                                                    <a href="{{ env('APP_URL_FRONT_ADMIN') }}/{{ $valuationSlug }}"
                                                        style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Ver objetivo &rarr;</a>
                                                 </td>
                                             </tr>

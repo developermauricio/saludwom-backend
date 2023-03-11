@@ -15,11 +15,13 @@ use Spatie\IcalendarGenerator\Properties\TextProperty;
 class NewScheduleDoctorNotification extends Notification
 {
     use Queueable;
+
     protected $user;
     protected $doctor;
     protected $appointments;
     protected $plan;
     protected $treatment;
+
     /**
      * Create a new notification instance.
      *
@@ -37,7 +39,7 @@ class NewScheduleDoctorNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -48,18 +50,18 @@ class NewScheduleDoctorNotification extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
         $subject = count($this->appointments) > 1 ? 'NUEVAS CITAS PROGRAMADAS' : 'NUEVA CITA PROGRAMADA';
         $email = (new MailMessage)
-            ->subject(config('app.name') . ' - ' .$subject);
+            ->subject(config('app.name') . ' - ' . $subject);
 
         foreach ($this->appointments as $key => $appointment) {
             $calendar = Calendar::create()
-                ->productIdentifier(Str::random(5).'-descargar-agenda.cz')
+                ->productIdentifier(Str::random(5) . '-descargar-agenda.cz')
                 ->event(function (Event $event) use ($appointment, $key) {
                     $event->name('Cita #' . ($key + 1) . ' para el tratamiento agendada para el ')
                         ->attendee($this->user['email'])
@@ -71,7 +73,6 @@ class NewScheduleDoctorNotification extends Notification
                 'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
             ]);
         }
-
 
 
         $email->markdown('mails.new-schedule-notification-doctor', [
@@ -88,15 +89,16 @@ class NewScheduleDoctorNotification extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
+        $description = count($this->appointments) > 1 ? 'Han sido programadas varias citas con el paciente ' : 'Ha sido programada la cita con el paciente ';
         return [
-            'link' => '',
-            'title' => count($this->appointments) > 0 ? 'Nuevas citas programadas' : 'Nueva cita programada ',
-            'description' => count($this->appointments) > 0 ? 'Han sido programadas varias citas con el paciente' : 'Ha sido programada la cita con el paciente '. $this->user['name'].' '.$this->user['last_name']
+            'link' => '/citas',
+            'title' => count($this->appointments) > 1 ? 'Nuevas citas programadas. 🗓' : 'Nueva cita programada. 🗓',
+            'description' => $description . '<strong>'.$this->user['name'] . ' ' . $this->user['last_name'].'</strong>.'
         ];
     }
 }

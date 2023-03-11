@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
+use PhpMqtt\Client\Facades\MQTT;
 
 class NewValuationPatientNotification extends Notification
 {
@@ -14,6 +15,7 @@ class NewValuationPatientNotification extends Notification
     protected $user;
     protected $doctor;
     protected $valuation;
+    protected $valuationSlug;
     protected $plan;
     protected $treatment;
     /**
@@ -21,12 +23,13 @@ class NewValuationPatientNotification extends Notification
      *
      * @return void
      */
-    public function __construct($user, $doctor, $valuation, $plan, $treatment)
+    public function __construct($user, $doctor, $valuation, $valuationSlug, $plan, $treatment)
     {
         $this->user = $user;
         $this->doctor = $doctor;
         $this->valuation = $valuation;
         $this->treatment = $treatment;
+        $this->valuationSlug = $valuationSlug;
         $this->plan = $plan;
     }
 
@@ -56,6 +59,7 @@ class NewValuationPatientNotification extends Notification
                 'plan' => $this->plan,
                 'doctor' => $this->doctor,
                 'valuation' => $this->valuation,
+                'valuationSlug' => $this->valuationSlug,
                 'treatment' => $this->treatment,
             ]);
     }
@@ -68,10 +72,12 @@ class NewValuationPatientNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            'link' => env('LINK_SHOW_VALORACION'),
-            'title' => 'Tienes un nuevo objetivo creado',
-            'description' => 'Pronto el doctor enviará los recursos para iniciar el plan de tratamiento.'
+        $notification = [
+            'link' => '/webapp/objetivos/'.$this->valuationSlug,
+            'title' => 'Has creado un nuevo objetivo llamado <strong>'.$this->valuation.' 🔥</strong>',
+            'description' => 'Pronto el especialista enviará los recursos para iniciar el tratamiento.'
         ];
+        MQTT::publish('notification', 'new-valuation-patient-notification');
+        return $notification;
     }
 }

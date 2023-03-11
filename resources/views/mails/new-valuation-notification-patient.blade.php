@@ -81,7 +81,7 @@
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; --bg-opacity: 1; background-color: rgba(241, 240, 240, 0.38); background-color: rgba(241, 240, 240, 0.38);">
-<div style="display: none;">Tienes un nuevo objetivo creado</div>
+<div style="display: none;">Tienes un nuevo objetivo creado.</div>
 <div role="article" aria-roledescription="email" aria-label="Verify Email Address" lang="es">
     <table style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; width: 100%;" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
@@ -110,7 +110,7 @@
                                             Confirmación de un nuevo objetivo llamado {{ $valuation }}. 🔥
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-                                            Has creado un nuevo objetivo de tratamiento de <strong>{{$treatment}}</strong>, con el especialista <strong>{{ $doctor['name'] }} {{ $doctor['last_name'] }}</strong>. <br>
+                                            Has creado un nuevo objetivo para el tratamiento de <strong>{{$treatment}}</strong>, con el especialista <strong>{{ $doctor['name'] }} {{ $doctor['last_name'] }}</strong>. <br>
                                             El objetivo lo has creado con el <strong>{{$plan['name']}}</strong>.
 
                                         </p>
@@ -124,7 +124,7 @@
                                             <tr>
                                                 <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"
                                                     bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
-                                                    <a href="{{ env('APP_URL_FRONT') }}/{{env('LINK_SHOW_VALORACION')}}"
+                                                    <a href="{{ env('APP_URL_FRONT') }}/{{ $valuationSlug }}"
                                                        style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Ver objetivo &rarr;</a>
                                                 </td>
                                             </tr>

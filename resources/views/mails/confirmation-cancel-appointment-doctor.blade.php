@@ -128,9 +128,9 @@
                                             Paciente:
                                             <strong>{{ $user['name'] }} {{ $user['last_name'] }}</strong><br>
                                             Fecha para {{config('app.timezone')}}: <!--Timezone del doctor-->
-                                            <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment['date'])->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                            <strong>{{ ucwords(\Jenssegers\Date\Date::parse($appointment['date'])->locale('es')->format('l F d Y H:i')) }}</strong><br>
                                             Fecha para {{$appointment['timezone']}}: <!--Timezone del paciente-->
-                                            <strong>{{ ucwords(\Jenssegers\Date\Date::parse(\Carbon\Carbon::parse($appointment['date'])->timezone($appointment['timezone']))->locale('es')->format('l F d Y H:i:s')) }}</strong><br>
+                                            <strong>{{ ucwords(\Jenssegers\Date\Date::parse(\Carbon\Carbon::parse($appointment['date'])->timezone($appointment['timezone']))->locale('es')->format('l F d Y H:i')) }}</strong><br>
                                         </p>
                                         <hr>
                                         <table style="font-family: 'Montserrat',Arial,sans-serif; width: 100%;"
