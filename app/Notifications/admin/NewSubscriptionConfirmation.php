@@ -59,11 +59,11 @@ class NewSubscriptionConfirmation extends Notification
      */
     public function toArray($notifiable)
     {
-        MQTT::publish('notification', 'new-subscription-confirmation');
+        MQTT::publish('notification', $this->user->id);
         return [
             'link' => '/subscriptions',
             'title' => 'Nueva suscripción con el <strong>'.$this->plan->name.'</strong> ha sido adquirida. 🎊',
-            'description' => 'El paciente es <strong>'.$this->user->name.' '.$this->user->last_name.'.Clic para más información.'
+            'description' => 'El paciente es <strong>'.$this->user->name.' '.$this->user->last_name.'.</strong> Clic para más información.'
         ];
     }
 }

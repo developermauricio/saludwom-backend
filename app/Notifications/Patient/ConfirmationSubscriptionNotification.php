@@ -65,7 +65,7 @@ class ConfirmationSubscriptionNotification extends Notification implements Shoul
      */
     public function toArray($notifiable)
     {
-        MQTT::publish('notification', 'confirmation-subscription-notification');
+        MQTT::publish('notification', $this->user->id);
         return [
             'link' => $this->link,
             'title' => 'Tienes una suscripción activa con el <strong>'.$this->plan->name.'</strong>. 🎊',

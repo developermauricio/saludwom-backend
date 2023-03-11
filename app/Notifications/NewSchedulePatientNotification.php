@@ -101,7 +101,7 @@ class NewSchedulePatientNotification extends Notification
             'title' => count($this->appointments) > 1 ? 'Tus citas han sido agendadas. 🗓' : 'Tu cita ha sido agendada. 🗓',
             'description' => $description.' para tu tratamiento de '.'<strong>'.$this->treatment.'</strong>, clic para ver con mas detalle.'
         ];
-        MQTT::publish('notification', 'new-schedule-patient-notification');
+        MQTT::publish('notification', $this->user['id']);
         return $notification;
     }
 }

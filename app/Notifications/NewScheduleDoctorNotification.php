@@ -96,7 +96,7 @@ class NewScheduleDoctorNotification extends Notification
     public function toArray($notifiable)
     {
         $description = count($this->appointments) > 1 ? 'Han sido programadas varias citas con el paciente ' : 'Ha sido programada la cita con el paciente ';
-        MQTT::publish('notification', 'new-schedule-doctor-notification');
+        MQTT::publish('notification', $this->doctor['id']);
         return [
             'link' => '/citas',
             'title' => count($this->appointments) > 1 ? 'Nuevas citas programadas. 🗓' : 'Nueva cita programada. 🗓',

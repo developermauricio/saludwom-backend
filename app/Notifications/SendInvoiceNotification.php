@@ -78,7 +78,7 @@ class SendInvoiceNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        MQTT::publish('notification', 'send-invoice-notification');
+        MQTT::publish('notification', $this->user['id']);
         return [
             'link' => '/webapp/perfil/historial-pagos',
             'title' => 'Factura enviada. 🧾',

@@ -77,7 +77,7 @@ class NewValuationPatientNotification extends Notification
             'title' => 'Has creado un nuevo objetivo llamado <strong>'.$this->valuation.' 🔥</strong>',
             'description' => 'Pronto el especialista enviará los recursos para iniciar el tratamiento.'
         ];
-        MQTT::publish('notification', 'new-valuation-patient-notification');
+        MQTT::publish('notification', $this->user['id']);
         return $notification;
     }
 }
