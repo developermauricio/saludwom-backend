@@ -11,6 +11,7 @@ use PhpMqtt\Client\Facades\MQTT;
 class NewSubscriptionConfirmation extends Notification
 {
     use Queueable;
+    protected $userAdmin;
     protected $user;
     protected $plan;
     protected $subscription;
@@ -19,8 +20,9 @@ class NewSubscriptionConfirmation extends Notification
      *
      * @return void
      */
-    public function __construct($user, $plan, $subscription)
+    public function __construct($userAdmin, $user, $plan, $subscription)
     {
+        $this->userAdmin = $userAdmin;
         $this->user = $user;
         $this->subscription = $subscription;
         $this->plan = $plan;
@@ -59,7 +61,7 @@ class NewSubscriptionConfirmation extends Notification
      */
     public function toArray($notifiable)
     {
-        MQTT::publish('notification', $this->user->id);
+        MQTT::publish('notification', $this->userAdmin->id);
         return [
             'link' => '/subscriptions',
             'title' => 'Nueva suscripción con el <strong>'.$this->plan->name.'</strong> ha sido adquirida. 🎊',

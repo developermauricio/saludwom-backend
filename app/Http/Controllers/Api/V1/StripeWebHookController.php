@@ -62,7 +62,7 @@ class StripeWebHookController extends WebhookController
                 //Enviamos notificación a todos los usuarios que sean ADMIN
                 $usersAdmin = User::role(['Admin', 'Asistente'])->get();
                 foreach ($usersAdmin as $user){
-                    $user->notify(new NewSubscriptionConfirmation($patient->user, $subscription->plan,  $subscription));
+                    $user->notify(new NewSubscriptionConfirmation($user, $patient->user, $subscription->plan,  $subscription));
                 }
 
                 Log::info(json_encode($order));
