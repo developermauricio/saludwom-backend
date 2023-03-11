@@ -6,6 +6,8 @@ use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Patient;
 use App\Models\Subscription;
+use App\Models\User;
+use App\Notifications\admin\NewSubscriptionConfirmation;
 use App\Notifications\Patient\ConfirmationSubscriptionNotification;
 use App\Notifications\SendInvoiceNotification;
 use Illuminate\Http\Response;
@@ -57,6 +59,11 @@ class StripeWebHookController extends WebhookController
                 $patient->user->notify(new SendInvoiceNotification($patient->user, $invoice, $order, $subscription->plan));
                 //Se notifica la confimación de una nueva suscripción
                 $patient->user->notify(new ConfirmationSubscriptionNotification($patient->user, $subscription->plan,  $subscription)); //Confirmación al paciente
+                //Enviamos notificación a todos los usuarios que sean ADMIN
+                $usersAdmin = User::role(['Admin', 'Asistente'])->get();
+                foreach ($usersAdmin as $user){
+                    $user->notify(new NewSubscriptionConfirmation($patient->user, $subscription->plan,  $subscription));
+                }
 
                 Log::info(json_encode($order));
                 Log::info(json_encode($subscription));

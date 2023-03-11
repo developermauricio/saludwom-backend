@@ -91,6 +91,7 @@ class DatabaseSeeder extends Seeder
         $administrator = Role::create(['name' => 'Admin']);
         $patient = Role::create(['name' => 'Paciente']);
         $doctor = Role::create(['name' => 'Doctor']);
+        $doctor = Role::create(['name' => 'Asistente']);
 
         /*=============================================
             CREAMOS UN USUARIO ADMINISTRADOR

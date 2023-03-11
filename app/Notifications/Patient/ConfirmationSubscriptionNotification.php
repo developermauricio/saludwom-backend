@@ -3,11 +3,12 @@
 namespace App\Notifications\Patient;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use PhpMqtt\Client\Facades\MQTT;
 
-class ConfirmationSubscriptionNotification extends Notification
+class ConfirmationSubscriptionNotification extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $link;
