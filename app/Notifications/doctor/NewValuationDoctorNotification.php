@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\doctor;
+namespace App\Notifications\Doctor;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;

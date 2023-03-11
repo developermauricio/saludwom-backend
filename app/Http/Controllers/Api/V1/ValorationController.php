@@ -12,7 +12,7 @@ use App\Models\SchedulesHoursMinute;
 use App\Models\Subscription;
 use App\Models\TypeTreatment;
 use App\Models\Valuation;
-use App\Notifications\doctor\NewValuationDoctorNotification;
+use App\Notifications\Doctor\NewValuationDoctorNotification;
 use App\Notifications\NewScheduleDoctorNotification;
 use App\Notifications\NewSchedulePatientNotification;
 use App\Notifications\NewValuationPatientNotification;

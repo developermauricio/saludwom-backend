@@ -7,7 +7,7 @@ use App\Models\Order;
 use App\Models\Patient;
 use App\Models\Subscription;
 use App\Models\User;
-use App\Notifications\admin\NewSubscriptionConfirmation;
+use App\Notifications\Admin\NewSubscriptionConfirmation;
 use App\Notifications\Patient\ConfirmationSubscriptionNotification;
 use App\Notifications\SendInvoiceNotification;
 use Illuminate\Http\Response;
