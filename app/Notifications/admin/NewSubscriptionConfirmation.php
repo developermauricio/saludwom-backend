@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Notifications\Patient;
+namespace App\Notifications\admin;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use PhpMqtt\Client\Facades\MQTT;
 
-class ConfirmationSubscriptionNotification extends Notification
+class NewSubscriptionConfirmation extends Notification
 {
     use Queueable;
-    protected $link;
     protected $user;
     protected $plan;
     protected $subscription;
@@ -24,7 +24,6 @@ class ConfirmationSubscriptionNotification extends Notification
         $this->user = $user;
         $this->subscription = $subscription;
         $this->plan = $plan;
-        $this->link = '/webapp/valoracion/crear';
     }
 
     /**
@@ -35,25 +34,21 @@ class ConfirmationSubscriptionNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'database'];
+        return ['database'];
     }
 
     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return MailMessage
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(config('app.name') . ' - ' . 'CONFIRMACIÓN DE SUSCRIPCIÓN')
-            ->markdown('mails.confirmation-subscription', [
-                'user' => $this->user,
-                'plan' => $this->plan,
-                'link' => $this->link,
-                'subscription' => $this->subscription,
-            ]);
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -64,11 +59,11 @@ class ConfirmationSubscriptionNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        MQTT::publish('notification', 'confirmation-subscription-notification');
+        MQTT::publish('notification', 'new-subscription-confirmation');
         return [
-            'link' => $this->link,
-            'title' => 'Tienes una suscripción activa con el <strong>'.$this->plan->name.'</strong>. 🎊',
-            'description' => 'Es momento de crear un nuevo objetivo 🤗.'
+            'link' => '/subscriptions',
+            'title' => 'Nueva suscripción con el <strong>'.$this->plan->name.'</strong> ha sido adquirida. 🎊',
+            'description' => 'El paciente es <strong>'.$this->user->name.' '.$this->user->last_name.'.Clic para más información.'
         ];
     }
 }

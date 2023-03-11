@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Log;
+use PhpMqtt\Client\Facades\MQTT;
 
 class SendInvoiceNotification extends Notification
 {
@@ -77,10 +78,11 @@ class SendInvoiceNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        MQTT::publish('notification', 'send-invoice-notification');
         return [
-            'link' => 'link',
-            'title' => 'Factura enviada',
-            'description' => 'Hemos enviado tu factura para tu suscripción '
+            'link' => '/webapp/perfil/historial-pagos',
+            'title' => 'Factura enviada. 🧾',
+            'description' => 'Puedes ver y descargar tu orden de compra. '
         ];
     }
 }

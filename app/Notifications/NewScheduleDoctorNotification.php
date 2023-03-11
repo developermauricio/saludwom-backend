@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
+use PhpMqtt\Client\Facades\MQTT;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
 use Spatie\IcalendarGenerator\Properties\TextProperty;
@@ -95,6 +96,7 @@ class NewScheduleDoctorNotification extends Notification
     public function toArray($notifiable)
     {
         $description = count($this->appointments) > 1 ? 'Han sido programadas varias citas con el paciente ' : 'Ha sido programada la cita con el paciente ';
+        MQTT::publish('notification', 'new-schedule-doctor-notification');
         return [
             'link' => '/citas',
             'title' => count($this->appointments) > 1 ? 'Nuevas citas programadas. 🗓' : 'Nueva cita programada. 🗓',

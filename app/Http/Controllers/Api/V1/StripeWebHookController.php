@@ -53,8 +53,9 @@ class StripeWebHookController extends WebhookController
                     'order_id' => $order->id,
                     'invoice_stripe_id' => $invoice_id
                 ]);
-
+                //Se notifica la factura
                 $patient->user->notify(new SendInvoiceNotification($patient->user, $invoice, $order, $subscription->plan));
+                //Se notifica la confimación de una nueva suscripción
                 $patient->user->notify(new ConfirmationSubscriptionNotification($patient->user, $subscription->plan,  $subscription)); //Confirmación al paciente
 
                 Log::info(json_encode($order));

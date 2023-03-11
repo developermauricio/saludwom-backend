@@ -97,7 +97,7 @@ class NewSchedulePatientNotification extends Notification
     {
         $description = count($this->appointments) > 1 ? 'Tus citas han sido programadas' : 'Tu cita ha sido programada';
         $notification =  [
-            'link' => '/citas',
+            'link' => '/webapp/citas',
             'title' => count($this->appointments) > 1 ? 'Tus citas han sido agendadas. 🗓' : 'Tu cita ha sido agendada. 🗓',
             'description' => $description.' para tu tratamiento de '.'<strong>'.$this->treatment.'</strong>, clic para ver con mas detalle.'
         ];

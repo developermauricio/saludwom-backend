@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-    <title>Factura</title>
+    <title>Orden de Compra</title>
     <!--[if mso]>
     <xml><o:officedocumentsettings><o:pixelsperinch>96</o:pixelsperinch></o:officedocumentsettings></xml>
     <![endif]-->
@@ -31,7 +31,7 @@
     </style>
 </head>
 <body style="margin: 0; width: 100%; padding: 0; word-break: break-word; -webkit-font-smoothing: antialiased;">
-<div style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; display: none;">Esta es una factura por su compra.</div>
+<div style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly; display: none;">Esta es una orden de compra.</div>
 <div role="article" aria-roledescription="email" aria-label="" lang="es" style="font-family: 'Montserrat', sans-serif; mso-line-height-rule: exactly;">
     <table style="width: 100%; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
