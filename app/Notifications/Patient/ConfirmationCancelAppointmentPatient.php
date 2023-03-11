@@ -74,7 +74,7 @@ class ConfirmationCancelAppointmentPatient extends Notification
      */
     public function toArray($notifiable)
     {
-        MQTT::publish('notification', 'confirmation-cancel-appointment-patient');
+        MQTT::publish('notification',  $this->user['id']);
         return [
             'link' => '/webapp/objetivos/'.$this->valuation['slug'],
             'title' => 'Tu cita para el <strong>'.Date::parse(Carbon::parse($this->appointment['date'])->timezone($this->appointment['timezone']))->locale('es')->format('l F d Y H:i').'</strong> con el especialista <strong>'.$this->doctor['user']['name'].' '.$this->doctor['user']['last_name'].'</strong> para el objetivo <strong>'.$this->valuation['name'].'</strong> ha sido cancelada. ',
