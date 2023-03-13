@@ -67,7 +67,7 @@ class StripeWebHookController extends WebhookController
 
                 Log::info(json_encode($order));
                 Log::info(json_encode($subscription));
-                Log::info("Orden actualizado correctamente");
+                Log::info("Orden actualizada correctamente");
                 DB::commit();
                 return new Response('Webhook Handled: {handleChargeSucceeded}', 200);
             }

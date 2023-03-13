@@ -3,26 +3,40 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NotificationResource;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
 {
-    public function getNotifications($idUser){
+    public function getNotifications($idUser)
+    {
         $notifications = DB::table('notifications')
             ->where('notifiable_id', $idUser)
-                ->orderByDesc('created_at')
+            ->orderByDesc('created_at')
+            ->paginate(6);
+
+        $notificationsNotRead_at = DB::table('notifications')
+            ->where('notifiable_id', $idUser)
+            ->where('read_at', null)
             ->get();
+
 
         return response()->json([
             'message' => 'get notifications user',
             'response' => 'get_notifications_user',
             'success' => true,
-            'data' => $notifications
+            'data' => $notifications,
+            'not_read_at' => $notificationsNotRead_at->count(),
+            'lastPage' => $notifications->lastPage(),
+            'total' => $notifications->total()
         ], 200);
     }
-    public function readAtNotifications($notification){
+
+    public function readAtNotifications($notification)
+    {
         DB::beginTransaction();
         try {
             DB::table('notifications')
@@ -34,7 +48,7 @@ class NotificationController extends Controller
                 'message' => 'Notification Read',
                 'response' => 'notification_read',
             ], 200);
-        }catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             $response = [
                 'success' => false,
                 'message' => 'Transaction Error',
