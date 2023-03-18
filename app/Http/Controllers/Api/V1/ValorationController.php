@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ValorationRequest;
 use App\Models\AppointmentValuation;
+use App\Models\ChatUserValuation;
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
 use App\Models\Patient;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Jenssegers\Date\Date;
 use MacsiDigital\Zoom\Facades\Zoom;
 
 class ValorationController extends Controller
@@ -55,8 +57,10 @@ class ValorationController extends Controller
 
     public function getValoration($valuation)
     {
-
-        $getValuation = Valuation::where('slug', $valuation)->with('doctor.user', 'patient.user', 'treatment', 'subscription.plan', 'archives', 'appointments.doctor.user')->first();
+        $getValuation = Valuation::where('slug', $valuation)->with('doctor.user', 'patient.user.country', 'patient.gender', 'treatment', 'subscription.plan', 'archives', 'appointments.doctor.user', 'chat')->first();
+        $getValuation->patient->user->setAttribute('age', Carbon::parse($getValuation->patient->user->birthday)->age);
+        $getValuation->setAttribute('created_at_format', Date::parse($getValuation->created_at)->locale('es')->format('l d F Y'));
+        $getValuation->patient->user->setAttribute('country_flag', $getValuation->patient->user->country ? $getValuation->patient->user->country->flag : '');
         return response()->json([
             'success' => true,
             'message' => 'Get Valuation',
@@ -95,6 +99,21 @@ class ValorationController extends Controller
                 'subscription_id' => $request['subscriptionId'],
                 'objectives' => $request['objectives']
             ]);
+
+            /*Creamos el chat si es plan diamante*/
+            if ($subscription->plan->id === 1) {
+                $usersChat = [$doctorValoration->user->id, $patient->user->id];
+                $chatChannel = $valuation->chat()->firstOrCreate([
+                    'chat_key' => 'chat-' . Str::random(8),
+                ]);
+                foreach ($usersChat as $user) {
+                    $chatUserValoration = ChatUserValuation::create([
+                        'chat_channel_id' => $chatChannel->id,
+                        'user_id' => $user
+                    ]);
+                }
+
+            }
             $appointmentDoctor = [];
 
             if ($request->appointments) {
@@ -244,13 +263,13 @@ class ValorationController extends Controller
         $file = $request->file('file');
         $fileExtension = $file->getClientOriginalExtension();
         $fileName = $random . '-' . $request->filename;
+        Log::info($request->file('file'));
         $urlFinal = env('FILES_UPLOAD_PRODUCTION') === false ? $this->uploadFilesLocal($file, $fileName) : $this->uploadFilesStorage($file, $fileName);
         $storage = env('FILES_UPLOAD_PRODUCTION') === false ? 'local' : 'cloud';
 
         if ($valuationId !== '0') {
             $valuation = Valuation::find($valuationId);
         } else {
-            Log::info("Entro aca");
             $patient = Patient::where('user_id', $id)->first();
             $valuation = $patient->valuations()->latest()->first();
         }
@@ -295,6 +314,7 @@ class ValorationController extends Controller
     public function uploadFilesLocal($file, $fileName)
     {
         $fileNameStr = str_replace(' ', '-', $fileName);
+        Log::info($file);
         $path = Storage::disk('public')->put('/patient/archives/' . $fileNameStr, file_get_contents($file));
         $urlFinal = 'storage/patient/archives/' . $fileNameStr;
         return $urlFinal;

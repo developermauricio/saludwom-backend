@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Controller;
+use \App\Http\Controllers\ChatController;
 use \App\Http\Controllers\Auth\LoginController;
 use \App\Http\Controllers\Api\V1\PlanController;
 use \App\Http\Controllers\Api\V1\AdminController;
@@ -81,9 +82,8 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA LOS DOCTORES
      =============================================*/
     Route::get('check-schedule-available/{id}', [DoctorController::class, 'scheduleAvailable'])->name('check.schedule.available');
-    Route::get('get-patients-doctor', [DoctorController::class, 'getPatients'])->name('get.patients.doctor');
     Route::get('get-count-patients-doctor/{idDoctor}', [DoctorController::class, 'getCountPatients'])->name('get.patients.doctor');
-    Route::get('get-valuations-doctor', [DoctorController::class, 'getValorations'])->name('get.valorations.objectives.doctor');
+    Route::get('get-valorations-doctor/{dateFilter}', [DoctorController::class, 'getValorations'])->name('get.valorations.objectives.doctor');
     /*=============================================
       RUTA PARA EL ADMIN
      =============================================*/
@@ -120,6 +120,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('get-notification-users/{idUser}', [ NotificationController::class, 'getNotifications'])->name('get.notifications');
     Route::post('read-at-notification/{notification}', [ NotificationController::class, 'readAtNotifications'])->name('readAt.notifications');
 
+    /*=============================================
+      RUTA PARA EL CHAT
+     =============================================*/
+    Route::get('get-messages-valoration/{chatId}', [ChatController::class, 'getMessagesChatValoration'])->name('get.chat.message.valoration');
+    Route::post('chat-save', [ChatController::class, 'saveMessage'])->name('save.message.chat');
+    Route::post('close-online-chat/{chatId}', [ChatController::class, 'closeOnlineChat'])->name('close.online.chat');
 });
 Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');
@@ -128,6 +134,8 @@ Route::get('get-document-types', [Controller::class, 'getDocumentTypes'])->name(
 Route::get('get-countries', [Controller::class, 'countries'])->name('get.all.countries');
 Route::get('get-cities-from-country/{country}', [Controller::class, 'citiesFromCountry'])->name('get.city.from.country');
 Route::get('/verify-email-user/{email}', [Controller::class, 'validateEmailApi'])->name('get.validate.email');
+
+Route::post('send-notification-new-message', [Controller::class, 'testSendEmailMessage']);
 
 
 /*=============================================

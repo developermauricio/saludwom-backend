@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ChatChannel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Api\V1\StripeWebHookController;
@@ -15,7 +16,9 @@ use MacsiDigital\Zoom\Facades\Zoom;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('phpinfo', function () {
+   return  ChatChannel::where('id', 1)->with('valoration')->first();
+});
 Route::post('stripe/webhook', [StripeWebHookController::class, 'handleWebHook']);
 
 

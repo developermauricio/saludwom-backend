@@ -214,4 +214,8 @@ class Controller extends BaseController
             return response()->json($response, 500);
         }
     }
+
+    public function testSendEmailMessage(){
+        Log::info('ENVIO EL CORREO');
+    }
 }

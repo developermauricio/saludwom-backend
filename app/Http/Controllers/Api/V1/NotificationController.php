@@ -13,6 +13,13 @@ class NotificationController extends Controller
 {
     public function getNotifications($idUser)
     {
+        if (!$idUser){
+            return response()->json([
+                'message' => 'Not user notification',
+                'response' => 'not_user_notification',
+                'success' => false,
+            ], 404);
+        }
         $notifications = DB::table('notifications')
             ->where('notifiable_id', $idUser)
             ->orderByDesc('created_at')

@@ -33,6 +33,9 @@ class Valuation extends Model
             'user_id' => auth()->id()
         ]);
     }
+    public function chat(){
+        return $this->morphOne(ChatChannel::class, 'chateable');
+    }
     public function appointments(){
         return $this->hasMany(AppointmentValuation::class, 'valuation_id')->orderByRaw("FIELD(state , '5', '1', '3', '2') ASC")->orderBy('date', 'ASC');
     }

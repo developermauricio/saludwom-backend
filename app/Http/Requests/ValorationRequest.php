@@ -27,7 +27,7 @@ class ValorationRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'doctorId' => 'required',
+//            'doctorId' => 'required',
             'selectedTreatment' => 'required',
             'subscriptionId' => 'required',
             'objectives' => 'required',
