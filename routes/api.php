@@ -21,6 +21,7 @@ use \App\Http\Controllers\Api\V1\NotificationController;
 use \App\Http\Controllers\Api\V1\AppointmentController;
 use \App\Http\Controllers\Auth\ResetPasswordController;
 use \App\Http\Controllers\Auth\ForgotPasswordController;
+use \App\Http\Controllers\Api\V1\QuestionnaireController;
 use \App\Http\Controllers\Api\V1\SubscriptionsController;
 
 
@@ -119,6 +120,7 @@ Route::group(['middleware' => ['auth:api']], function () {
      =============================================*/
     Route::get('get-notification-users/{idUser}', [ NotificationController::class, 'getNotifications'])->name('get.notifications');
     Route::post('read-at-notification/{notification}', [ NotificationController::class, 'readAtNotifications'])->name('readAt.notifications');
+    Route::post('mark-notifications-as-read', [ NotificationController::class, 'markNotificationAsRead'])->name('mark.notifications.as.read');
 
     /*=============================================
       RUTA PARA EL CHAT
@@ -126,6 +128,16 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('get-messages-valoration/{chatId}', [ChatController::class, 'getMessagesChatValoration'])->name('get.chat.message.valoration');
     Route::post('chat-save', [ChatController::class, 'saveMessage'])->name('save.message.chat');
     Route::post('close-online-chat/{chatId}', [ChatController::class, 'closeOnlineChat'])->name('close.online.chat');
+    Route::post('message-read-at/{chatId}', [ChatController::class, 'messageReatAt'])->name('message.read.at');
+    Route::get('get-unread-message/{chatId}', [ChatController::class, 'getUnreadMessages'])->name('get.unread.messages');
+
+    /*=============================================
+      RUTA PARA EL CUESTIONARIO
+     =============================================*/
+    Route::get('get-type-questions', [QuestionnaireController::class, 'getTypeQuestions'])->name('get.type.questions');
+    Route::get('get-questionnaires', [QuestionnaireController::class, 'getQuestionnaires'])->middleware('questionnaire.permissions')->name('get.questionnaires');
+    Route::post('add-questionnaire', [QuestionnaireController::class, 'addQuestionnaire'])->name('add.questionnaire');
+    Route::post('update-state-questionnaire/{questionnaireId}/{state}', [QuestionnaireController::class, 'updateStateQuestionnaire'])->name('update.state.questionnaire');
 });
 Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');

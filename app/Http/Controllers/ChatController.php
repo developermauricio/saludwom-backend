@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
+    public function messageReatAt($chatId){
+        $updateReadAt = ChatMessages::where('chat_channel_id', $chatId)
+            ->where('recipient_user_id', auth()->user()->id)
+            ->update(['read_at' => now()]);
+    }
     public function getMessagesChatValoration($chatId)
     {
         if (!$chatId) {
@@ -23,12 +28,19 @@ class ChatController extends Controller
                 'success' => false,
             ], 404);
         }
+        //Cambiamos el estado de online y no disponible para enviar notificaciones
         $chatUserValuation = ChatUserValuation::where('chat_channel_id', $chatId)
             ->where('user_id', auth()->user()->id)->update(['online' => true, 'receive_notification' => false]);
+        //Canal de chat
         $chatChannel = ChatChannel::where('id', $chatId)->first();
+        //Actaulizamos los chat leiados por el usuario
+        $this->messageReatAt($chatId);
+
+        //Obtener todos los mensajes
         $messages = ChatMessages::where('chat_channel_id', $chatId)
             ->orderBy('id', 'DESC')
-            ->paginate(20);
+            ->paginate(15);
+
         return response()->json([
             'message' => 'get chat messages user',
             'response' => 'get_chat_messages_user',
@@ -45,8 +57,6 @@ class ChatController extends Controller
     {
         $chatUserValoration = ChatUserValuation::where('user_id', $request->recipient_user_id)
             ->where('chat_channel_id', $request->chat)->first();
-        Log::info($chatUserValoration);
-
         DB::beginTransaction();
         try {
             ChatMessages::create([
@@ -106,5 +116,25 @@ class ChatController extends Controller
             Log::error('LOG ERROR SAVE MESSAGE CHAT.', $response); // Guardamos el error en el archivo de logs
             return response()->json($response, 500);
         }
+    }
+
+    public function getUnreadMessages($chatId){
+        if (!$chatId) {
+            return response()->json([
+                'message' => 'Not chat channel id',
+                'response' => 'not_chat_channel_id',
+                'success' => false,
+            ], 404);
+        }
+        $messages = ChatMessages::where('chat_channel_id', $chatId)
+            ->where('recipient_user_id', auth()->user()->id)
+            ->where('read_at', null)
+            ->get();
+        return response()->json([
+            'message' => 'get chat messages user',
+            'response' => 'get_chat_messages_user',
+            'success' => true,
+            'data' => $messages->count(),
+        ], 200);
     }
 }

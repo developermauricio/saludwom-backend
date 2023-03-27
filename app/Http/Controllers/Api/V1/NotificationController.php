@@ -23,7 +23,7 @@ class NotificationController extends Controller
         $notifications = DB::table('notifications')
             ->where('notifiable_id', $idUser)
             ->orderByDesc('created_at')
-            ->paginate(6);
+            ->paginate(10);
 
         $notificationsNotRead_at = DB::table('notifications')
             ->where('notifiable_id', $idUser)
@@ -48,6 +48,30 @@ class NotificationController extends Controller
         try {
             DB::table('notifications')
                 ->where('id', $notification)
+                ->update(['read_at' => now()]);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Notification Read',
+                'response' => 'notification_read',
+            ], 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR READ AT NOTIFICATION.', $response); // Guardamos el error en el archivo de logs
+            DB::rollBack();
+            return response()->json($response, 500);
+        }
+    }
+    public function markNotificationAsRead(){
+        DB::beginTransaction();
+        try {
+            DB::table('notifications')
+                ->where('notifiable_id', auth()->user()->id)
                 ->update(['read_at' => now()]);
             DB::commit();
             return response()->json([

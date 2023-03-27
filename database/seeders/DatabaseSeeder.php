@@ -10,6 +10,7 @@ use App\Models\Gender;
 use App\Models\IdentificationType;
 use App\Models\Patient;
 use App\Models\Plan;
+use App\Models\QuestionTypes;
 use App\Models\SchedulesHoursMinute;
 use App\Models\Subscription;
 use App\Models\TypeTreatment;
@@ -58,6 +59,25 @@ class DatabaseSeeder extends Seeder
         ]);
         Gender::factory()->count(1)->create([
             'name' => 'Otro'
+        ]);
+
+        /*=============================================
+             CREAMOS TIPOS DE PREGUNTA
+         =============================================*/
+        QuestionTypes::factory()->count(1)->create([
+            'name' => 'input'
+        ]);
+        QuestionTypes::factory()->count(1)->create([
+            'name' => 'textarea'
+        ]);
+        QuestionTypes::factory()->count(1)->create([
+            'name' => 'number'
+        ]);
+        QuestionTypes::factory()->count(1)->create([
+            'name' => 'checkbox'
+        ]);
+        QuestionTypes::factory()->count(1)->create([
+            'name' => 'select'
         ]);
 //        Gender::factory()->count(1)->create([
 //            'name' => 'No reporta género'

@@ -34,7 +34,7 @@ class ValorationController extends Controller
         $patient = Patient::where('user_id', auth()->id())->first();
 
         try {
-            $valuations = Valuation::where('patient_id', $patient->id)->with('doctor', 'patient.user', 'treatment', 'appointments.doctor.user')->latest('created_at')->paginate(6);
+            $valuations = Valuation::where('patient_id', $patient->id)->with('doctor', 'patient.user', 'treatment', 'appointments.doctor.user')->latest('created_at')->paginate(8);
             return response()->json([
                 'success' => true,
                 'message' => 'Get Valuations',

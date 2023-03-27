@@ -20,7 +20,7 @@ class SubscriptionsController extends Controller
     {
         $patient = Patient::where('user_id', auth()->id())->first();
         try {
-            $subscriptions = Subscription::where('patient_id', $patient->id)->with('plan')->latest('state')->paginate(5);
+            $subscriptions = Subscription::where('patient_id', $patient->id)->with('plan')->latest('state')->paginate(10);
             return response()->json([
                 'success' => true,
                 'message' => 'Get Subscription',
