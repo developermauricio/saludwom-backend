@@ -12,6 +12,7 @@ use \App\Http\Controllers\Api\V1\OrderController;
 use \App\Http\Controllers\Api\V1\CouponController;
 use \App\Http\Controllers\Api\V1\DoctorController;
 use \App\Http\Controllers\Auth\RegisterController;
+use \App\Http\Controllers\Api\V1\FolderController;
 use \App\Http\Controllers\Api\V1\PatientController;
 use \App\Http\Controllers\Api\V1\CheckoutController;
 use \App\Http\Controllers\Auth\VerificationController;
@@ -23,6 +24,7 @@ use \App\Http\Controllers\Auth\ResetPasswordController;
 use \App\Http\Controllers\Auth\ForgotPasswordController;
 use \App\Http\Controllers\Api\V1\QuestionnaireController;
 use \App\Http\Controllers\Api\V1\SubscriptionsController;
+use \App\Http\Controllers\Api\V1\ResourceFolderContentController;
 
 
 /*
@@ -137,7 +139,17 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('get-type-questions', [QuestionnaireController::class, 'getTypeQuestions'])->name('get.type.questions');
     Route::get('get-questionnaires', [QuestionnaireController::class, 'getQuestionnaires'])->middleware('questionnaire.permissions')->name('get.questionnaires');
     Route::post('add-questionnaire', [QuestionnaireController::class, 'addQuestionnaire'])->name('add.questionnaire');
+    Route::post('update-questionnaire/{id}', [QuestionnaireController::class, 'updateQuestionnaire'])->name('update.questionnaire');
+    Route::post('delete-questionnaire/{id}', [QuestionnaireController::class, 'deleteQuestionnaire'])->name('delete.questionnaire');
     Route::post('update-state-questionnaire/{questionnaireId}/{state}', [QuestionnaireController::class, 'updateStateQuestionnaire'])->name('update.state.questionnaire');
+
+    /*=============================================
+      RUTA PARA LOS FOLDERS
+     =============================================*/
+    Route::get('get-folders', [FolderController::class, 'getFolders'])->name('get.folders');
+    Route::get('get-files-resource-to-folder/{id}', [ResourceFolderContentController::class, 'getResourceFiles'])->name('get.files.resources.folder');
+    Route::post('add-resource-folder', [ResourceFolderContentController::class, 'addResourceFolder'])->name('add.resource.folder');
+    Route::post('update-resource-folder/{id}', [ResourceFolderContentController::class, 'updateResourceFolder'])->name('update.resource.folder');
 });
 Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');

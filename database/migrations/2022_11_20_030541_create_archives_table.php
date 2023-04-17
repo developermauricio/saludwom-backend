@@ -16,10 +16,14 @@ class CreateArchivesTable extends Migration
         Schema::create('archives', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('path_file');
+            $table->mediumText('path_file');
             $table->string('name_file');
             $table->string('type_file');
             $table->string('storage');
+            $table->enum('state', [
+                \App\Models\Archive::ACTIVE,
+                \App\Models\Archive::INACTIVE
+            ])->default(\App\Models\Archive::ACTIVE);
             $table->morphs('archiveable');
             $table->timestamps();
         });

@@ -11,6 +11,7 @@ use App\Models\IdentificationType;
 use App\Models\Patient;
 use App\Models\Plan;
 use App\Models\QuestionTypes;
+use App\Models\ResourceFolder;
 use App\Models\SchedulesHoursMinute;
 use App\Models\Subscription;
 use App\Models\TypeTreatment;
@@ -518,5 +519,33 @@ Apasionada por el trabajo y la atención a pacientes.',
 
             });
         });
+
+        /*=============================================
+             CREAMOS CARPETAS PARA LOS RECURSOS
+         =============================================*/
+        ResourceFolder::factory()->count(1)->create([
+           'folder' => 'Videos de Valoración',
+            'slug' => 'videos-valoracion'
+        ]);
+        ResourceFolder::factory()->count(1)->create([
+            'folder' => 'Logros',
+            'slug' => 'logros'
+        ]);
+        ResourceFolder::factory()->count(1)->create([
+            'folder' => 'Ejercicios en 7 minutes',
+            'slug' => 'ejerciocios-siete-minutes'
+        ]);
+        ResourceFolder::factory()->count(1)->create([
+            'folder' => 'Información',
+            'slug' => 'informacion'
+        ]);
+        ResourceFolder::factory()->count(1)->create([
+            'folder' => 'Documentos PDF',
+            'slug' => 'documentos-pdf'
+        ]);
+        ResourceFolder::factory()->count(1)->create([
+            'folder' => 'Información del Sistema',
+            'slug' => 'informacion-del-sistema'
+        ]);
     }
 }

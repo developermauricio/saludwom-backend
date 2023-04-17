@@ -12,13 +12,15 @@ class Questionnaire extends Model
     const INACTIVE = 2;
 
     protected $guarded = 'id';
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['id','name', 'description'];
 
     public function treatments(){
         return $this->belongsToMany(TypeTreatment::class, 'questionnaire_treatment', 'questionnaire_id', 'type_treatment_id');
     }
     public function questions(){
         return $this->hasMany(QuestionsQuestionnaire::class)
-            ->select('questionnaire_id', 'question_type_id', 'question', 'required', 'options', 'illustration', 'order');
+            ->orderBy('order')
+            ->select('id', 'questionnaire_id', 'question_type_id', 'question', 'required', 'options', 'illustration', 'order');
     }
+
 }
