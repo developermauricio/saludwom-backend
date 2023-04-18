@@ -26,4 +26,9 @@ class ResourceFolder extends Model
             'user_id' => auth()->id()
         ]);
     }
+
+    public function archiveCount()
+    {
+        return $this->archives()->count() ?? '';
+    }
 }

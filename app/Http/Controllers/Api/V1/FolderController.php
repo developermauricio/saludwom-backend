@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FolderResource;
 use App\Models\ResourceFolder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,8 +13,9 @@ class FolderController extends Controller
     public function getFolders(): \Illuminate\Http\JsonResponse
     {
         try {
-            $folders = ResourceFolder::all();
-
+            $folders = FolderResource::collection(
+                ResourceFolder::all()
+            );
             return response()->json([
                 'success' => true,
                 'message' => 'Get folders',
