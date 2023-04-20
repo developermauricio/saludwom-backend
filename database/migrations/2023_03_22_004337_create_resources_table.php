@@ -23,8 +23,6 @@ class CreateResourcesTable extends Migration
             $table->foreign('valuation_id')->references('id')->on('valuations');
             $table->unsignedBigInteger('doctor_id')->nullable();
             $table->foreign('doctor_id')->references('id')->on('doctors');
-            $table->boolean('enable_touch_data')->default(false);
-            $table->boolean('assign_rating_videos')->default(false);
             $table->text('message_doctor')->nullable();
             $table->timestamps();
         });

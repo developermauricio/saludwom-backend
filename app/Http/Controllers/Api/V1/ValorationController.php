@@ -100,8 +100,8 @@ class ValorationController extends Controller
                 'objectives' => $request['objectives']
             ]);
 
-            /*Creamos el chat si es plan diamante*/
-            if ($subscription->plan->id === 1) {
+            /*Creamos el chat si es plan diamante o esmeralda*/
+            if ($subscription->plan->id === 1 || $subscription->plan->id === 2) {
                 $usersChat = [$doctorValoration->user->id, $patient->user->id];
                 $chatChannel = $valuation->chat()->firstOrCreate([
                     'chat_key' => 'chat-' . Str::random(8),
