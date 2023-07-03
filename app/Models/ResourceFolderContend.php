@@ -17,4 +17,10 @@ class ResourceFolderContend extends Model
     public function treatments(){
         return $this->belongsToMany(TypeTreatment::class, 'r_folder_contents_treatmets', 'resource_folder_contend_id', 'type_treatment_id');
     }
+
+    public function archive()
+    {
+        return $this->belongsTo(Archive::class, 'archive_id');
+    }
+
 }

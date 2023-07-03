@@ -98,10 +98,11 @@ class ResourceFolderContentController extends Controller
         if (!$id) {
             return response()->json('Debe agregar un identificador');
         }
-        Log::info($request);
+
         $file = '';
         $fileExtension = '';
         $treatments = json_decode($request->treatments);
+        $deleteTreatments = json_decode($request->deleteTreatments);
         $storage = env('FILES_UPLOAD_PRODUCTION') === false ? 'local' : 'cloud';
         $resourceFolderContent = ResourceFolderContend::find($id);
         try {
@@ -109,19 +110,16 @@ class ResourceFolderContentController extends Controller
                 $file = $request->file('pathFile');
                 Log::info($file);
                 if ($file) {
-                    Log::info('ENTRO EN EL IF SI TIENE FILE');
                     $fileExtension = $file->getClientOriginalExtension();
                     $file = env('FILES_UPLOAD_PRODUCTION') === false ? $this->uploadResourceToFolderToLocal($file, $fileExtension) : $this->uploadSignaturePatientStorage($file);
                 } else {
-                    Log::info('NO TIENE FILE ENTRO ACA');
-                    Log::info($request->pathFile);
                     $file = $request->pathFile;
                 }
 
             } else {
                 $file = $request->pathFile;
             }
-//            $resourceFolder = ResourceFolder::find($request->folderId);
+
             DB::table('archives')
                 ->where('id', $request->fileId)
                 ->update([
@@ -140,7 +138,7 @@ class ResourceFolderContentController extends Controller
             ]);
 
             //Guardamos los tratamientos
-            $this->addTreatments($treatments, $resourceFolderContent);
+            $this->updateTreatments($treatments, $deleteTreatments, $resourceFolderContent);
             DB::commit();
             return response()->json([
                 'success' => true,
@@ -157,6 +155,28 @@ class ResourceFolderContentController extends Controller
             Log::error('LOG ERROR CREATE RESOURCE TO FOLDER.', $response); // Guardamos el error en el archivo de logs
             DB::rollBack();
             return response()->json($response, 500);
+        }
+    }
+
+    /*=============================================
+     ACTUALIZAR TRATAMIENTOS
+    =============================================*/
+    public function updateTreatments($treatments, $deleteTreatments, $resourceFolderContent)
+    {
+        Log::info($deleteTreatments);
+        if (count($deleteTreatments) > 0){
+            foreach ($deleteTreatments as $deleteTreatment){
+                $resourceFolderContent->treatments()->detach($deleteTreatment->id);
+            }
+        }
+
+        foreach ($treatments as $treatment) {
+             DB::table('r_folder_contents_treatmets')
+                ->updateOrInsert([
+                    'type_treatment_id' => $treatment->id,
+                    'resource_folder_contend_id' => $resourceFolderContent->id
+                ]);
+
         }
     }
 

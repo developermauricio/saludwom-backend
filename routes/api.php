@@ -120,9 +120,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     /*=============================================
       RUTAS PARA LAS NOTIFICACIONES
      =============================================*/
-    Route::get('get-notification-users/{idUser}', [ NotificationController::class, 'getNotifications'])->name('get.notifications');
-    Route::post('read-at-notification/{notification}', [ NotificationController::class, 'readAtNotifications'])->name('readAt.notifications');
-    Route::post('mark-notifications-as-read', [ NotificationController::class, 'markNotificationAsRead'])->name('mark.notifications.as.read');
+    Route::get('get-notification-users/{idUser}', [NotificationController::class, 'getNotifications'])->name('get.notifications');
+    Route::post('read-at-notification/{notification}', [NotificationController::class, 'readAtNotifications'])->name('readAt.notifications');
+    Route::post('mark-notifications-as-read', [NotificationController::class, 'markNotificationAsRead'])->name('mark.notifications.as.read');
 
     /*=============================================
       RUTA PARA EL CHAT
@@ -150,6 +150,25 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('get-files-resource-to-folder/{id}', [ResourceFolderContentController::class, 'getResourceFiles'])->name('get.files.resources.folder');
     Route::post('add-resource-folder', [ResourceFolderContentController::class, 'addResourceFolder'])->name('add.resource.folder');
     Route::post('update-resource-folder/{id}', [ResourceFolderContentController::class, 'updateResourceFolder'])->name('update.resource.folder');
+
+    /*=============================================
+      RUTA PARA LOS RECURSOS
+     =============================================*/
+    Route::post('add-resource-valoration', [ValorationController::class, 'addResourceValoration'])->name('add.resource.valoration');
+    Route::get('get-list-resources/{valuationId}', [ValorationController::class, 'getResources'])->name('get.resources');
+    Route::get('get-answer-resources/{data}', [ValorationController::class, 'getAnswerQuestionResource'])->name('get.answer.resources');
+    Route::post('send-resource-patient', [ValorationController::class, 'sendResourcePatient'])->name('send.resource.patient'); //El paciente envia el recurso
+
+    /*=============================================
+      RUTA PARA LOS OBJETIVOS ADMIN
+     =============================================*/
+    Route::get('get-valorations/{dateFilter}', [ValorationController::class, 'getValorationsAdmin'])->name('get.valorations.objectives');
+
+    /*=============================================
+      RUTA PARA LOS DOCTORES ADMIN
+     =============================================*/
+    Route::get('get-doctors', [AdminController::class, 'getDoctors'])->name('get.doctors');
+    Route::get('get-doctors-admin', [AdminController::class, 'getDoctorsAdmin'])->name('get.doctors.admin');
 });
 Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');

@@ -34,6 +34,7 @@ class ValorationResource extends JsonResource
             'document' => $this->patient->user->document,
             'document_type' => $this->patient->user->identificationType->name,
             'gender' => $this->patient->gender->name,
+            'doctor' => $this->doctor->user->name.' '.$this->doctor->user->last_name,
             'age' => Carbon::parse($this->patient->user->birthday)->age,
             'patient_slug' => $this->patient->user->slug,
             'picture' => $this->patient->user->picture,

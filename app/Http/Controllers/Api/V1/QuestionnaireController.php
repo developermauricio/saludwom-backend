@@ -45,11 +45,11 @@ class QuestionnaireController extends Controller
     {
         try {
             //Obtenemos todos los cuestionarios
-            if ($request->treatmentId){
+            if ($request->treatmentId) {
                 $questionnaires = Questionnaire::whereHas('treatments', function ($q) use ($request) {
-                        $q->where('type_treatment_id', $request->treatmentId);
-                    })->with('treatments', 'questions.typeQuestion')->orderByDesc('created_at')->get();
-            }else{
+                    $q->where('type_treatment_id', $request->treatmentId);
+                })->with('treatments', 'questions.typeQuestion')->orderByDesc('created_at')->get();
+            } else {
                 $questionnaires = Questionnaire::with('treatments', 'questions.typeQuestion')->latest('created_at')->get();
             }
 
@@ -137,12 +137,32 @@ class QuestionnaireController extends Controller
     public function addTreatments($treatments, $questionnaire)
     {
         foreach ($treatments as $treatment) {
-//            $questionnaire->treatments()->sync($treatment['id']);
-            DB::table('questionnaire_treatment')
+           $treatment = DB::table('questionnaire_treatment')
                 ->updateOrInsert([
                     'type_treatment_id' => $treatment['id'],
                     'questionnaire_id' => $questionnaire->id
                 ]);
+        }
+    }
+    /*=============================================
+     ACTUALIZAR TRATAMIENTOS
+    =============================================*/
+    public function updateTreatments($treatments, $deleteTreatments, $questionnaire)
+    {
+        Log::info($deleteTreatments);
+        if (count($deleteTreatments) > 0){
+            foreach ($deleteTreatments as $deleteTreatment){
+                $questionnaire->treatments()->detach($deleteTreatment['id']);
+            }
+        }
+
+        foreach ($treatments as $treatment) {
+           $treatment = DB::table('questionnaire_treatment')
+                ->updateOrInsert([
+                    'type_treatment_id' => $treatment['id'],
+                    'questionnaire_id' => $questionnaire->id
+                ]);
+
         }
     }
 
@@ -160,7 +180,7 @@ class QuestionnaireController extends Controller
             }
 
             $questionIn = QuestionsQuestionnaire::firstOrCreate([
-                'question_type_id' => $question['type']['id'],
+                'question_type_id' => $question['type_question']['id'],
                 'questionnaire_id' => $questionnaire->id,
                 'question' => $question['question'],
                 'required' => $question['required'],
@@ -222,7 +242,7 @@ class QuestionnaireController extends Controller
             'description' => $request['description']
         ]);
         //Guardamos los tratamientos
-        $this->addTreatments($request['treatments'], $questionnaire);
+        $this->updateTreatments($request['treatments'], $request['deleteTreatments'], $questionnaire);
         //Guardamos las preguntas
         $this->addQuestions($request['questions'], $questionnaire);
         //Eliminar preguntas
@@ -231,7 +251,8 @@ class QuestionnaireController extends Controller
         }
     }
 
-    public function deleteQuestionnaire($id){
+    public function deleteQuestionnaire($id)
+    {
         DB::beginTransaction();
         try {
             $questionnaire = Questionnaire::find($id);
@@ -244,9 +265,31 @@ class QuestionnaireController extends Controller
                 ->delete();
             //Eliminamos el cuestionario
             $questionnaire = Questionnaire::find($id);
-            $questionnaire->delete();
-            DB::commit();
-        }catch (\Throwable $th) {
+            $resourceQuestionnaire = DB::table('questionnaire_resource')
+                ->where('questionnaire_id', $id)
+                ->get();
+            Log::info($resourceQuestionnaire);
+            if (count($resourceQuestionnaire) > 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Questionnaire cannot be deleted',
+                    'response' => 'questionnaire_cannot_be_delete',
+                    'data' => $questionnaire,
+                ], 201);
+            } else {
+                $questionnaire->delete();
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Questionnaire Delete',
+                    'response' => 'questionnaire_delete',
+                    'data' => $questionnaire,
+                ], 200);
+
+            }
+
+
+        } catch (\Throwable $th) {
             $response = [
                 'success' => false,
                 'message' => 'Transaction Error',

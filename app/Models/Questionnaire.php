@@ -22,5 +22,4 @@ class Questionnaire extends Model
             ->orderBy('order')
             ->select('id', 'questionnaire_id', 'question_type_id', 'question', 'required', 'options', 'illustration', 'order');
     }
-
 }

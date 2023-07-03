@@ -24,6 +24,7 @@ class CreateResourcesTable extends Migration
             $table->unsignedBigInteger('doctor_id')->nullable();
             $table->foreign('doctor_id')->references('id')->on('doctors');
             $table->text('message_doctor')->nullable();
+            $table->boolean('enable__touch_data')->default(false)->nullable();
             $table->timestamps();
         });
     }
