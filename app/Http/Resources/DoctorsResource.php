@@ -16,11 +16,32 @@ class DoctorsResource extends JsonResource
     {
         $index = 1;
         return [
+            'id' => $this->id,
+            'userId' => $this->user->id,
             'index' => $this->sequence_number,
-            'name' => $this->user->name.' '.$this->user->last_name,
+            'countTotalValuation' => $this->countTotalValuation,
+            'stateInTreatment' => $this->stateInTreatment,
+            'statePendSendReso' => $this->statePendSendReso,
+            'stateFinished' => $this->stateFinished,
+            'fullName' => $this->user->name.' '.$this->user->last_name,
+            'name' => $this->user->name,
+            'lastName' => $this->user->last_name,
+            'email' => $this->user->email,
+            'phone' => $this->user->phone,
+            'birthday' => $this->user->birthday,
+            'address' => $this->user->address,
+            'picture' => $this->user->picture,
+            'document' => $this->user->document,
+            'documentType' => $this->user->identificationType,
+            'city' => $this->user->city,
+            'country' => $this->user->city->country,
             'state' => $this->user->state,
             'biography' => $this->biography,
-            'treatments' => $this->treatments
+            'treatments' => $this->treatments,
+            'valuations' => $this->valuations,
+            'appointments' => $this->doctorSchedule,
+            "zoomApiKey" => $this->zoom_api_key,
+            "zoomApiSecret" => $this->zoom_api_secret
         ];
     }
 }

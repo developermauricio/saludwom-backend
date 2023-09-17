@@ -342,6 +342,7 @@ class ValorationController extends Controller
         $getValuation->patient->user->setAttribute('age', Carbon::parse($getValuation->patient->user->birthday)->age);
         $getValuation->setAttribute('created_at_format', Date::parse($getValuation->created_at)->locale('es')->format('l d F Y'));
         $getValuation->patient->user->setAttribute('country_flag', $getValuation->patient->user->country ? $getValuation->patient->user->country->flag : '');
+
         return response()->json([
             'success' => true,
             'message' => 'Get Valuation',

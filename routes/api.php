@@ -57,6 +57,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('logout', [LoginController::class, 'logout']);
     /*Obtener el usuario autenticado*/
     Route::get('user', [LoginController::class, 'user']);
+    Route::post('update-photo-profile', [LoginController::class, 'updatePhotoProfile']);
+
+    Route::post('update-password/{userId}', [LoginController::class, 'updatePassword'])->name('update.password');
     /*=============================================
       RUTAS PARA LAS SUSCRIPCIONES
      =============================================*/
@@ -85,8 +88,15 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA LOS DOCTORES
      =============================================*/
     Route::get('check-schedule-available/{id}', [DoctorController::class, 'scheduleAvailable'])->name('check.schedule.available');
+    Route::get('check-schedule-doctor/{id}/{date}', [DoctorController::class, 'scheduleDate'])->name('check.schedule.date');
     Route::get('get-count-patients-doctor/{idDoctor}', [DoctorController::class, 'getCountPatients'])->name('get.patients.doctor');
     Route::get('get-valorations-doctor/{dateFilter}', [DoctorController::class, 'getValorations'])->name('get.valorations.objectives.doctor');
+    Route::post('remove-availability-hour-minute/{id}/{doctorId}/{dateSelected}', [DoctorController::class, 'removeAvailabilityHourMinute'])->name('remove.availability.hour.minute');
+    Route::post('add-schedule-available', [DoctorController::class, 'addScheduleAvailable'])->name('add.schedule.available');
+    Route::get('get-appointments-doctor/{idDoctor}', [DoctorController::class, 'getAppointmentsDoctor'])->name('get.appointments.doctor');
+    Route::post('change-status-doctor/{idDoctor}', [DoctorController::class, 'changeStatusDoctor'])->name('change.status.doctor');
+    Route::get('get-doctor-appointments-agenda/{idDoctor}', [DoctorController::class, 'getDoctorAppointmentsAgenda'])->name('get.doctor.appointments.agenda');
+    Route::delete('delete-doctor/{idDoctor}', [DoctorController::class, 'deleteDoctor'])->name('delete.doctor');
     /*=============================================
       RUTA PARA EL ADMIN
      =============================================*/
@@ -105,6 +115,7 @@ Route::group(['middleware' => ['auth:api']], function () {
       RUTA PARA PACIENTES
      =============================================*/
     Route::get('check-signature', [PatientController::class, 'checkSignature'])->name('check.signature');
+    Route::post('update-data-patient/{userId}', [PatientController::class, 'updateData'])->name('update.data.patient');
 
     /*=============================================
       RUTA PARA CUPONES
@@ -114,6 +125,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     /*=============================================
       RUTAS PARA LAS CITAS
      =============================================*/
+    Route::get('/get-appointments-patient/{patientId}', [AppointmentController::class, 'getAppointments'])->name('get.appointments.patient');
     Route::post('cancel-appointment/{idAppointmentValuation}', [AppointmentController::class, 'cancelAppointment'])->name('cancel.appointment');
     Route::post('reschedule-appointment', [AppointmentController::class, 'rescheduleAppointment'])->name('reschedule.appointment');
 
@@ -169,6 +181,9 @@ Route::group(['middleware' => ['auth:api']], function () {
      =============================================*/
     Route::get('get-doctors', [AdminController::class, 'getDoctors'])->name('get.doctors');
     Route::get('get-doctors-admin', [AdminController::class, 'getDoctorsAdmin'])->name('get.doctors.admin');
+    Route::get('get-count-objects', [DoctorController::class, 'getCountValuationByDoctor'])->name('get.count.valuation.by.doctor');
+    Route::post('add-doctor', [DoctorController::class, 'addDoctor'])->name('add.doctor');
+    Route::post('edit-doctor/{doctorId}', [DoctorController::class, 'editDoctor'])->name('edit.doctor');
 });
 Route::post('/upload-files-valuation/{id}/{valutionId}', [ValorationController::class, 'uploadFiles'])->name('upload.file.valuation');
 Route::get('get-genders', [Controller::class, 'getGenders'])->name('get.genders');
@@ -176,7 +191,7 @@ Route::get('get-timezones', [Controller::class, 'allTimezone'])->name('get.timez
 Route::get('get-document-types', [Controller::class, 'getDocumentTypes'])->name('get.document.types');
 Route::get('get-countries', [Controller::class, 'countries'])->name('get.all.countries');
 Route::get('get-cities-from-country/{country}', [Controller::class, 'citiesFromCountry'])->name('get.city.from.country');
-Route::get('/verify-email-user/{email}', [Controller::class, 'validateEmailApi'])->name('get.validate.email');
+Route::get('/verify-email-user/{email}/{userId}', [Controller::class, 'validateEmailApi'])->name('get.validate.email');
 
 Route::post('send-notification-new-message', [Controller::class, 'testSendEmailMessage']);
 

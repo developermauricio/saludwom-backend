@@ -121,9 +121,16 @@ class Controller extends BaseController
         }
     }
 
-    public function validateEmailApi($email)
+    public function validateEmailApi($email, $userId = null)
     {
-        $check = User::whereEmail($email)->first();
+        $query = User::whereEmail($email);
+
+        if ($userId !== null) {
+            $query->where('id', '!=', $userId);
+        }
+
+        $check = $query->first();
+
         if ($check !== null) {
             return response()->json([
                 'success' => true,

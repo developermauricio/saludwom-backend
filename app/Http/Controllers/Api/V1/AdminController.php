@@ -35,7 +35,7 @@ class AdminController extends Controller
 
     public function getDoctors(){
         try {
-            $doctors = Doctor::with('user')->get();
+            $doctors = Doctor::with('user', 'treatments')->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Get Doctors',
@@ -56,11 +56,19 @@ class AdminController extends Controller
 
     public function getDoctorsAdmin(){
         try {
-            $doctors = Doctor::with('user', 'treatments')->get();
+            $doctors = Doctor::with('user.identificationType', 'treatments', 'valuations.patient.user.city.country', 'valuations.treatment', 'doctorSchedule.schedulesHoursMinutes')->get();
 
             $doctors = $doctors->each(function ($doctors, $index) {
                 $doctors->sequence_number = $index + 1;
+                $doctors->countTotalValuation =  $doctors->valuations->count();
+                $doctors->statePendSendReso =   $doctors->valuations->where('state', '1')->count();
+                $doctors->stateInTreatment =   $doctors->valuations->where('state', '4')->count();
+                $doctors->stateFinished =   $doctors->valuations->where('state', '5')->count();
+                $doctors->valuations->each(function ($valuations, $index){
+                    $valuations->sequence_number = $index + 1;
+                });
             });
+
 
             $doctors = DoctorsResource::collection(
                 $doctors

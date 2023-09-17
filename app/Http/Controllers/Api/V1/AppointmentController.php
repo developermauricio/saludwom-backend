@@ -180,4 +180,35 @@ class AppointmentController extends Controller
             return response()->json($response, 500);
         }
     }
+
+    public function getAppointments($patientId)
+    {
+
+        try {
+            $appointmentsPatient = AppointmentValuation::whereHas('valuation', function ($q) use ($patientId) {
+                $q->where('patient_id', $patientId);
+            })->with(['valuation', 'doctor.user'])->paginate(8);
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Get Appointments Patient',
+                'response' => 'get_appointments_patient',
+                'data' => $appointmentsPatient,
+                'lastPage' => $appointmentsPatient->lastPage(),
+                'total' => $appointmentsPatient->total()
+            ], 200);
+
+        } catch (\Throwable $th) {
+            $response = [
+                'success' => false,
+                'message' => 'Transaction Error',
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ];
+            Log::error('LOG ERROR GET APPOINTMENTS PATIENT.', $response); // Guardamos el error en el archivo de logs
+            return response()->json($response, 500);
+        }
+
+    }
 }
