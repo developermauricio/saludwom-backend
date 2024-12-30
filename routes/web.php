@@ -17,21 +17,22 @@ use MacsiDigital\Zoom\Facades\Zoom;
 |
 */
 Route::get('phpinfo', function () {
-   return  ChatChannel::where('id', 1)->with('valoration')->first();
+    return ChatChannel::where('id', 1)->with('valoration')->first();
 });
-Route::post('stripe/webhook', [StripeWebHookController::class, 'handleWebHook']);
+Route::post('stripe/webhook', [StripeWebHookController::class, 'handleWebHook'])->name('cashier.webhook');
 
 
 Route::get('/', function () {
+    phpinfo();
     return view('welcome');
 });
 Route::get('/zoom', function () {
     $zoomMeeting = Zoom::meeting()->make([
-            'topic' => 'Test Create Meeting',
-            'duration' => 15, // In minutes, optional
-            'start_time' => new Carbon('2022-11-22 20:00:00'),
-            'timezone' => 'Asia/Jakarta',
-        ]);
+        'topic' => 'Test Create Meeting',
+        'duration' => 15, // In minutes, optional
+        'start_time' => new Carbon('2022-11-22 20:00:00'),
+        'timezone' => 'Asia/Jakarta',
+    ]);
     return response()->json($zoomMeeting);
 });
 Route::get('/mail', function () {

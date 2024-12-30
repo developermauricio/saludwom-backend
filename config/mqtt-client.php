@@ -78,8 +78,8 @@ return [
 
                 // Credentials used for authentication and authorization.
                 'auth' => [
-                    'username' => env('MQTT_AUTH_USERNAME'),
-                    'password' => env('MQTT_AUTH_PASSWORD'),
+                    'username' => env('MQTT_AUTH_USERNAME', null),
+                    'password' => env('MQTT_AUTH_PASSWORD', null),
                 ],
 
                 // Can be used to declare a last will during connection. The last will

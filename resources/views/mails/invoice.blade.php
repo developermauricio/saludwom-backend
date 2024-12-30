@@ -29,14 +29,13 @@
 
 <table width="100%">
     <tr>
-        <td valign="top"><img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWom"
-                              width="150"/></td>
+        <td valign="top"><img src="{{ env('APP_URL') }}/assets/images/logo-saludWoM.png" width="300" alt="SaludWom"/></td>
         <td align="right">
             <h3>{{ env('APP_NAME') }}</h3>
             <pre>
                 Salud WoM
-                Barcelona - España
                 +34 640 847 411
+                Barcelona - España
                 info@saludwom.com
             </pre>
         </td>
@@ -54,7 +53,7 @@
             <strong>Teléfono:</strong> {{$user->phone}} <br>
         </td>
         <td>
-            <strong>Orden de compra #</strong> {{ $invoice->id }} <br>
+            <strong>Orden de compra #</strong> {{ $invoice->id }} @if($subscription->name)<strong style="color: #D85C72 !important;">MANUAL</strong>@endif<br>
             <strong>Fecha:</strong> {{  ucwords(\Jenssegers\Date\Date::parse($invoice->created_at)->locale('es')->format('F d Y')) }}
         </td>
     </tr>

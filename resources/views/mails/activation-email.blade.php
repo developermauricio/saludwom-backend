@@ -106,7 +106,7 @@
                                             Gracias por registrarte. 👋
                                         </p>
                                         <p style="margin: 0 0 24px;color: #666666 !important;">
-                                            Verifica tu dirección de correo electrónico haciendo clic en el botón de abajo y <strong>Crear ahora tu nuevo objetivo para ser un equipo y alcanzar tus exitos.</strong>
+                                            Verifica tu dirección de correo electrónico haciendo clic en el botón de abajo. <strong>Crea ahora tu nuevo objetivo para ser un equipo y alcanzar tus éxitos.</strong>
                                         </p>
                                         <p style="margin: 0 0 24px; color: #666666 !important;">
                                             Si no te has registrado, ignora este correo electrónico o contáctenos a

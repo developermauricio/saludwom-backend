@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-
             $table->unsignedBigInteger('plan_id')->nullable();
             $table->foreign('plan_id')->references('id')->on('plans');
             $table->unsignedBigInteger('patient_id')->nullable();
@@ -32,6 +31,7 @@ return new class extends Migration
             $table->string('stripe_id')->unique()->nullable();
             $table->string('stripe_status')->nullable();
             $table->string('stripe_price')->nullable();
+            $table->mediumText('cancellation_reason')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('quantity')->nullable();
             $table->timestamp('trial_ends_at')->nullable();

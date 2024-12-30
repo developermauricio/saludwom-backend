@@ -21,7 +21,8 @@ class CreateCouponsTable extends Migration
             $table->unsignedBigInteger('create_user_id')->nullable();
             $table->foreign('create_user_id')->references('id')->on('users');
             $table->timestamp('date_expiration')->nullable();
-            $table->integer('limit_use')->default(1);
+            $table->integer('limit_use_per_user')->default(1);
+            $table->integer('limit_use_per_coupon')->default(1);
             $table->json('except_plans')->nullable();
             $table->enum('state', [
                 \App\Models\Coupon::ACTIVE,

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
 
 class PasswordReset extends Notification
 {
@@ -41,10 +42,14 @@ class PasswordReset extends Notification
 
         $appUrl = config('app.front_url', config('app.url'));
 
+        Log::info($appUrl);
+
         $url = env('APP_URL_FRONT') . route('password.reset', [
                 'token' => $this->token,
                 'email' => $notifiable->getEmailForPasswordReset(),
             ], false);
+
+        Log::info($url);
         return str_replace(url(''), $appUrl, $url);
     }
 

@@ -101,11 +101,11 @@
                                     <td class="sm-px-24" style="--bg-opacity: 1; background-color: #ffffff; background-color: rgba(255, 255, 255, var(--bg-opacity)); border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 24px; padding: 48px; text-align: left; --text-opacity: 1; color: #626262; color: rgba(98, 98, 98, var(--text-opacity));" bgcolor="rgba(255, 255, 255, var(--bg-opacity))" align="left">
                                         <p style="font-weight: 600; font-size: 18px; margin-bottom: 0;color: #666666 !important;">Cordial Saludo!</p>
                                         <p style="font-weight: 700; font-size: 20px; margin-top: 0; --text-opacity: 1; color: #D85C72; color: #D85C72 ;">
-                                           Esp. {{ $name }} {{ $last_name }}</p>
+                                           {{ $name }} {{ $last_name }}</p>
                                         <p class="sm-leading-32" style="font-weight: 600; font-size: 20px; margin: 0 0 16px; --text-opacity: 1; color: #263238; color: #263238">
-                                            Su cuenta ha sido creada exitosamente! 👋
+                                            Tu cuenta ha sido creada exitosamente! 👋
                                         </p>
-                                        <p>Sus credenciales de acceso son:</p>
+                                        <p>Tus credenciales de acceso son:</p>
                                         <ul style="margin-bottom: 24px;">
                                             <li><span style="font-weight: bold">Correo electrónico:</span> <span style="color: #11435b; font-weight: bold">{{ $email }}</span></li>
                                             <li><span style="font-weight: bold">Contraseña:</span>  <span style="color: #11435b; font-weight: bold">{{ $password }}</span></li>
@@ -113,7 +113,7 @@
                                         <table style="font-family: 'Montserrat',Arial,sans-serif;" cellpadding="0" cellspacing="0" role="presentation">
                                             <tr>
                                                 <td style="mso-padding-alt: 16px 24px; --bg-opacity: 1; background-color: #D85C72; background-color: #D85C72; border-radius: 4px; font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;" bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
-                                                    <a href="{{ env('APP_URL_FRON_ADMIN') }}/login" style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Iniciar Sesión →</a>
+                                                    <a href="{{ env('APP_URL_FRONT') }}/login" style="display: block; font-weight: 600; font-size: 14px; line-height: 100%; padding: 16px 24px; --text-opacity: 1; color: #ffffff; color: #ffffff; text-decoration: none;">Iniciar Sesión →</a>
                                                 </td>
                                             </tr>
                                         </table>

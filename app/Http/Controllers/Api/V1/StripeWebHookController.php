@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Notifications\Admin\NewSubscriptionConfirmation;
 use App\Notifications\Patient\ConfirmationSubscriptionNotification;
 use App\Notifications\SendInvoiceNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -78,4 +79,75 @@ class StripeWebHookController extends WebhookController
             return new Response('Webhook Handled with error: {handleChargeSucceeded}', 400);
         }
     }
+
+    protected function handleCustomerSubscriptionCreated(array $payload)
+    {
+        $user = $this->getUserByStripeId($payload['data']['object']['customer']);
+
+        if ($user) {
+            $data = $payload['data']['object'];
+
+            Log::info($data);
+
+            // Buscar la suscripción existente
+            $subscription = $user->subscriptions()->where('stripe_id', $data['id'])->first();
+
+            Log::info($subscription);
+
+            if ($subscription) {
+                // Actualizar los valores de la suscripción existente
+                $trialEndsAt = isset($data['trial_end']) ? Carbon::createFromTimestamp($data['trial_end']) : null;
+
+                $subscription->update([
+                    'stripe_status' => $data['status'],
+                    'trial_ends_at' => $trialEndsAt,
+                    'stripe_price' => count($data['items']['data']) === 1 ? $data['items']['data'][0]['price']['id'] : null,
+                    'quantity' => count($data['items']['data']) === 1 && isset($data['items']['data'][0]['quantity']) ? $data['items']['data'][0]['quantity'] : null,
+                ]);
+
+                // Actualizar los elementos de la suscripción
+                foreach ($data['items']['data'] as $item) {
+                    $subscriptionItem = $subscription->items()->where('stripe_id', $item['id'])->first();
+
+                    if ($subscriptionItem) {
+                        $subscriptionItem->update([
+                            'stripe_product' => $item['price']['product'],
+                            'stripe_price' => $item['price']['id'],
+                            'quantity' => $item['quantity'] ?? null,
+                        ]);
+                    } else {
+                        // Crear el elemento si no existe (opcional)
+                        $subscription->items()->create([
+                            'stripe_id' => $item['id'],
+                            'stripe_product' => $item['price']['product'],
+                            'stripe_price' => $item['price']['id'],
+                            'quantity' => $item['quantity'] ?? null,
+                        ]);
+                    }
+                }
+
+                // Obtener y actualizar fechas relevantes
+                $periodStart = Carbon::createFromTimestamp($data['current_period_start']);
+                $periodEnd = Carbon::createFromTimestamp($data['current_period_end']);
+                $paidAt = isset($data['created']) ? Carbon::createFromTimestamp($data['created']) : null;
+
+                // Actualizar la orden asociada
+                $order = $subscription->order;
+                if ($order) {
+                    $order->update([
+                        'paid_at' => $paidAt,
+                        'period_start' => $periodStart,
+                        'period_end' => $periodEnd,
+                    ]);
+                }
+
+                Log::info('La suscripción y la orden han sido actualizadas correctamente.');
+            } else {
+                Log::warning('No se encontró la suscripción en la base de datos.');
+            }
+        }
+
+        return $this->successMethod();
+    }
+
 }

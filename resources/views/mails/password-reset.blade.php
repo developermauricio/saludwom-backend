@@ -7,12 +7,6 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-    <!--[if mso]>
-    <xml>
-        <o:OfficeDocumentSettings>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-        </o:OfficeDocumentSettings>
-    </xml>
     <style>
         td, th, div, p, a, h1, h2, h3, h4, h5, h6 {
             font-family: "Segoe UI", sans-serif;
@@ -20,7 +14,7 @@
         }
     </style>
     <![endif]-->
-    <title>Solicitud para restablecer contraseña</title>
+    <title>Cambiar Contraseña</title>
     <link
         href="https://fonts.googleapis.com/css?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700"
         rel="stylesheet" media="screen">

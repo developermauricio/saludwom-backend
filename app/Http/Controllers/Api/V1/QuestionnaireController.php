@@ -44,33 +44,33 @@ class QuestionnaireController extends Controller
     public function getQuestionnaires(Request $request)
     {
         try {
-            //Obtenemos todos los cuestionarios
+
+            $query = Questionnaire::with('treatments', 'questions.typeQuestion', 'categories')->latest('created_at');
+
             if ($request->treatmentId) {
-                $questionnaires = Questionnaire::whereHas('treatments', function ($q) use ($request) {
+                $query->whereHas('treatments', function ($q) use ($request) {
                     $q->where('type_treatment_id', $request->treatmentId);
-                })->with('treatments', 'questions.typeQuestion')->orderByDesc('created_at')->get();
-            } else {
-                $questionnaires = Questionnaire::with('treatments', 'questions.typeQuestion')->latest('created_at')->get();
+                });
             }
 
-
-            //Convertimos la fecha de registro en formato legible para el usuario
-            $questionnaires->map(function ($item) {
-                return $item->setAttribute('created_at_format', Date::parse($item->created_at)->locale('es')->format('l d F Y H:i:s'));
-            });
-            //Convertimos la última fecha de actualización en formato legible para el usuario
-            $questionnaires->map(function ($item) {
-                return $item->setAttribute('update_at_format', Date::parse($item->update_at)->locale('es')->format('l d F Y H:i:s'));
-            });
-            //Convertimos las preguntas en decode json para leerlas
-            $questions = $questionnaires->map(function ($item) {
-                return $item->questions->map(function ($ques) {
-                    $ques->setAttribute('options', json_decode($ques->options));
+            if ($request->categoryId) {
+                $query->whereHas('categories', function ($q) use ($request) {
+                    $q->where('category_id', $request->categoryId);
                 });
+            }
+
+            $questionnaires = $query->get();
+
+//            // Transformación de fechas
+            $questionnaires->each(function ($item) {
+                $item->setAttribute('created_at_format', Date::parse($item->created_at)->locale('es')->format('l d F Y H:i:s'));
+                $item->setAttribute('update_at_format', Date::parse($item->updated_at)->locale('es')->format('l d F Y H:i:s'));
             });
-            //Convertimos el tipo de pregunta en un formato legible
-            $questions = $questionnaires->map(function ($item) {
-                return $item->questions->map(function ($ques) {
+
+            // Manipulación de preguntas y opciones
+            $questionnaires->each(function ($item) {
+                $item->questions->each(function ($ques) {
+                    $ques->setAttribute('options', json_decode($ques->options));
                     $ques->setAttribute('type', $ques->typeQuestion);
                 });
             });
@@ -81,6 +81,7 @@ class QuestionnaireController extends Controller
                 'response' => 'get_questionnaires',
                 'data' => $questionnaires
             ], 200);
+
         } catch (\Throwable $th) {
             $response = [
                 'success' => false,
@@ -111,6 +112,8 @@ class QuestionnaireController extends Controller
             // Guardamos las preguntas
             $this->addQuestions($request['questions'], $questionnaire);
 
+            $this->addCategories($request['categories'], $questionnaire);
+
             DB::commit();
             return response()->json([
                 'success' => true,
@@ -137,29 +140,64 @@ class QuestionnaireController extends Controller
     public function addTreatments($treatments, $questionnaire)
     {
         foreach ($treatments as $treatment) {
-           $treatment = DB::table('questionnaire_treatment')
+            $treatment = DB::table('questionnaire_treatment')
                 ->updateOrInsert([
                     'type_treatment_id' => $treatment['id'],
                     'questionnaire_id' => $questionnaire->id
                 ]);
         }
     }
+
+    /*=============================================
+     AGREGAR CATEGORIAS
+    =============================================*/
+    public function addCategories($categories, $questionnaire)
+    {
+        foreach ($categories as $category) {
+            $treatment = DB::table('category_questionnaire')
+                ->updateOrInsert([
+                    'category_id' => $category['id'],
+                    'questionnaire_id' => $questionnaire->id
+                ]);
+        }
+    }
+
     /*=============================================
      ACTUALIZAR TRATAMIENTOS
     =============================================*/
     public function updateTreatments($treatments, $deleteTreatments, $questionnaire)
     {
-        Log::info($deleteTreatments);
-        if (count($deleteTreatments) > 0){
-            foreach ($deleteTreatments as $deleteTreatment){
+        if ($deleteTreatments && count($deleteTreatments) > 0) {
+            foreach ($deleteTreatments as $deleteTreatment) {
                 $questionnaire->treatments()->detach($deleteTreatment['id']);
             }
         }
 
         foreach ($treatments as $treatment) {
-           $treatment = DB::table('questionnaire_treatment')
+            $treatment = DB::table('questionnaire_treatment')
                 ->updateOrInsert([
                     'type_treatment_id' => $treatment['id'],
+                    'questionnaire_id' => $questionnaire->id
+                ]);
+
+        }
+    }
+
+    /*=============================================
+     ACTUALIZAR CATEGORIAS
+    =============================================*/
+    public function updateCategories($categories, $deleteCategories, $questionnaire)
+    {
+        if ($deleteCategories && count($deleteCategories) > 0) {
+            foreach ($deleteCategories as $deleteCategory) {
+                $questionnaire->categories()->detach($deleteCategory['id']);
+            }
+        }
+
+        foreach ($categories as $category) {
+            $treatment = DB::table('category_questionnaire')
+                ->updateOrInsert([
+                    'category_id' => $category['id'],
                     'questionnaire_id' => $questionnaire->id
                 ]);
 
@@ -201,10 +239,14 @@ class QuestionnaireController extends Controller
 
     public function removeQuestions($questions)
     {
-        foreach ($questions as $question) {
-            QuestionsQuestionnaire::where('id', $question['id'])
-                ->delete();
+        if (count($questions) > 0) {
+
+            foreach ($questions as $question) {
+                QuestionsQuestionnaire::where('id', $question['id'])
+                    ->delete();
+            }
         }
+
     }
 
     /*=============================================
@@ -243,10 +285,14 @@ class QuestionnaireController extends Controller
         ]);
         //Guardamos los tratamientos
         $this->updateTreatments($request['treatments'], $request['deleteTreatments'], $questionnaire);
+
+        $this->updateCategories($request['categories'], $request['deleteCategories'], $questionnaire);
+
         //Guardamos las preguntas
         $this->addQuestions($request['questions'], $questionnaire);
+
         //Eliminar preguntas
-        if ($request['removeQuestions']) {
+        if (count($request['removeQuestions']) > 0) {
             $this->removeQuestions($request['removeQuestions']);
         }
     }
@@ -261,6 +307,10 @@ class QuestionnaireController extends Controller
                 ->delete();
             //Eliminamos los tratamientos relacionados
             DB::table('questionnaire_treatment')
+                ->where('questionnaire_id', $id)
+                ->delete();
+            //Eliminamos las categorias
+            DB::table('category_questionnaire')
                 ->where('questionnaire_id', $id)
                 ->delete();
             //Eliminamos el cuestionario

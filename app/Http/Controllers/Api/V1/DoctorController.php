@@ -139,6 +139,13 @@ class DoctorController extends Controller
 
             DB::commit();
 
+            return response()->json([
+                'success' => true,
+                'message' => 'Edit Doctor',
+                'response' => 'edit_doctor',
+                'data' => $doctor,
+            ], 200);
+
         } catch (\Throwable $th) {
             $response = [
                 'success' => false,

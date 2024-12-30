@@ -16,7 +16,8 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('currency')->default('eur');
+            $table->string('currency')->default('EUR');
+            $table->string('stripe_plan_price_id')->nullable();
             $table->mediumText('description')->nullable();
             $table->double('price');
             $table->unsignedBigInteger('user_id')->nullable();
@@ -33,6 +34,7 @@ class CreatePlansTable extends Migration
                 \App\Models\Plan::ACTIVE,
                 \App\Models\Plan::INACTIVE
             ])->default(\App\Models\Plan::ACTIVE);
+            $table->integer('order')->nullable();
             $table->timestamps();
         });
     }

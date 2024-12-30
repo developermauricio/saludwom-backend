@@ -77,7 +77,21 @@ class NewValuationPatientNotification extends Notification
             'title' => 'Has creado un nuevo objetivo llamado <strong>'.$this->valuation.' 🔥</strong>',
             'description' => 'Pronto el especialista enviará los recursos para iniciar el tratamiento.'
         ];
-        MQTT::publish('notification', $this->user->id);
+
+        Log::info('MQTT connection settings', [
+            'host' => env('MQTT_HOST'),
+            'port' => env('MQTT_PORT'),
+            'username' => env('MQTT_AUTH_USERNAME'),
+            'password' => env('MQTT_AUTH_PASSWORD'),
+            'user' => $this->user
+        ]);
+
+        try {
+            MQTT::publish('notification', $this->user->id);
+        }catch (\Throwable $th){
+            Log::info("MQTT ERROR {$th}");
+        }
+
         return $notification;
     }
 }

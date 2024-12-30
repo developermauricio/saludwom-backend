@@ -17,6 +17,9 @@ class Questionnaire extends Model
     public function treatments(){
         return $this->belongsToMany(TypeTreatment::class, 'questionnaire_treatment', 'questionnaire_id', 'type_treatment_id');
     }
+    public function categories(){
+        return $this->belongsToMany(Category::class, 'category_questionnaire', 'questionnaire_id', 'category_id');
+    }
     public function questions(){
         return $this->hasMany(QuestionsQuestionnaire::class)
             ->orderBy('order')

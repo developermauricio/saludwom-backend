@@ -67,263 +67,67 @@ class ValorationController extends Controller
         $date = json_decode($dateFilter);
 
         try {
-            if ($request->doctor) {
-                if (count((array)$date) > 0) {
-                    $from = Carbon::createFromFormat('Y-m-d', $date->start)->startOfDay();
-                    $to = Carbon::createFromFormat('Y-m-d', $date->end)->endOfDay();
-                    $valorations = Valuation::whereBetween('created_at', [$from, $to])
-                        ->whereHas('doctor', function ($q) use ($request) {
-                            $q->where('doctor_id', $request->doctor);
-                        })
-                        ->whereHas('patient', function ($q) use ($request) {
-                            $q->where('gender_id', $request->genderId);
-                        })->orderByDesc('created_at')->get();
-                } else {
-                    $valorations = Valuation::whereHas('doctor', function ($q) use ($request) {
-                        $q->where('doctor_id',$request->doctor);
-                    })->orderByDesc('created_at')->get();
-                }
+            // Inicializa una consulta base
+            $query = Valuation::with([
+                'patient.user.identificationType',
+                'patient.gender',
+                'patient.user.city',
+                'patient.user.country',
+                'subscription.plan',
+                'doctor.user',
+            ]);
 
-                $valorations = $valorations->each(function ($valorations, $index) {
-                    $valorations->sequence_number = $index + 1;
+            // Aplica filtros según las solicitudes
+            if ($request->doctor) {
+                $query->whereHas('doctor', function ($q) use ($request) {
+                    $q->where('doctor_id', $request->doctor);
                 });
-                $valorations = ValorationResource::collection(
-                    $valorations
-                );
             }
 
             if ($request->plan) {
-
-                if (count((array)$date) > 0) {
-                    $from = Carbon::createFromFormat('Y-m-d', $date->start)->startOfDay();
-                    $to = Carbon::createFromFormat('Y-m-d', $date->end)->endOfDay();
-                    $valorations = Valuation::whereBetween('created_at', [$from, $to])
-                        ->whereHas('subscription', function ($q) use ($request) {
-                            $q->where('plan_id', $request->plan);
-                        })
-                        ->whereHas('patient', function ($q) use ($request) {
-                            $q->where('gender_id', $request->genderId);
-                        })->orderByDesc('created_at')->get();
-
-                } else {
-
-                    $valorations = Valuation::whereHas('subscription', function ($q) use ($request) {
-                            $q->where('plan_id', $request->plan);
-                        })->orderByDesc('created_at')->get();
-                }
-
-                $valorations = $valorations->each(function ($valorations, $index) {
-                    $valorations->sequence_number = $index + 1;
+                $query->whereHas('subscription', function ($q) use ($request) {
+                    $q->where('plan_id', $request->plan);
                 });
-                $valorations = ValorationResource::collection(
-                    $valorations
-                );
             }
+
             if ($request->genderId) {
-
-                if (count((array)$date) > 0) {
-                    $from = Carbon::createFromFormat('Y-m-d', $date->start)->startOfDay();
-                    $to = Carbon::createFromFormat('Y-m-d', $date->end)->endOfDay();
-                    $valorations = Valuation::whereBetween('created_at', [$from, $to])
-                        ->whereHas('patient', function ($q) use ($request) {
-                            $q->where('gender_id', $request->genderId);
-                        })->orderByDesc('created_at')->get();
-
-                } else {
-                    $valorations = Valuation::whereHas('patient', function ($q) use ($request) {
-                            $q->where('gender_id', $request->genderId);
-                        })->orderByDesc('created_at')->get();
-                }
-
-                $valorations = $valorations->each(function ($valorations, $index) {
-                    $valorations->sequence_number = $index + 1;
+                $query->whereHas('patient', function ($q) use ($request) {
+                    $q->where('gender_id', $request->genderId);
                 });
-                $valorations = ValorationResource::collection(
-                    $valorations
-                );
-
-
             }
+
             if ($request->state) {
-//                $valorations = ValorationResource::collection(
-//                    Valuation::where('doctor_id', $doctor->id)
-//                        ->whereHas('patient', function ($q) use ($request) {
-//                            $q->where('patient_type', );
-//                        })->orderByDesc('created_at')->get());
-                if (count((array)$date) > 0) {
-                    $from = Carbon::createFromFormat('Y-m-d', $date->start)->startOfDay();
-                    $to = Carbon::createFromFormat('Y-m-d', $date->end)->endOfDay();
-                    $valorations = Valuation::whereBetween('created_at', [$from, $to])
-                        ->where('state', $request->state)->with('patient')
-                        ->orderByDesc('created_at')->get();
-                } else {
-                    $valorations = Valuation::where('state', $request->state)->with('patient')
-                        ->orderByDesc('created_at')->get();
-                }
-
-                $valorations = $valorations->each(function ($valorations, $index) {
-                    $valorations->sequence_number = $index + 1;
-                });
-                $valorations = ValorationResource::collection(
-                    $valorations
-                );
-            }
-            if ($request->genderId && $request->state && $request->plan && $request->doctor) {
-//                $valorations = ValorationResource::collection(
-//                    Valuation::where('doctor_id', $doctor->id)
-//                        ->whereHas('patient', function ($q) use ($request) {
-//                            $q->where('gender_id', $request->genderId)->where('patient_type', $request->type);
-//                        })->orderByDesc('created_at')->get());
-                if (count((array)$date) > 0) {
-                    $from = Carbon::createFromFormat('Y-m-d', $date->start)->startOfDay();
-                    $to = Carbon::createFromFormat('Y-m-d', $date->end)->endOfDay();
-                    $valorations = Valuation::whereBetween('created_at', [$from, $to])
-                        ->where('state', $request->state)
-                        ->whereHas('subscription', function ($q) use ($request) {
-                            $q->where('plan_id', $request->plan);
-                        })->whereHas('doctor', function ($q) use ($request) {
-                            $q->where('doctor_id', $request->doctor);
-                        })->whereHas('patient', function ($q) use ($request) {
-                            $q->where('gender_id', $request->genderId);
-                        })->orderByDesc('created_at')->get();
-                } else {
-                    $valorations = Valuation::where('state', $request->state)
-                        ->whereHas('subscription', function ($q) use ($request) {
-                            $q->where('plan_id', $request->plan);
-                        })
-                        ->whereHas('patient', function ($q) use ($request) {
-                            $q->where('gender_id', $request->genderId);
-                        })->orderByDesc('created_at')->get();
-                }
-
-                $valorations = $valorations->each(function ($valorations, $index) {
-                    $valorations->sequence_number = $index + 1;
-                });
-                $valorations = ValorationResource::collection(
-                    $valorations
-                );
+                $query->where('state', $request->state);
             }
 
-            if ($request->genderId == null && $request->state == null && $request->plan == null && $request->doctor == null) {
-
-                if (count((array)$date) > 0) {
-                    $from = Carbon::createFromFormat('Y-m-d', $date->start)->startOfDay();
-                    $to = Carbon::createFromFormat('Y-m-d', $date->end)->endOfDay();
-                    $valorations = Valuation::whereBetween('created_at', [$from, $to])
-                        ->with(['patient.user.identificationType', 'patient.gender',
-                            'patient.user.city', 'patient.user.country', 'subscription.plan', 'doctor.user'
-                        ])->orderByDesc('created_at')->get();
-                } else {
-                    $valorations = Valuation::with(['patient.user.identificationType', 'patient.gender',
-                            'patient.user.city', 'patient.user.country', 'subscription.plan', 'doctor.user'
-                        ])->orderByDesc('created_at')->get();
-                }
-
-                $valorations = $valorations->each(function ($valorations, $index) {
-                    $valorations->sequence_number = $index + 1;
-                });
-                $valorations = ValorationResource::collection(
-                    $valorations
-                );
+            // Aplica filtro de fechas si están disponibles
+            if (count((array) $date) > 0) {
+                $from = Carbon::createFromFormat('Y-m-d', $date->start)->startOfDay();
+                $to = Carbon::createFromFormat('Y-m-d', $date->end)->endOfDay();
+                $query->whereBetween('created_at', [$from, $to]);
             }
-//            $countGenderM = $valorations->filter(function ($item, $key) {
-//                return $item->patient->gender_id === 1;
-//            });
-//            $countGenderF = $patients->filter(function ($item, $key) {
-//                return $item->patient->gender_id === 2;
-//            });
-//            $countGenderO = $patients->filter(function ($item, $key) {
-//                return $item->patient->gender_id === 3;
-//            });
-//            $countTypeClient = $patients->filter(function ($item, $key){
-//                return $item->patient->patient_type === 'client';
-//            });
-//            $countTypeCourtesy = $patients->filter(function ($item, $key){
-//                return $item->patient->patient_type === 'courtesy';
-//            });
-            $countStatePendSendReso = $valorations->filter(function ($item, $key) {
-                return $item->state === '1';
-            });
-            $countStateResoSedFromDoctor = $valorations->filter(function ($item, $key) {
-                return $item->state === '2';
-            });
-            $countStatePendSendTreaFromDoctor = $valorations->filter(function ($item, $key) {
-                return $item->state === '3';
-            });
-            $countStateInTreatment = $valorations->filter(function ($item, $key) {
-                return $item->state === '4';
-            });
-            $countStateFinished = $valorations->filter(function ($item, $key) {
-                return $item->state === '5';
+
+            $valorations = $query->orderByDesc('created_at')->get();
+
+            $valorations = $valorations->each(function ($valuation, $index) {
+                $valuation->sequence_number = $index + 1;
             });
 
-            $totalValorations = new \stdClass();
-            $totalValorations->total = $valorations->count();
-            $totalValorations->type = 'totalValorations';
+            $valorations = ValorationResource::collection($valorations);
 
-            $totalPendSendRes = new \stdClass();
-            $totalPendSendRes->total = $countStatePendSendReso->count();
-            $totalPendSendRes->type = 'totalPendSendRes';
+            // Llama a la función para obtener el total de valoraciones en diferentes estados
+            $queryStates = clone $query;
 
-            $totalResSendFromDoctor = new \stdClass();
-            $totalResSendFromDoctor->total = $countStateResoSedFromDoctor->count();
-            $totalResSendFromDoctor->type = 'totalResSendFromDoctor';
+            $totalStates = $this->getTotalStates($queryStates);
 
-            $totalPendSendTreaFromDoctor = new \stdClass();
-            $totalPendSendTreaFromDoctor->total = $countStatePendSendTreaFromDoctor->count();
-            $totalPendSendTreaFromDoctor->type = 'totalPendSendTreaFromDoctor';
-
-            $totalInTreatment = new \stdClass();
-            $totalInTreatment->total = $countStateInTreatment->count();
-            $totalInTreatment->type = 'totalInTreatment';
-
-            $totalFinished = new \stdClass();
-            $totalFinished->total = $countStateFinished->count();
-            $totalFinished->type = 'totalFinished';
-
-//            $totalPatientsM = new \stdClass();
-//            $totalPatientsM->total = $countGenderM->count();
-//            $totalPatientsM->type = 'totalPatientsM';
-//
-//            $totalPatientsF = new \stdClass();
-//            $totalPatientsF->total = $countGenderF->count();
-//            $totalPatientsF->type = 'totalPatientsF';
-//
-//            $totalPatientsO = new \stdClass();
-//            $totalPatientsO->total = $countGenderO->count();
-//            $totalPatientsO->type = 'totalPatientsO';
-
-//            $totalPatientsTypeCli = new \stdClass();
-//            $totalPatientsTypeCli->total = $countTypeClient->count();
-//            $totalPatientsTypeCli->type = 'totalPatientsCli';
-//
-//            $totalPatientsTypeCour = new \stdClass();
-//            $totalPatientsTypeCour->total = $countTypeCourtesy->count();
-//            $totalPatientsTypeCour->type = 'totalPatientsCour';
-
-            Log::info(json_encode($valorations));
             return response()->json([
                 'success' => true,
                 'total' => $valorations->count(),
-                'countDataState' => [
-                    $totalValorations,
-                    $totalPendSendRes,
-                    $totalResSendFromDoctor,
-                    $totalPendSendTreaFromDoctor,
-                    $totalInTreatment,
-                    $totalFinished
-//                    $totalPatientsM,
-//                    $totalPatientsF,
-//                    $totalPatientsO,
-//                    $totalPatientsTypeCli,
-//                    $totalPatientsTypeCour
-                ],
-
+                'countDataState' => $totalStates,
                 'message' => 'Get Valorations',
                 'response' => 'get_valorations',
                 'data' => $valorations,
             ], 200);
-
         } catch (\Throwable $th) {
             $response = [
                 'success' => false,
@@ -331,10 +135,38 @@ class ValorationController extends Controller
                 'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ];
-            Log::error('LOG ERROR GET PATIENTS.', $response); // Guardamos el error en el archivo de logs
+            Log::error('LOG ERROR GET VALORATIONS.', $response); // Guardamos el error en el archivo de logs
             return response()->json($response, 500);
         }
     }
+
+// Función para obtener el total de valoraciones en diferentes estados
+    private function getTotalStates($query): array
+    {
+        $queryPendSendReso = clone $query;
+        $queryResoSedFromDoctor = clone $query;
+        $queryPendSendTreaFromDoctor = clone $query;
+        $queryInTreatment = clone $query;
+        $queryFinished = clone $query;
+        $all = clone $query;
+
+        $totalValorations = $all->count();
+        $totalPendSendReso = $queryPendSendReso->where('state', '1')->count();
+        $totalResoSedFromDoctor = $queryResoSedFromDoctor->where('state', '2')->count();
+        $totalPendSendTreaFromDoctor = $queryPendSendTreaFromDoctor->where('state', '3')->count();
+        $totalInTreatment = $queryInTreatment->where('state', '4')->count();
+        $totalFinished = $queryFinished->where('state', '5')->count();
+
+        return [
+            (object)['total' => $totalValorations, 'type' => 'totalValorations'],
+            (object)['total' => $totalPendSendReso, 'type' => 'totalPendSendRes'],
+            (object)['total' => $totalResoSedFromDoctor, 'type' => 'totalResSendFromDoctor'],
+            (object)['total' => $totalPendSendTreaFromDoctor, 'type' => 'totalPendSendTreaFromDoctor'],
+            (object)['total' => $totalInTreatment, 'type' => 'totalInTreatment'],
+            (object)['total' => $totalFinished, 'type' => 'totalFinished'],
+        ];
+    }
+
 
     public function getValoration($valuation)
     {

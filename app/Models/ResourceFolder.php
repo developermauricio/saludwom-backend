@@ -13,11 +13,11 @@ class ResourceFolder extends Model
     const INACTIVE = 2;
 
     protected $guarded = 'id';
-    protected $fillable = ['id','folder', 'description', 'state'];
+    protected $fillable = ['id','folder', 'description', 'state', 'slug'];
 
     public function archives()
     {
-        return $this->morphMany(Archive::class, 'archiveable');
+        return $this->morphMany(Archive::class, 'archiveable')->latest();
     }
 
     public function archive()
@@ -26,6 +26,12 @@ class ResourceFolder extends Model
             'user_id' => auth()->id()
         ]);
     }
+
+    public function hasArchives(): bool
+    {
+        return $this->archives()->exists();
+    }
+
 
     public function archiveCount()
     {

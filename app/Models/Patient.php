@@ -24,7 +24,7 @@ class Patient extends Model
         return $this->hasMany(Order::class);
     }
     public function subcrition(){
-        return $this->hasMany(Subscription::class);
+        return $this->hasMany(Subscription::class, 'patient_id', 'id');
     }
 
     public function couponUser(){

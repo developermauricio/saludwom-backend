@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class Subscription extends Model
 {
     use HasFactory;
+
     const PENDING = 1;
     const CANCELLED = 2;
     const REJECTED = 3;
@@ -17,10 +18,21 @@ class Subscription extends Model
     const COMPLETED = 5;
 
     protected $guarded = ['id'];
-    protected $fillable = ['plan_id', 'patient_id', 'expiration_date', 'state'];
+    protected $fillable = ['plan_id', 'patient_id', 'expiration_date', 'state', 'name'];
 
-    public function plan(){
-        return $this->belongsTo(Plan::class);
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class, 'plan_id');
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    public function order()
+    {
+        return $this->hasOne(Order::class, 'subscription_id');
     }
 
     static public function validatePeriod($period)
@@ -38,7 +50,6 @@ class Subscription extends Model
                     $date = Carbon::now()->addYear();
                     break;
             }
-            Log::info($date->format('Y-m-d H:i:s'));
             return $date->format('Y-m-d H:i:s');
         }
     }

@@ -16,11 +16,26 @@ class Cors
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request)
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Credentials', 'true')
-            ->header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
-            ->header('Access-Control-Max-Age', '1000')
-            ->header('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token , Authorization');
+        if ($request->getMethod() === 'OPTIONS') {
+            return response('', 200)
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Credentials', 'true')
+                ->header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
+                ->header('Access-Control-Max-Age', '1000')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token, Authorization, Sec-WebSocket-Protocol');
+        }
+
+        $response = $next($request);
+
+        if (method_exists($response, 'header')) {
+            $response->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Credentials', 'true')
+                ->header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
+                ->header('Access-Control-Max-Age', '1000')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token, Authorization, Sec-WebSocket-Protocol');
+        }
+
+        return $response;
     }
+
 }

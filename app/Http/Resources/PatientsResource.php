@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class PatientsResource extends JsonResource
 {
@@ -16,26 +17,51 @@ class PatientsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'valoration_id' => $this->id,
-            'valoration_name' => $this->name,
-            'patient_id' => $this->patient->id,
-            'user_id' => $this->patient->user->id,
-            'rowKey' => $this->patient->id,
-            'name' => $this->patient->user->name.' '.$this->patient->user->last_name,
-            'email' => $this->patient->user->email,
-            'phone' => $this->patient->user->phone,
-            'document' => $this->patient->user->document,
-            'document_type' => $this->patient->user->identificationType->name,
-            'gender' => $this->patient->gender->name,
-            'age' => Carbon::parse($this->patient->user->birthday)->age,
-            'slug' => $this->patient->user->slug,
-            'picture' => $this->patient->user->picture,
-            'patient_type' => $this->patient->patient_type,
-            'country' => $this->patient->user->country ? $this->patient->user->country->name : 'No registrado.',
-            'country_flag' => $this->patient->user->country ? $this->patient->user->country->flag : '',
-            'city' => $this->patient->user->city ? $this->patient->user->city->name : 'No regitrado.',
-            'created_at' => $this->patient->created_at,
-            'updated_at' => $this->patient->updated_at,
+
+            'index' => $this->sequence_number,
+
+            /* Total o cantidad para las valoraciones u objetivos*/
+            'totalValorations' => $this->countTotalValuation,
+            'totalPendSendRes' => $this->countTotalPendSenResources,
+            'totalResSendFromDoctor' => $this->countTotalResoSedFromDoctor,
+            'totalPendSendTreaFromDoctor' => $this->countTotalPendSendTreaFromDoctor,
+            'totalInTreatment' => $this->countTotalInTreatment,
+            'totalFinished' => $this->countTotalFinished,
+
+            /* Total o cantidad para las subscripciones*/
+            'totalSubscriptions' => $this->totalSubscriptions,
+            'totalSubscriptionPending' => $this->totalSubscriptionPending,
+            'totalSubscriptionCancelled' => $this->totalSubscriptionCancelled,
+            'totalSubscriptionRejected' => $this->totalSubscriptionRejected,
+            'totalSubscriptionAccepted' => $this->totalSubscriptionAccepted,
+            'totalSubscriptionCompleted' => $this->totalSubscriptionCompleted,
+
+            'patient_id' => $this->id,
+            'user_id' => $this->user->id,
+            'rowKey' => $this->id,
+            'name' => $this->user->name.' '.$this->user->last_name,
+            'lastName' => $this->user->last_name,
+            'email' => $this->user->email,
+            'user' => $this->user,
+            'phone' => $this->user->phone,
+            'state' => $this->user->state,
+            'document' => $this->user->document,
+            'birthday' => $this->user->birthday,
+            'documentType' =>  $this->user->identificationType,
+            'gender' => $this->gender,
+            'address' => $this->user->address,
+            'age' => Carbon::parse($this->user->birthday)->age,
+            'slug' => $this->user->slug,
+            'picture' => $this->user->picture,
+            'signature' => $this->signature,
+            'patientType' => $this->patient_type,
+            'country' => $this->user->country ?? 'No registrado.',
+            'country_flag' => $this->user->country ? $this->user->country->flag : '',
+            'city' => $this->user->city ?? 'No regitrado.',
+            'valoration' => $this->valuations,
+            'subcrition' => $this->subcrition,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

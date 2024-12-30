@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\CategoryTreatment;
 use App\Models\Coupon;
 use App\Models\Doctor;
@@ -130,36 +131,37 @@ class DatabaseSeeder extends Seeder
         =============================================*/
         Plan::factory()->count(1)->create([
             'name' => 'Plan Diamante',
+            'stripe_plan_price_id' => 'price_1QYGeZIzBwjuGosrxqQ8nLJu',
             'currency' => 'EUR',
             'description' => 'Seguimiento semanal Online 10€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
-            'price' => 10,
+            'price' => 20,
             'user_id' => 1,
             'number_appointments' => 0,
-            'period' => 'week',
+            'period' => 'month',
             'image_background' => '/assets/images/plans/plan-diamante.png'
         ]);
-        Plan::factory()->count(1)->create([
-            'name' => 'Plan Esmeralda',
-            'currency' => 'EUR',
-            'description' => '2 citas online de 30 minutos 60€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
-            'price' => 80,
-            'user_id' => 1,
-            'number_appointments' => 2,
-            'time_interval_appointments' => 15,
-            'period' => 'month',
-            'image_background' => '/assets/images/plans/plan-esmeralda.png'
-        ]);
-        Plan::factory()->count(1)->create([
-            'name' => 'Plan Rubí',
-            'currency' => 'EUR',
-            'description' => '4 citas online de 30 minutos 120€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
-            'price' => 140,
-            'user_id' => 1,
-            'number_appointments' => 4,
-            'time_interval_appointments' => 7,
-            'period' => 'month',
-            'image_background' => '/assets/images/plans/plan-rubi.png'
-        ]);
+//        Plan::factory()->count(1)->create([
+//            'name' => 'Plan Esmeralda',
+//            'currency' => 'EUR',
+//            'description' => '2 citas online de 30 minutos 60€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
+//            'price' => 80,
+//            'user_id' => 1,
+//            'number_appointments' => 2,
+//            'time_interval_appointments' => 15,
+//            'period' => 'month',
+//            'image_background' => '/assets/images/plans/plan-esmeralda.png'
+//        ]);
+//        Plan::factory()->count(1)->create([
+//            'name' => 'Plan Rubí',
+//            'currency' => 'EUR',
+//            'description' => '4 citas online de 30 minutos 120€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€',
+//            'price' => 140,
+//            'user_id' => 1,
+//            'number_appointments' => 4,
+//            'time_interval_appointments' => 7,
+//            'period' => 'month',
+//            'image_background' => '/assets/images/plans/plan-rubi.png'
+//        ]);
         /*=============================================
             CREAMOS PACIENTE UNO
         =============================================*/
@@ -192,6 +194,20 @@ class DatabaseSeeder extends Seeder
         CategoryTreatment::factory()->count(1)->create([
             'name' => 'Infante',
         ]);
+
+        /*=============================================
+             CREAMOS CATEGORIAS
+         =============================================*/
+        Category::factory()->count(1)->create([
+            'category' => 'Recurso de valoración',
+            'description' => 'Hace referencia que el cuestionario o el recurso de video podrá ser usado cuando el doctor envie los recursos de valoración.'
+        ]);
+
+        Category::factory()->count(1)->create([
+            'category' => 'Tratamiento',
+            'description' => 'Hace referencia que el cuestionario o el recurso de video podrá ser usado cuando el doctor envie el tratamiento para cumplir un objetivo.'
+        ]);
+
         /*=============================================
             CREAMOS TRATAMIENTOS
         =============================================*/
@@ -485,8 +501,8 @@ Apasionada por el trabajo y la atención a pacientes.',
             "discount" => 10,
             "description" => 'Este cupon es para uso solo en tiempos de febrero en amor y amistad',
             "create_user_id" => 1,
-            "date_expiration" => "2023-12-15",
-            "limit_use" => 2
+            "date_expiration" => "2025-12-15",
+            "limit_use_per_user" => 2
         ]);
         /*=============================================
           CREAMOS PACIENTES SIN SUBCRIPTION
