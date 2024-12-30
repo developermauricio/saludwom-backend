@@ -76,7 +76,7 @@ class SendInvoiceNotification extends Notification
      * @param mixed $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
         MQTT::publish('notification', $this->user['id']);
         return [
